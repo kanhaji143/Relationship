@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Builds
+.next/
+out/
+build/
+dist/
+
+# Environment & secrets — NEVER commit real values
+.env
+.env.local
+.env*.local
+firebase-adminsdk-*.json
+*-firebase-adminsdk*.json
+serviceAccountKey*.json
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.runtimeconfig.json
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Logs
+npm-debug.log*
+logs/
+
+# Local uploads (dev storage adapter)
+uploads/
+
+# Extracted archives / temp
+*.zip
+tmp/

@@ -1,0 +1,23 @@
+rules_version = '2';
+
+// ============================================================================
+// CLOUD STORAGE SECURITY RULES — Phase 0 draft
+//
+// All photos are PRIVATE. Any use of a photo happens through short-lived
+// signed download URLs issued by server code (Admin SDK, which bypasses
+// these rules). Client uploads must go through an authorized Cloud Function
+// that performs: auth + App Check + size/type validation + EXIF strip +
+// moderation status assignment. Direct Firebase Storage uploads may be
+// enabled later with strict rules ONLY if reviewed (default deny now).
+// ============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /{allPaths=**} {
+      // Direct client access denied. Signed URLs (issued server-side) do not
+      // require rules access and carry the only legitimate read path.
+      allow read, write: if false;
+    }
+  }
+}

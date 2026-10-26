@@ -1,0 +1,24 @@
+# Decision Log (append-only)
+
+| # | Date | Decision | Rationale | Alternatives rejected |
+|---|---|---|---|---|
+| 1 | 2026-10-26 | Build **responsive web first** (Next.js App Router + TS + Tailwind), mobile app later | Blueprint default; API-first Functions make future React Native viable | Native app first (slower, no web presence) |
+| 2 | 2026-10-26 | **Firebase instead of PostgreSQL/Prisma** — product owner requirement for hosting | Firebase App Hosting + Auth + Firestore + Storage covers the stack; held byFunctions for sensitive logic | Self-managed Postgres host (owner prefers Firebase ecosystem) |
+| 3 | 2026-10-26 | **Browser never talks to Firestore/Storage directly; all sensitive ops in Cloud Functions / server routes** | Server-side authorization (blueprint rule 6); Firestore rules can't express block-aware discovery/moderation/audit | Client SDK with permissive rules (insecure) |
+| 4 | 2026-10-26 | Realtime chat via **Firestore listeners**, participant-authorized server-side | Blueprint allows polling fallback; listeners are native, low-latency | WebSocket provider (extra vendor, later if scale demands) |
+| 5 | 2026-10-26 | Discovery via **pre-computed candidate pools** (background recompute on changes) | Firestore lacks multi-field SQL-style filtering | Composite-index-only queries (cannot combine block list + intent + age + region reliably) |
+| 6 | 2026-10-26 | Brand name **"Bondora" is provisional**; branding configurable via env | Blueprint §16; trademark/domain clearance pending | Locking name now (blocks legal clearance) |
+| 7 | 2026-10-26 | Payments = **Razorpay adapter, test-mode only** until credentials + legal review; billing disabled via env flag | Blueprint rule 5 (no fake integrations; safe local/test mode) | Fake payments or silent billing |
+| 8 | 2026-10-26 | Chat encryption posture: **no E2EE claim**; TLS + restricted audited staff access, honest disclosure | Blueprint §8: "do not claim E2EE falsely" | Claiming E2EE without implementation |
+| 9 | 2026-10-26 | Launch country = **India only**; international gated by counsel review | Blueprint §9 launch gate | Enabling multiple countries at MVP |
+| 10 | 2026-10-26 | Pricing stays in **research hypotheses** (₹199–399 / ₹499–999 tiers) until willingness-to-pay tests | Blueprint §10 | Publishing prices as final |
+
+## Open items requiring human action (tracked in docs/LEGAL_CHECKLIST_INDIA.md)
+
+- Final brand name + trademark/domain clearance (client)
+- Company + GST registrations before real payments (client)
+- Grievance Officer appointment + published contact (client)
+- Firebase project creation + production plan/costs approval (client)
+- Payment provider account (Razorpay) (client)
+- Legal counsel engagement for DPDP + IT Rules review (client)
+- Photography moderation vendor + email provider selection (deferred; adapters + test mode active)
