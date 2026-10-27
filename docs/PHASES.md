@@ -30,3 +30,4 @@ Rule: each phase keeps the app runnable before the next begins.
 | Rules deploy cleanly                | Drafts finalized + wired in `firebase.json`; deployment needs a real project (`docs/SETUP_FIREBASE.md`) — not yet run                   |
 | Links to blueprints live            | `README.md` links every doc; app footer/landing link to public pages                                                                    |
 | Tooling                             | `npm run verify` — format, lint, typecheck, 32 tests, build all green                                                                   |
+| Delivery workflow                   | `RFP.md` → `TestCases.md` → `npm run evidence` → `evidence/phase0-2026-10-27/` (12/12 checks pass, 2 blocked on human actions)          |

@@ -1,0 +1,14 @@
+# Lint
+command: npm run lint
+started: 2026-10-27T16:09:19.184Z
+duration_ms: 9191
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 lint
+> eslint
+
+
+## stderr

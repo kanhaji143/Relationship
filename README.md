@@ -100,6 +100,22 @@ npm run verify
 
 Rule deployment and emulator runs need a Firebase project and JDK 21+ — see [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md). Nothing in this repo has been deployed publicly.
 
+## Delivery workflow
+
+Every change follows: **requirements → test cases → execute → evidence → finish**.
+
+| Artifact                          | Purpose                                                                                        |
+| --------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [`RFP.md`](RFP.md)                | Requirements. Owner writes their own in §1's input space; §2 is the current approved baseline. |
+| [`TestCases.md`](TestCases.md)    | Step-by-step cases mapped to requirement IDs, with expected outcomes and actual results.       |
+| [`evidence/`](evidence/README.md) | Raw logs, route-smoke JSON and run summaries — proof that tests actually ran.                  |
+
+Reproduce a full run with the same gates CI uses:
+
+```bash
+npm run evidence
+```
+
 ## Key documents
 
 - [`docs/PRODUCT_BLUEPRINT.md`](docs/PRODUCT_BLUEPRINT.md) — full product specification (source of truth)

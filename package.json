@@ -19,6 +19,7 @@
     "test:watch": "vitest",
     "setup:env": "node scripts/setup-env.mjs",
     "env:check": "node --env-file-if-exists=.env.local scripts/check-env.mjs",
+    "evidence": "node scripts/run-evidence.mjs --out evidence/phase0-2026-10-27",
     "emulators": "firebase emulators:start",
     "rules:deploy": "firebase deploy --only firestore:rules,storage",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"

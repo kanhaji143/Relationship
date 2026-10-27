@@ -29,3 +29,6 @@ docs/PRODUCT_BLUEPRINT.md
 docs/ARCHITECTURE.md
 docs/FIRESTORE_SCHEMA.md
 docs/LEGAL_CHECKLIST_INDIA.md
+
+# Generated evidence artifacts (raw logs, run summaries)
+evidence/

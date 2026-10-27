@@ -17,6 +17,7 @@
 | 13  | 2026-10-27 | **Zod** for env + input validation; Firebase config optional at boot                                                 | Fail fast on bad config without blocking Phase 0 local boot                                                        | Ad-hoc `process.env` checks; requiring Firebase to render the shell                       |
 | 14  | 2026-10-27 | Phase 0 ships static `/how-it-works` and `/safety` placeholders; no legal pages until counsel-reviewed copy          | Avoid dead links and false legal claims                                                                            | Linking unfinished legal pages                                                            |
 | 15  | 2026-10-27 | English-only copy for Phase 0; Hindi/regional copy after legal + UX review                                           | Avoid half-translated legal-sensitive text                                                                         | Machine-translated legal text                                                             |
+| 16  | 2026-10-27 | Delivery workflow is **RFP → TestCases → execute → evidence → finish**, saved in `AGENTS.md`                         | Owner-requested traceability; every PASS needs captured output, blocked items must state why                       | Informal "it works" claims; screenshots without logs                                      |
 
 ## Open items requiring human action (tracked in docs/LEGAL_CHECKLIST_INDIA.md)
 
