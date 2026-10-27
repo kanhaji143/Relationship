@@ -1,0 +1,48 @@
+{
+  "name": "bondora",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Privacy-first, consent-led, adults-only relationship platform (India-first MVP). Working name: Bondora.",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "setup:env": "node scripts/setup-env.mjs",
+    "env:check": "node --env-file-if-exists=.env.local scripts/check-env.mjs",
+    "emulators": "firebase emulators:start",
+    "rules:deploy": "firebase deploy --only firestore:rules,storage",
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"
+  },
+  "dependencies": {
+    "firebase": "^13.1.0",
+    "firebase-admin": "^14.5.0",
+    "next": "16.4.3",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^5.0.5"
+  }
+}

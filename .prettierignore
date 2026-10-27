@@ -1,0 +1,31 @@
+# Build output
+.next/
+out/
+build/
+dist/
+coverage/
+node_modules/
+
+# Lockfiles other than npm
+pnpm-lock.yaml
+yarn.lock
+
+# Generated / local
+next-env.d.ts
+*.tsbuildinfo
+.env
+.env.local
+.env*.local
+*.log
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/
+playwright-report/
+test-results/
+
+# Source-of-truth documents authored in Phase 0 — keep their layout verbatim.
+docs/PRODUCT_BLUEPRINT.md
+docs/ARCHITECTURE.md
+docs/FIRESTORE_SCHEMA.md
+docs/LEGAL_CHECKLIST_INDIA.md
