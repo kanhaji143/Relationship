@@ -55,10 +55,15 @@ export function getAdminAuth(): Auth {
   return getAuth(getAdminApp());
 }
 
+let firestoreSettingsApplied = false;
+
 export function getAdminDb(): Firestore {
   const db = getFirestore(getAdminApp());
-  // Ignore undefined fields instead of throwing; schemas are validated before writes.
-  db.settings({ ignoreUndefinedProperties: true });
+  if (!firestoreSettingsApplied) {
+    // Ignore undefined fields instead of throwing; schemas are validated before writes.
+    db.settings({ ignoreUndefinedProperties: true });
+    firestoreSettingsApplied = true;
+  }
   return db;
 }
 

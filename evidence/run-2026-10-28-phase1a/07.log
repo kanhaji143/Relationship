@@ -1,0 +1,18 @@
+# Env check
+command: npm run env:check
+started: 2026-10-28T05:51:46.563Z
+duration_ms: 929
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 env:check
+> node --env-file-if-exists=.env.local scripts/check-env.mjs
+
+✔ .env.local found (18 keys)
+  Firebase client config: 0/6 filled
+  Still empty: NEXT_PUBLIC_FIREBASE_API_KEY, NEXT_PUBLIC_FIREBASE_PROJECT_ID, NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET, NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID, NEXT_PUBLIC_FIREBASE_APP_ID, NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+  → The app boots without Firebase, but auth features need these (docs/SETUP_FIREBASE.md).
+
+## stderr

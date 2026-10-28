@@ -1,0 +1,16 @@
+# Format check
+command: npm run format:check
+started: 2026-10-28T05:52:32.001Z
+duration_ms: 5827
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+## stderr

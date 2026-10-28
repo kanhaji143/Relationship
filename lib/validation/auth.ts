@@ -130,6 +130,19 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Enter your password.").max(128),
 });
 
+/** Phase 1A signup: account + consents only; profile/onboarding comes next. */
+export const authSignupSchema = z.object({
+  adultConfirmed: z.literal(true, "You must confirm you are 18 or older."),
+  acceptedTerms: z.literal(true, "You must accept the Terms to continue."),
+  acceptedPrivacy: z.literal(true, "You must accept the Privacy Policy to continue."),
+  locale: localeSchema.default("en-IN"),
+  policyVersion: z.string().trim().min(1).max(20),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
+});
+
 export const onboardingBasicsSchema = z.object({
   displayName: displayNameSchema,
   birthDate: birthDateSchema,
@@ -138,5 +151,7 @@ export const onboardingBasicsSchema = z.object({
 });
 
 export type SignupInput = z.infer<typeof signupSchema>;
+export type AuthSignupInput = z.infer<typeof authSignupSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type OnboardingBasicsInput = z.infer<typeof onboardingBasicsSchema>;

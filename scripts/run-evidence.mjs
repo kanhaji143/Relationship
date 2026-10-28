@@ -192,6 +192,10 @@ async function routeSmoke() {
       { path: "/", expectedStatus: 200, expectText: "Relationships with clear intent" },
       { path: "/how-it-works", expectedStatus: 200, expectText: "How it works" },
       { path: "/safety", expectedStatus: 200, expectText: "Safety commitments" },
+      { path: "/login", expectedStatus: 200, expectText: "Welcome back" },
+      { path: "/signup", expectedStatus: 200, expectText: "Create your account" },
+      { path: "/forgot-password", expectedStatus: 200, expectText: "Reset your password" },
+      { path: "/account", expectedStatus: 307, expectLocation: "/login" },
       { path: "/definitely-not-a-route", expectedStatus: 404, expectText: "Page not found" },
     ];
 
@@ -204,15 +208,86 @@ async function routeSmoke() {
           .exec(body)?.[1]
           ?.replace(/<[^>]*>/g, "")
           .trim() ?? "";
-      const pass = response.status === route.expectedStatus && body.includes(route.expectText);
+      const location = response.headers.get("location") ?? "";
+      const pass =
+        response.status === route.expectedStatus &&
+        (route.expectText ? body.includes(route.expectText) : true) &&
+        (route.expectLocation ? location.includes(route.expectLocation) : true);
       checks.push({
+        kind: "page",
         path: route.path,
         expectedStatus: route.expectedStatus,
         actualStatus: response.status,
-        expectedText: route.expectText,
+        expectedText: route.expectText ?? null,
+        expectedLocation: route.expectLocation ?? null,
+        actualLocation: location || null,
         title,
         h1,
         bodyBytes: Buffer.byteLength(body),
+        status: pass ? "PASS" : "FAIL",
+      });
+    }
+
+    const sessionUrl = `${BASE_URL}/api/auth/session`;
+    const registerUrl = `${BASE_URL}/api/auth/register`;
+    const jsonHeaders = { "content-type": "application/json" };
+    const apiCases = [
+      {
+        name: "session POST without Origin is rejected (CSRF)",
+        run: async () =>
+          fetch(sessionUrl, {
+            method: "POST",
+            headers: jsonHeaders,
+            body: JSON.stringify({ idToken: "x".repeat(40) }),
+          }),
+        expectedStatus: 403,
+        check: (response) => response.status === 403,
+      },
+      {
+        name: "session POST same-origin without Firebase returns 503",
+        run: async () =>
+          fetch(sessionUrl, {
+            method: "POST",
+            headers: { ...jsonHeaders, origin: BASE_URL },
+            body: JSON.stringify({ idToken: "x".repeat(40) }),
+          }),
+        expectedStatus: 503,
+        check: (response) => response.status === 503,
+      },
+      {
+        name: "register POST without Origin is rejected (CSRF)",
+        run: async () =>
+          fetch(registerUrl, {
+            method: "POST",
+            headers: jsonHeaders,
+            body: JSON.stringify({}),
+          }),
+        expectedStatus: 403,
+        check: (response) => response.status === 403,
+      },
+      {
+        name: "session DELETE clears the __session cookie",
+        run: async () => fetch(sessionUrl, { method: "DELETE", headers: { origin: BASE_URL } }),
+        expectedStatus: 200,
+        check: (response) => {
+          const cookie = response.headers.get("set-cookie") ?? "";
+          return (
+            response.status === 200 && cookie.includes("__session=") && /max-age=0/i.test(cookie)
+          );
+        },
+      },
+    ];
+
+    for (const apiCase of apiCases) {
+      const response = await apiCase.run();
+      const body = await response.text();
+      const pass = apiCase.check(response);
+      checks.push({
+        kind: "api",
+        name: apiCase.name,
+        expectedStatus: apiCase.expectedStatus,
+        actualStatus: response.status,
+        body: body.slice(0, 200),
         status: pass ? "PASS" : "FAIL",
       });
     }
@@ -431,6 +506,53 @@ async function main() {
       run: () => {
         const client = read("lib/firebase/client/app.ts");
         return !/AIza[0-9A-Za-z_-]{20,}/.test(client);
+      },
+    },
+  ]);
+
+  runStatic("13", "Auth session hardening", [
+    {
+      name: "session cookie is HttpOnly, SameSite=Lax and Secure in production",
+      run: () => {
+        const cookie = read("lib/session/cookie.ts");
+        return (
+          cookie.includes("httpOnly: true") &&
+          cookie.includes('sameSite: "lax"') &&
+          cookie.includes("secure: isProduction")
+        );
+      },
+    },
+    {
+      name: "both auth routes enforce same-origin and rate limiting",
+      run: () =>
+        ["app/api/auth/session/route.ts", "app/api/auth/register/route.ts"].every((route) => {
+          const source = read(route);
+          return source.includes("isAllowedOrigin") && source.includes("checkAuthRateLimit");
+        }),
+    },
+    {
+      name: "registration verifies the ID token and writes in a transaction",
+      run: () => {
+        const register = read("app/api/auth/register/route.ts");
+        return (
+          register.includes("verifyIdToken") &&
+          register.includes("runTransaction") &&
+          register.includes("consentRecords")
+        );
+      },
+    },
+    {
+      name: "no browser storage of auth tokens",
+      run: () => {
+        const files = [
+          "features/auth/client.ts",
+          "features/auth/components/LoginForm.tsx",
+          "features/auth/components/SignupForm.tsx",
+          "features/auth/components/ForgotPasswordForm.tsx",
+        ];
+        return files.every(
+          (file) => !/localStorage|sessionStorage|document\.cookie/.test(read(file)),
+        );
       },
     },
   ]);

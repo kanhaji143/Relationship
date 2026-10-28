@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  authSignupSchema,
   emailSchema,
+  forgotPasswordSchema,
   isAdultBirthDate,
   isPlausibleBirthDate,
   normalizeEmail,
@@ -101,5 +103,44 @@ describe("signupSchema", () => {
 
   it("accepts names in non-Latin scripts", () => {
     expect(signupSchema.safeParse({ ...validSignup, displayName: "आशा" }).success).toBe(true);
+  });
+});
+
+describe("authSignupSchema", () => {
+  const valid = {
+    adultConfirmed: true as const,
+    acceptedTerms: true as const,
+    acceptedPrivacy: true as const,
+    locale: "en-IN",
+    policyVersion: "2026-10-28",
+  };
+
+  it("accepts consents for an adult", () => {
+    expect(authSignupSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it("requires the 18+ confirmation", () => {
+    expect(authSignupSchema.safeParse({ ...valid, adultConfirmed: false }).success).toBe(false);
+  });
+
+  it("requires both policies", () => {
+    expect(authSignupSchema.safeParse({ ...valid, acceptedTerms: false }).success).toBe(false);
+    expect(authSignupSchema.safeParse({ ...valid, acceptedPrivacy: false }).success).toBe(false);
+  });
+
+  it("rejects an empty policy version", () => {
+    expect(authSignupSchema.safeParse({ ...valid, policyVersion: "" }).success).toBe(false);
+  });
+});
+
+describe("forgotPasswordSchema", () => {
+  it("normalizes the email", () => {
+    const result = forgotPasswordSchema.safeParse({ email: " Asha@Example.COM " });
+    expect(result.success).toBe(true);
+    if (result.success) expect(result.data.email).toBe("asha@example.com");
+  });
+
+  it("rejects invalid emails", () => {
+    expect(forgotPasswordSchema.safeParse({ email: "nope" }).success).toBe(false);
   });
 });

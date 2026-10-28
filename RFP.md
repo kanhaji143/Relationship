@@ -56,7 +56,24 @@ Authentication flows, onboarding UI, database writes, discovery, matching, chat,
 
 ---
 
-## 3. Open human actions
+## 3. Phase 1 — Foundations (slice 1A: auth entry + session)
+
+Added 2026-10-28. Scope is deliberately limited to what can be built and tested without a Firebase project; end-to-end Firebase flows stay blocked.
+
+| ID        | Requirement                                                              | Acceptance criteria                                                                                                                                                                                       | Status                            |
+| --------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| **R-101** | Auth entry pages must exist and be responsive/accessible.                | `/login`, `/signup`, `/forgot-password` render with labelled fields, inline errors, and a clear "Firebase not configured" state.                                                                          | ✅ Done                           |
+| **R-102** | Sessions must be HttpOnly cookies, never client storage.                 | ID token exchanged at `POST /api/auth/session` for a Secure/HttpOnly/SameSite cookie (`__session`); no token written to localStorage/sessionStorage.                                                      | 🟡 Built; issuance E2E blocked    |
+| **R-103** | Auth endpoints must be CSRF- and abuse-resistant.                        | Same-origin check on every state-changing request; fixed-window rate limit (10 req / 5 min / IP) on login exchange and registration.                                                                      | ✅ Done                           |
+| **R-104** | Registration must create only server-authorized records.                 | `POST /api/auth/register` verifies the Firebase ID token, requires 18+ confirmation + terms/privacy consent, and writes `users/{uid}`, consent records, email lookup and an audit log in one transaction. | 🟡 Built; transaction E2E blocked |
+| **R-105** | Sessions must be server-authoritative.                                   | `/account` reads the session cookie server-side and redirects unauthenticated visitors to `/login`; UI checks never grant access.                                                                         | ✅ Done                           |
+| **R-106** | Auth failures must not leak account existence or tokens.                 | Login errors are generic; tokens/cookies are never logged; forgot-password always returns the same message.                                                                                               | ✅ Done                           |
+| **R-107** | Auth code must be unit-tested.                                           | Tests cover rate limiter, origin check, safe redirect, cookie options, hashing, error mapping and new validation schemas.                                                                                 | ✅ Done (72 tests)                |
+| **R-108** | Firebase end-to-end auth must be verified before Phase 1 is called done. | signup→login→session→account works against the emulator or a real project.                                                                                                                                | ⛔ Blocked (no project/JDK)       |
+
+Legend: ✅ = verified with captured output; 🟡 = code complete + unit/static checks, but the Firebase-dependent execution is still blocked (TC-028, TC-032).
+
+## 4. Open human actions
 
 | Item                                                    | Owner           | Blocks                           |
 | ------------------------------------------------------- | --------------- | -------------------------------- |
@@ -65,7 +82,7 @@ Authentication flows, onboarding UI, database writes, discovery, matching, chat,
 | Install JDK 21+                                         | Dev environment | Firebase Emulator Suite          |
 | Add owner requirements in §1                            | Product owner   | Next test-case expansion         |
 
-## 4. Traceability
+## 5. Traceability
 
 | Requirement | Test cases                             |
 | ----------- | -------------------------------------- |
@@ -82,3 +99,11 @@ Authentication flows, onboarding UI, database writes, discovery, matching, chat,
 | R-011       | TC-017                                 |
 | R-012       | TC-019, TC-020                         |
 | NFR-001     | TC-020                                 |
+| R-101       | TC-024                                 |
+| R-102       | TC-025, TC-030                         |
+| R-103       | TC-026, TC-027                         |
+| R-104       | TC-028                                 |
+| R-105       | TC-029                                 |
+| R-106       | TC-030, TC-033                         |
+| R-107       | TC-031                                 |
+| R-108       | TC-032                                 |

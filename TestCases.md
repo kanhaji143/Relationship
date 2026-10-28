@@ -1,9 +1,9 @@
-﻿# Test Cases — Phase 0 baseline
+﻿# Test Cases — Phase 0 baseline + Phase 1A auth entry
 
-**Generated from:** `RFP.md` §2 (owner input space §1 was empty at generation time)
-**Executed:** 2026-10-27 · run `evidence/phase0-2026-10-27/`
-**Re-verified:** 2026-10-28 · run `evidence/run-2026-10-28/`
-**Result:** **21/21 executable cases passed · 2 blocked · 0 failed** (23 total)
+**Generated from:** `RFP.md` §2 (Phase 0) and §3 (Phase 1A)
+**Executed:** 2026-10-27 (Phase 0) · Phase 1A re-verified 2026-10-28
+**Phase 1A evidence:** `evidence/run-2026-10-28-phase1a-r2/` (latest full run)
+**Result:** **29/33 passed · 4 blocked · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment
@@ -18,7 +18,7 @@
 | Firebase CLI     | 15.34.0                                  |
 | Java             | ❌ not installed (blocks emulators)      |
 | Firebase project | ❌ not created (blocks rules deployment) |
-| Git at run time  | `master@f3df165`                         |
+| Git at run time  | `master@d8269b4` + Phase 1A working tree |
 
 ## Summary
 
@@ -47,6 +47,16 @@
 | TC-021 | Deploy security rules             | R-007            | ⛔ BLOCKED (no Firebase project) |
 | TC-022 | Start Firebase emulators          | R-008            | ⛔ BLOCKED (no JDK 21+)          |
 | TC-023 | Accessibility + honest claims     | NFR-002, NFR-003 | ✅ PASS                          |
+| TC-024 | Auth pages render                 | R-101            | ✅ PASS                          |
+| TC-025 | Session cookie hardening          | R-102            | ✅ PASS                          |
+| TC-026 | CSRF origin rejection             | R-103            | ✅ PASS                          |
+| TC-027 | Auth rate limiting                | R-103            | ✅ PASS                          |
+| TC-028 | Registration transaction          | R-104            | ⛔ BLOCKED (no Firebase project) |
+| TC-029 | Protected account route           | R-105            | ✅ PASS                          |
+| TC-030 | No browser token storage          | R-102, R-106     | ✅ PASS                          |
+| TC-031 | Auth utility unit coverage        | R-107            | ✅ PASS                          |
+| TC-032 | End-to-end Firebase auth          | R-108            | ⛔ BLOCKED (no project/JDK)      |
+| TC-033 | Generic auth error copy           | R-106            | ✅ PASS                          |
 
 ---
 
@@ -381,17 +391,169 @@
 - **Actual:** PASS — 5/5 assertions (first run failed on an over-broad regex; the check was corrected and the full run re-executed — see execution log).
 - **Status:** ✅ PASS
 
+## TC-024 — Auth pages render
+
+- **Requirement:** R-101
+- **Preconditions:** production build succeeds (`npm run build`).
+- **Steps:**
+  1. Start the production server on an isolated port (`next start`).
+  2. `GET /login` and assert 200 + "Welcome back".
+  3. `GET /signup` and assert 200 + "Create your account".
+  4. `GET /forgot-password` and assert 200 + "Reset your password".
+- **Expected outcome:** All three pages return 200 with their heading and a rendered form.
+- **Validation points:** status codes, page titles, h1 text captured in the smoke JSON.
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/06-route-smoke.json`, `06-route-smoke.log`
+- **Actual:** PASS — `/login` 200 "Welcome back", `/signup` 200 "Create your account", `/forgot-password` 200 "Reset your password". All three expose labelled email/password fields with `autoComplete` hints; submit is disabled with a setup notice while Firebase is unconfigured.
+- **Status:** ✅ PASS
+
+## TC-025 — Session cookie hardening
+
+- **Requirement:** R-102
+- **Preconditions:** session cookie module imported by unit tests; production server running.
+- **Steps:**
+  1. Run `npx vitest run lib/session/cookie.test.ts`.
+  2. Assert cookie name `__session`, `httpOnly: true`, `sameSite: "lax"`, `path: "/"`.
+  3. Assert `secure` is `true` only when production.
+  4. Send `DELETE /api/auth/session` and inspect the `Set-Cookie` header.
+- **Expected outcome:** Cookie is never JS-readable; cleared cookie has `Max-Age=0`.
+- **Validation points:** cookie attributes, clearing behaviour, 5-day lifetime (`SESSION_MAX_AGE_SECONDS`).
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/04.log`, `06-route-smoke.json` (DELETE check), `13.log`
+- **Actual:** PASS — 2/2 cookie tests pass; DELETE returned 200 with `__session=` and `Max-Age=0` (asserted by the smoke runner). Cookie value is issued by Firebase Admin `createSessionCookie`; real issuance is covered by blocked TC-032.
+- **Status:** ✅ PASS
+
+## TC-026 — CSRF origin rejection
+
+- **Requirement:** R-103
+- **Preconditions:** production server running; no Firebase credentials required.
+- **Steps:**
+  1. `POST /api/auth/session` and `/api/auth/register` **without** an `Origin` header.
+  2. Assert both return 403 `forbidden_origin`.
+  3. Repeat the session POST with `Origin` equal to the server origin; assert it passes the origin gate.
+- **Expected outcome:** Missing/foreign origins are rejected before any token work; same-origin requests continue to normal handling.
+- **Validation points:** status codes, error codes, order of checks (origin before Firebase config).
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/06-route-smoke.json`, `lib/http/origin.test.ts`
+- **Actual:** PASS — both endpoints returned 403 without Origin; same-origin session POST reached the next gate and returned 503 `auth_not_configured` (expected on this build). 5/5 origin unit tests pass.
+- **Status:** ✅ PASS
+
+## TC-027 — Auth rate limiting
+
+- **Requirement:** R-103
+- **Preconditions:** fixed-window limiter module.
+- **Steps:**
+  1. Run `npx vitest run lib/rate-limit/fixed-window.test.ts`.
+  2. Assert the 3rd request is blocked for `limit: 2`.
+  3. Assert keys are isolated, the window resets, and `retry-after` is reported.
+  4. Confirm both auth routes call `checkAuthRateLimit` with per-IP keys.
+- **Expected outcome:** Limits hold per key/window and both endpoints are wrapped.
+- **Validation points:** allowed/remaining/reset behaviour; 10 requests / 5 minutes configuration.
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/04.log`, `13.log`
+- **Actual:** PASS — 5/5 limiter tests pass; static check confirms `checkAuthRateLimit` in both auth routes with `session:`/`register:` keys. Shared-store limiting across instances remains a follow-up.
+- **Status:** ✅ PASS
+
+## TC-028 — Registration transaction
+
+- **Requirement:** R-104
+- **Preconditions:** Firebase project or Auth+Firestore emulators; a freshly created Firebase user and ID token.
+- **Steps:**
+  1. POST `/api/auth/register` with a valid bearer token and consents.
+  2. Assert `users/{uid}` is created with `accountStatus: "active"`.
+  3. Assert three granted `consentRecords`, an `emailLookup` entry and an `auditLogs` entry.
+  4. Repeat the request; assert 200 `exists` and no duplicates.
+  5. Register a second uid with the same email; assert 409 `email_in_use`.
+- **Expected outcome:** Records are created atomically; retries are idempotent; duplicate emails are rejected.
+- **Validation points:** transaction contents, idempotency, 409 collision, no partial writes.
+- **Evidence:** _none — not executed_; static structure only in `13.log`
+- **Actual:** NOT EXECUTED — requires a Firebase project or emulator (no project; JDK missing). Static check confirms `verifyIdToken`, `runTransaction` and `consentRecords` are wired, which is not a functional pass.
+- **Status:** ⛔ BLOCKED — product-owner Firebase setup + JDK 21+ (`RFP.md` §4)
+
+## TC-029 — Protected account route
+
+- **Requirement:** R-105
+- **Preconditions:** production server; no session cookie.
+- **Steps:**
+  1. `GET /account` with no cookie and `redirect: manual`.
+  2. Assert 307 and `Location: /login`.
+  3. Inspect the page: it calls `requireSessionUser()` (Admin `verifySessionCookie` with revocation check) behind Suspense.
+- **Expected outcome:** Unauthenticated visitors never receive account HTML; verification is server-side.
+- **Validation points:** HTTP status, redirect target, no client-only gate.
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/06-route-smoke.json` (check `/account`)
+- **Actual:** PASS — 307 to `/login` from the proxy; the page independently verifies the cookie with `verifySessionCookie(cookie, true)` before rendering account data.
+- **Status:** ✅ PASS
+
+## TC-030 — No browser token storage
+
+- **Requirement:** R-102, R-106
+- **Preconditions:** auth client and forms present.
+- **Steps:**
+  1. Scan `features/auth/client.ts` and the three auth forms for `localStorage`, `sessionStorage` and `document.cookie`.
+  2. Assert no matches.
+  3. Inspect IDs exchanged: ID token is posted once to `/api/auth/session` and never persisted.
+- **Expected outcome:** No token is written to browser storage; the session lives only in the HttpOnly cookie.
+- **Validation points:** static scan + code review of the exchange flow.
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/13.log`
+- **Actual:** PASS — 4/4 files clean; token held in a local variable for the exchange only. Firebase SDK persistence may keep its own refresh state in IndexedDB, which is not an app-managed token store; sessions are still server-authoritative.
+- **Status:** ✅ PASS
+
+## TC-031 — Auth utility unit coverage
+
+- **Requirement:** R-107
+- **Preconditions:** Vitest config aliases `@/` and mocks `server-only`.
+- **Steps:**
+  1. Run `npm test`.
+  2. Confirm all test files and tests pass.
+  3. Confirm the new suites cover rate limiting, origin, redirects, cookie options, hashing, request parsing and error copy.
+- **Expected outcome:** 0 failed tests; auth utilities covered.
+- **Validation points:** file/test counts, exit code, no skipped tests.
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/04.log`
+- **Actual:** PASS — 12 files, 72/72 tests in 2.44 s; exit 0. Phase 0 had 32 tests, so Phase 1A adds 40.
+- **Status:** ✅ PASS
+
+## TC-032 — End-to-end Firebase auth
+
+- **Requirement:** R-108
+- **Preconditions:** Firebase project configured in `.env.local` + Admin credentials, or Auth/Firestore emulators (JDK 21+).
+- **Steps:**
+  1. Create an account on `/signup`.
+  2. Assert the session cookie is set and `/account` renders the signed-in email.
+  3. Sign out; assert `/account` redirects to `/login`.
+  4. Sign in again with the same credentials.
+  5. Attempt signup with a birth date under 18 during onboarding (next slice) and assert rejection.
+- **Expected outcome:** Full signup → session → account → sign-out → sign-in loop works against real Firebase.
+- **Validation points:** cookie issuance, revocation check, account page data, redirects.
+- **Evidence:** _none — not executed_
+- **Actual:** NOT EXECUTED — no Firebase project (`.env.local` Firebase 0/6) and no emulator (Java missing). Login/signup buttons intentionally disable with a setup notice.
+- **Status:** ⛔ BLOCKED — product-owner Firebase setup + JDK 21+ (`RFP.md` §4)
+
+## TC-033 — Generic auth error copy
+
+- **Requirement:** R-106
+- **Preconditions:** error-mapping module.
+- **Steps:**
+  1. Run `npx vitest run features/auth/errors.test.ts`.
+  2. Assert `auth/invalid-credential` maps to "Email or password is incorrect."
+  3. Assert unknown codes fall back to a generic message.
+  4. Inspect forgot-password: unknown emails also show the generic "if an account exists" confirmation.
+- **Expected outcome:** No account enumeration; no raw Firebase codes shown to users.
+- **Validation points:** mapped strings, fallback, single confirmation path.
+- **Evidence:** `evidence/run-2026-10-28-phase1a-r2/04.log`
+- **Actual:** PASS — 9/9 error-copy tests pass; forgot-password sets the same success state for unknown-email errors and only surfaces network/rate-limit failures.
+- **Status:** ✅ PASS
+
 ---
 
 ## Execution log
 
-| Attempt | Date       | Runner   | Command            | Result                                                                |
-| ------- | ---------- | -------- | ------------------ | --------------------------------------------------------------------- |
-| 1       | 2026-10-27 | opencode | `npm run evidence` | ❌ 11/12 — TC-023 regex matched the honest _denial_ ("no E2EE claim") |
-| 2       | 2026-10-27 | opencode | `npm run evidence` | ❌ 11/12 — format check included the generated evidence summary       |
-| 3       | 2026-10-27 | opencode | `npm run evidence` | ✅ 12/12 · 44.5 s · capture in `evidence/phase0-2026-10-27/`          |
-| 4       | 2026-10-28 | opencode | `npm run evidence` | ✅ 12/12 · 207.1 s · re-verification in `evidence/run-2026-10-28/`    |
+| Attempt | Date       | Runner   | Command                                                        | Result                                                                                                                   |
+| ------- | ---------- | -------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 1       | 2026-10-27 | opencode | `npm run evidence`                                             | ❌ 11/12 — TC-023 regex matched the honest _denial_ ("no E2EE claim")                                                    |
+| 2       | 2026-10-27 | opencode | `npm run evidence`                                             | ❌ 11/12 — format check included the generated evidence summary                                                          |
+| 3       | 2026-10-27 | opencode | `npm run evidence`                                             | ✅ 12/12 · 44.5 s · capture in `evidence/phase0-2026-10-27/`                                                             |
+| 4       | 2026-10-28 | opencode | `npm run evidence`                                             | ✅ 12/12 · 207.1 s · re-verification in `evidence/run-2026-10-28/`                                                       |
+| 5       | 2026-10-28 | opencode | `npm run evidence -- --out evidence/run-2026-10-28-phase1a`    | ❌ 12/13 — same-origin API check compared against `request.url` (normalised to `localhost`) instead of the `Host` header |
+| 6       | 2026-10-28 | opencode | `npm run evidence -- --out evidence/run-2026-10-28-phase1a-r2` | ✅ 13/13 · 120.5 s · Phase 1A capture                                                                                    |
 
 > Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the Phase 0 capture; run 4 re-verifies the same code the next day. The evidence script now names each run by date automatically.
 >
-> TC-021 and TC-022 stay BLOCKED until the human actions in `RFP.md` §3 are completed. They must not be reported as passed.
+> Attempt 5 exposed a real CSRF-check bug: `request.url` is normalised to `localhost`, so a same-origin request to `127.0.0.1` was rejected. `requestOrigin()` now derives the origin from the `Host` header (honouring `x-forwarded-proto`), and run 6 re-executed every gate. Attempt 5's failed artifacts are kept in `evidence/run-2026-10-28-phase1a/`.
+>
+> TC-021, TC-022, TC-028 and TC-032 stay BLOCKED until the human actions in `RFP.md` §4 are completed. They must not be reported as passed.

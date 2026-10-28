@@ -52,6 +52,8 @@ One-time human steps. Everything in the repo is ready; the items below need a Go
 3. **Settings → Authorized domains**: `localhost` is pre-approved; add the App Hosting domain later.
 4. Keep **Email enumeration protection** enabled (default).
 
+> **Session cookies need Admin credentials.** `/login` and `/signup` use the client SDK, then `POST /api/auth/session` exchanges the ID token for an HttpOnly cookie using the Admin SDK. Complete §7 (ADC or service-account path) or the route returns `503 auth_not_configured`.
+
 ## 4. Link the CLI to the project
 
 ```bash
@@ -125,4 +127,6 @@ Firebase App Hosting connects a GitHub repo and builds with Next.js SSR. Do not 
 | `Missing or insufficient permissions` | Rules are deny-all by design. Reads/writes must go through server code.             |
 | Emulator fails to start               | Install JDK 21+; make sure ports 4000/8080/9099/9199 are free.                      |
 | `auth/unauthorized-domain`            | Add the current host to Auth → Settings → Authorized domains.                       |
+| `auth_not_configured` (503)           | Either the web config (§1) is missing or Admin credentials (§7) are unavailable.    |
+| `auth_unavailable` (503)              | Admin SDK could not reach Firebase; check ADC/service-account path and network.     |
 | CLI deploys to the wrong project      | `firebase use` and re-check `.firebaserc`.                                          |

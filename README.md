@@ -6,16 +6,16 @@ Privacy-first, consent-led, **adults-only (18+)** relationship platform. India-f
 
 ## Status
 
-**Phase 0 — complete** (2026-10-27). Next: **Phase 1 — Foundations** (accounts, age assurance, onboarding).
+**Phase 0 — complete** (2026-10-27) · **Phase 1 — in progress**: slice 1A ships auth entry pages, HttpOnly Firebase session cookies and server-side registration. Onboarding + age assurance next.
 
-| Phase                    | Status                                            |
-| ------------------------ | ------------------------------------------------- |
-| 0 — Discovery & setup    | ✅ App boots, tooling green, docs + rules drafted |
-| 1 — Foundations          | ⏳ Next                                           |
-| 2 — Discovery & matching | —                                                 |
-| 3 — Chat & safety        | —                                                 |
-| 4 — Privacy & billing    | —                                                 |
-| 5 — Launch readiness     | —                                                 |
+| Phase                    | Status                                                     |
+| ------------------------ | ---------------------------------------------------------- |
+| 0 — Discovery & setup    | ✅ App boots, tooling green, docs + rules drafted          |
+| 1 — Foundations          | 🟡 1A auth entry + sessions built; E2E blocked on Firebase |
+| 2 — Discovery & matching | —                                                          |
+| 3 — Chat & safety        | —                                                          |
+| 4 — Privacy & billing    | —                                                          |
+| 5 — Launch readiness     | —                                                          |
 
 ## Quick start
 
@@ -25,7 +25,7 @@ npm run setup:env     # creates .env.local from .env.example (safe: never overwr
 npm run dev           # http://localhost:3000
 ```
 
-The app boots **without** Firebase. Auth and data features turn on after the one-time, human-only setup in [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md).
+The app boots **without** Firebase. Auth entry pages render and show a setup notice; sign-in and registration turn on after the one-time, human-only setup in [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md) (including **Admin SDK credentials**, required to mint session cookies).
 
 ```bash
 npm run env:check     # which env keys are missing (names only, never values)
@@ -89,14 +89,16 @@ Copy `.env.example` → `.env.local`. Public values are inlined at build time (`
 | `FIREBASE_SERVICE_ACCOUNT_KEY_PATH`             | Admin SDK locally (ADC in production)    |
 | `RAZORPAY_*`, `BILLING_TEST_MODE`               | Phase 4 billing (leave empty = disabled) |
 
-## Verification (Phase 0 exit)
+## Verification (Phase 1A)
 
 ```
 npm run verify
 ✔ format:check   ✔ lint   ✔ typecheck
-✔ vitest         32 tests passing
-✔ next build     4 static routes
+✔ vitest         72 tests passing
+✔ next build     10 routes (3 auth pages, account, 2 auth APIs)
 ```
+
+Latest full evidence run: `evidence/run-2026-10-28-phase1a-r2/` — **13/13 checks pass**. Two auth cases remain blocked on human Firebase setup, and rules/emulator checks stay blocked on project/JDK (see `RFP.md` §4).
 
 Rule deployment and emulator runs need a Firebase project and JDK 21+ — see [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md). Nothing in this repo has been deployed publicly.
 

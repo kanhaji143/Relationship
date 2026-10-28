@@ -20,9 +20,17 @@ export function SiteHeader() {
             </span>
           ) : null}
         </Link>
-        <span className="bg-accent-soft text-accent rounded-full px-3 py-1 text-xs font-medium">
-          Phase 0 · development preview
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="bg-accent-soft text-accent hidden rounded-full px-3 py-1 text-xs font-medium sm:inline">
+            Phase 1 · development preview
+          </span>
+          <Link
+            href="/login"
+            className="border-line text-ink hover:border-brand rounded-lg border px-3 py-1.5 text-sm font-medium"
+          >
+            Sign in
+          </Link>
+        </div>
       </div>
     </header>
   );
