@@ -245,15 +245,15 @@ async function routeSmoke() {
         check: (response) => response.status === 403,
       },
       {
-        name: "session POST same-origin without Firebase returns 503",
+        name: "session POST same-origin rejects a dummy token (configured or not)",
         run: async () =>
           fetch(sessionUrl, {
             method: "POST",
             headers: { ...jsonHeaders, origin: BASE_URL },
             body: JSON.stringify({ idToken: "x".repeat(40) }),
           }),
-        expectedStatus: 503,
-        check: (response) => response.status === 503,
+        expectedStatus: "401 (configured) or 503 (not configured)",
+        check: (response) => response.status === 401 || response.status === 503,
       },
       {
         name: "register POST without Origin is rejected (CSRF)",
@@ -624,7 +624,39 @@ async function main() {
         );
       },
     },
+    {
+      name: "exact birth date is written only to the private user document",
+      run: () => {
+        const route = read("app/api/onboarding/route.ts");
+        const schema = read("types/models.ts");
+        return (
+          route.includes("birthDate: null") &&
+          route.includes("birthDate: input.birthDate") &&
+          schema.includes("Exact DOB stays in users/{uid}/private/ageAssurance")
+        );
+      },
+    },
+    {
+      name: "edit onboarding draft is loaded server-side from profile + private DOB",
+      run: () => {
+        const profile = read("lib/profile/server.ts");
+        const page = read("app/onboarding/page.tsx");
+        return (
+          profile.includes("getOnboardingDraft") &&
+          profile.includes("privateData.birthDate") &&
+          page.includes("initialData={initialData}")
+        );
+      },
+    },
   ]);
+
+  if (process.env.FIREBASE_E2E_UID) {
+    await runCommand(
+      "15",
+      "Firebase E2E user documents (read-only)",
+      "npm run verify:firebase-user",
+    );
+  }
 
   const finishedAt = new Date();
   const summary = {

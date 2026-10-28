@@ -11,13 +11,15 @@ import {
 } from "@/lib/firebase/collections";
 import { jsonError, readJson } from "@/lib/http/json";
 import { isAllowedOrigin } from "@/lib/http/origin";
-import { clientIp, requestOrigin } from "@/lib/http/request";
+import { requestOrigin } from "@/lib/http/request";
 import { logger } from "@/lib/logger";
 import { consumeRateLimit } from "@/lib/rate-limit/fixed-window";
 import { getSessionUser } from "@/lib/session";
 import { onboardingSchema } from "@/lib/validation/onboarding";
 
 const SAVE_LIMIT = { limit: 20, windowMs: 5 * 60 * 1000 };
+
+class MissingAccountRecordError extends Error {}
 
 function isSameOrigin(request: Request): boolean {
   return isAllowedOrigin(request.headers.get("origin"), {
@@ -74,10 +76,13 @@ export async function POST(request: Request) {
 
   try {
     await db.runTransaction(async (transaction) => {
-      const [profileSnapshot, preferencesSnapshot] = await Promise.all([
+      const [userSnapshot, profileSnapshot, preferencesSnapshot] = await Promise.all([
+        transaction.get(userRef),
         transaction.get(profileRef),
         transaction.get(preferencesRef),
       ]);
+
+      if (!userSnapshot.exists) throw new MissingAccountRecordError();
 
       const now = FieldValue.serverTimestamp();
       const existingProfile = profileSnapshot.data() ?? {};
@@ -89,7 +94,8 @@ export async function POST(request: Request) {
         {
           uid,
           displayName: input.displayName,
-          birthDate: input.birthDate,
+          // Exact DOB is private-only; this public profile field remains null.
+          birthDate: null,
           pronouns: existingProfile.pronouns ?? null,
           bio: input.bio,
           countryCode: input.countryCode,
@@ -134,6 +140,7 @@ export async function POST(request: Request) {
       transaction.set(
         ageAssuranceRef,
         {
+          birthDate: input.birthDate,
           ageAssurance: {
             method: "self_declared",
             status: "unverified",
@@ -157,9 +164,11 @@ export async function POST(request: Request) {
       });
     });
   } catch (error) {
+    if (error instanceof MissingAccountRecordError) {
+      return jsonError(409, "registration_required");
+    }
     logger.error("profile.onboarding.write_failed", {
       reason: error instanceof Error ? error.name : "unknown",
-      ip: clientIp(request),
     });
     return jsonError(503, "onboarding_unavailable");
   }

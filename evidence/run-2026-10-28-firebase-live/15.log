@@ -1,0 +1,30 @@
+# Firebase E2E user documents (read-only)
+command: npm run verify:firebase-user
+started: 2026-10-28T08:03:47.662Z
+duration_ms: 17456
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 verify:firebase-user
+> node --env-file-if-exists=.env.local scripts/verify-firebase-user.mjs
+
+{
+  "status": "PASS",
+  "checks": {
+    "firebaseAuthUserExists": true,
+    "accountDocumentExists": true,
+    "profileDocumentExists": true,
+    "preferencesDocumentExists": true,
+    "emailLookupEntryExists": true,
+    "exactDobHiddenFromPublicProfile": true,
+    "exactDobStoredInPrivateDocument": true,
+    "profileCreatedAtMs": 1793173295556,
+    "ageAssuranceSelfDeclared": true,
+    "consentRecordsPresent": true,
+    "registrationAndOnboardingAudited": true
+  }
+}
+
+## stderr

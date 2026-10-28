@@ -44,6 +44,8 @@ export type UserDoc = {
  * Never store raw ID documents here by default.
  */
 export type PrivateUserDoc = {
+  /** Exact birth date is private; never expose it through `profiles/{uid}`. */
+  birthDate?: string;
   ageAssurance: {
     method: "self_declared" | "document" | "vendor";
     status: "unverified" | "verified" | "failed";
@@ -56,7 +58,7 @@ export type PrivateUserDoc = {
 export type ProfileDoc = {
   uid: string;
   displayName: string;
-  birthDate: string | null; // ISO date (YYYY-MM-DD), or null when minimized
+  birthDate: null; // Exact DOB stays in users/{uid}/private/ageAssurance.
   pronouns: string | null;
   bio: string;
   countryCode: string; // ISO 3166-1 alpha-2

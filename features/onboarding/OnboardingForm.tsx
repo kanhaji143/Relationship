@@ -7,17 +7,18 @@ import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { INTERESTS, LANGUAGES, REGIONS, type RegionId } from "@/lib/config/onboarding";
+import type { OnboardingDraft } from "@/features/onboarding/types";
 import { onboardingSchema } from "@/lib/validation/onboarding";
 
-export function OnboardingForm() {
+export function OnboardingForm({ initialData }: { initialData: OnboardingDraft | null }) {
   const router = useRouter();
-  const [displayName, setDisplayName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [intent, setIntent] = useState<"serious" | "casual">("serious");
-  const [region, setRegion] = useState<RegionId | "">("");
-  const [languages, setLanguages] = useState<string[]>(["en-IN"]);
-  const [bio, setBio] = useState("");
-  const [interestIds, setInterestIds] = useState<string[]>([]);
+  const [displayName, setDisplayName] = useState(initialData?.displayName ?? "");
+  const [birthDate, setBirthDate] = useState(initialData?.birthDate ?? "");
+  const [intent, setIntent] = useState<"serious" | "casual">(initialData?.intent ?? "serious");
+  const [region, setRegion] = useState<RegionId | "">(initialData?.region ?? "");
+  const [languages, setLanguages] = useState<string[]>(initialData?.languages ?? ["en-IN"]);
+  const [bio, setBio] = useState(initialData?.bio ?? "");
+  const [interestIds, setInterestIds] = useState<string[]>(initialData?.interestIds ?? []);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 

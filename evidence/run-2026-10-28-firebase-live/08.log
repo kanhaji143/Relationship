@@ -1,0 +1,7 @@
+# Security rules deny by default
+
+[PASS] firestore.rules has catch-all deny
+[PASS] storage.rules has catch-all deny
+[PASS] no permissive allow rule in firestore.rules
+[PASS] no permissive allow rule in storage.rules
+[PASS] firebase.json references the rules files

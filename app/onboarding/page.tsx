@@ -3,6 +3,7 @@ import { Suspense } from "react";
 
 import { MarketingShell } from "@/components/layout/MarketingShell";
 import { OnboardingForm } from "@/features/onboarding/OnboardingForm";
+import { getOnboardingDraft } from "@/lib/profile/server";
 import { requireSessionUser } from "@/lib/session";
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 async function OnboardingContent() {
   const user = await requireSessionUser();
+  const initialData = await getOnboardingDraft(user.uid);
 
   return (
     <>
@@ -25,7 +27,7 @@ async function OnboardingContent() {
       </header>
 
       <div className="border-line rounded-2xl border bg-white/70 p-6 shadow-sm sm:p-8 dark:bg-white/[0.03]">
-        <OnboardingForm />
+        <OnboardingForm initialData={initialData} />
       </div>
     </>
   );

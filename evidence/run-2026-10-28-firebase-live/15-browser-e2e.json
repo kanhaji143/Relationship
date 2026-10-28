@@ -1,0 +1,52 @@
+{
+  "run": "run-2026-10-28-firebase-live",
+  "date": "2026-10-28",
+  "method": "Playwright-backed browser automation against the local Next.js app and the configured Firebase project",
+  "privacy": "Test identity, UID, email, password, ID token, session-cookie value and exact birth date intentionally omitted.",
+  "checks": [
+    {
+      "id": "signup-registration",
+      "action": "Submit the signup form with adult confirmation and Terms/Privacy consent.",
+      "observed": ["POST /api/auth/register -> 201", "POST /api/auth/session -> 200", "redirected to /account"],
+      "status": "PASS"
+    },
+    {
+      "id": "account-before-profile",
+      "action": "Render the server-protected account page immediately after signup.",
+      "observed": ["HTTP 200", "signed-in account shown", "Complete profile CTA shown"],
+      "status": "PASS"
+    },
+    {
+      "id": "onboarding-save",
+      "action": "Save an adult profile with broad region/language/interests.",
+      "observed": ["POST /api/onboarding -> 200", "redirected to /account", "profile summary rendered"],
+      "status": "PASS"
+    },
+    {
+      "id": "server-underage-rejection",
+      "action": "Send an authenticated direct API request with an under-18 birth date (bypassing client validation).",
+      "observed": ["POST /api/onboarding -> 403", "response error=underage"],
+      "status": "PASS"
+    },
+    {
+      "id": "signout-and-login",
+      "action": "Sign out, then sign in again with the test account.",
+      "observed": ["DELETE /api/auth/session -> 200", "POST /api/auth/session -> 200", "account page rendered again"],
+      "status": "PASS"
+    },
+    {
+      "id": "edit-prefill-and-resave",
+      "action": "Open Edit profile and save the unchanged profile again.",
+      "observed": ["form prefilled from Firestore, including DOB from private doc", "POST /api/onboarding -> 200", "profile createdAt unchanged"],
+      "status": "PASS"
+    },
+    {
+      "id": "admin-read-only-verification",
+      "action": "Run npm run verify:firebase-user with a temporary FIREBASE_E2E_UID.",
+      "observed": ["Auth/account/profile/preferences exist", "three consent records", "email lookup exists", "registration/onboarding audit exists", "public DOB null and private DOB present"],
+      "evidence": "15.log",
+      "status": "PASS"
+    }
+  ],
+  "summary": { "passed": 7, "failed": 0 }
+}

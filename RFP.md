@@ -1,6 +1,6 @@
 # RFP — Relationship Platform ("Bondora", working name)
 
-**Document status:** baseline captured 2026-10-27 · awaiting owner requirements in §1
+**Document status:** baseline captured 2026-10-27 · Firebase Phase 1 E2E verified 2026-10-28 · awaiting owner requirements in §1
 **Workflow:** `RFP.md` → `TestCases.md` → execute → `evidence/` → finish
 **Project:** privacy-first, consent-led, adults-only (18+) relationship platform, India-first web MVP on Firebase.
 
@@ -58,40 +58,40 @@ Authentication flows, onboarding UI, database writes, discovery, matching, chat,
 
 ## 3. Phase 1 — Foundations (slice 1A: auth entry + session)
 
-Added 2026-10-28. Scope is deliberately limited to what can be built and tested without a Firebase project; end-to-end Firebase flows stay blocked.
+Added 2026-10-28. Phase 1A was implemented without requiring Firebase; the owner then linked the Firebase project and real browser E2E was completed on 2026-10-28.
 
-| ID        | Requirement                                                              | Acceptance criteria                                                                                                                                                                                       | Status                            |
-| --------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| **R-101** | Auth entry pages must exist and be responsive/accessible.                | `/login`, `/signup`, `/forgot-password` render with labelled fields, inline errors, and a clear "Firebase not configured" state.                                                                          | ✅ Done                           |
-| **R-102** | Sessions must be HttpOnly cookies, never client storage.                 | ID token exchanged at `POST /api/auth/session` for a Secure/HttpOnly/SameSite cookie (`__session`); no token written to localStorage/sessionStorage.                                                      | 🟡 Built; issuance E2E blocked    |
-| **R-103** | Auth endpoints must be CSRF- and abuse-resistant.                        | Same-origin check on every state-changing request; fixed-window rate limit (10 req / 5 min / IP) on login exchange and registration.                                                                      | ✅ Done                           |
-| **R-104** | Registration must create only server-authorized records.                 | `POST /api/auth/register` verifies the Firebase ID token, requires 18+ confirmation + terms/privacy consent, and writes `users/{uid}`, consent records, email lookup and an audit log in one transaction. | 🟡 Built; transaction E2E blocked |
-| **R-105** | Sessions must be server-authoritative.                                   | `/account` reads the session cookie server-side and redirects unauthenticated visitors to `/login`; UI checks never grant access.                                                                         | ✅ Done                           |
-| **R-106** | Auth failures must not leak account existence or tokens.                 | Login errors are generic; tokens/cookies are never logged; forgot-password always returns the same message.                                                                                               | ✅ Done                           |
-| **R-107** | Auth code must be unit-tested.                                           | Tests cover rate limiter, origin check, safe redirect, cookie options, hashing, error mapping and new validation schemas.                                                                                 | ✅ Done (72 tests)                |
-| **R-108** | Firebase end-to-end auth must be verified before Phase 1 is called done. | signup→login→session→account works against the emulator or a real project.                                                                                                                                | ⛔ Blocked (no project/JDK)       |
+| ID        | Requirement                                                              | Acceptance criteria                                                                                                                                                                                       | Status                      |
+| --------- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| **R-101** | Auth entry pages must exist and be responsive/accessible.                | `/login`, `/signup`, `/forgot-password` render with labelled fields, inline errors, and a clear "Firebase not configured" state.                                                                          | ✅ Done                     |
+| **R-102** | Sessions must be HttpOnly cookies, never client storage.                 | ID token exchanged at `POST /api/auth/session` for a Secure/HttpOnly/SameSite cookie (`__session`); no token written to localStorage/sessionStorage.                                                      | ✅ Done (browser E2E)       |
+| **R-103** | Auth endpoints must be CSRF- and abuse-resistant.                        | Same-origin check on every state-changing request; fixed-window rate limit (10 req / 5 min / IP) on login exchange and registration.                                                                      | ✅ Done                     |
+| **R-104** | Registration must create only server-authorized records.                 | `POST /api/auth/register` verifies the Firebase ID token, requires 18+ confirmation + terms/privacy consent, and writes `users/{uid}`, consent records, email lookup and an audit log in one transaction. | ✅ Done (Firebase verified) |
+| **R-105** | Sessions must be server-authoritative.                                   | `/account` reads the session cookie server-side and redirects unauthenticated visitors to `/login`; UI checks never grant access.                                                                         | ✅ Done                     |
+| **R-106** | Auth failures must not leak account existence or tokens.                 | Login errors are generic; tokens/cookies are never logged; forgot-password always returns the same message.                                                                                               | ✅ Done                     |
+| **R-107** | Auth code must be unit-tested.                                           | Tests cover rate limiter, origin check, safe redirect, cookie options, hashing, error mapping and new validation schemas.                                                                                 | ✅ Done (84 tests)          |
+| **R-108** | Firebase end-to-end auth must be verified before Phase 1 is called done. | signup→login→session→account works against the emulator or a real project.                                                                                                                                | ✅ Done (real Firebase)     |
 
-Legend: ✅ = verified with captured output; 🟡 = code complete + unit/static checks, but the Firebase-dependent execution is still blocked (TC-028, TC-032).
+Legend: ✅ = verified with captured output; 🟡 = implementation present but some acceptance points remain unverified.
 
 ### 3.1 Phase 1B — onboarding basics (added 2026-10-28)
 
-| ID        | Requirement                                                                 | Acceptance criteria                                                                                                                                                                                                      | Status                            |
-| --------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
-| **R-109** | Onboarding must exist and be session-protected.                             | `/onboarding` collects display name, birth date, intent, broad region, languages, bio and interests; unauthenticated visitors are redirected to `/login` before any HTML.                                                | 🟡 Built; E2E blocked             |
-| **R-110** | The 18+ gate must be enforced on the server during onboarding.              | Under-18 birth dates are rejected with `403 underage` regardless of client validation; the client check is feedback only.                                                                                                | ✅ Done (unit-tested)             |
-| **R-111** | Onboarding saves must be atomic, idempotent and server-authorized.          | `POST /api/onboarding` derives the uid from the session cookie and writes `profiles/{uid}`, `preferences/{uid}`, the private age declaration and an audit log in one transaction, preserving existing fields on re-save. | 🟡 Built; transaction E2E blocked |
-| **R-112** | Location and profile data must stay privacy-safe and allow-listed.          | Country is fixed to IN; regions are broad enums (no city/precise location); languages and interests come from allow-lists; bios are length-capped and sanitized.                                                         | ✅ Done (unit-tested)             |
-| **R-113** | The account page must reflect onboarding state.                             | Signed-in users see either a "Complete profile" CTA or their saved profile summary (name, intent, broad region, languages, interests).                                                                                   | 🟡 Built; E2E blocked             |
-| **R-114** | Onboarding end-to-end must be verified with Firebase before Phase 1 closes. | signup → onboarding save → account shows the profile against emulator or a real project.                                                                                                                                 | ⛔ Blocked (no project/JDK)       |
+| ID        | Requirement                                                                 | Acceptance criteria                                                                                                                                                                                                      | Status                               |
+| --------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| **R-109** | Onboarding must exist and be session-protected.                             | `/onboarding` collects display name, birth date, intent, broad region, languages, bio and interests; unauthenticated visitors are redirected to `/login` before any HTML.                                                | ✅ Done (browser verified)           |
+| **R-110** | The 18+ gate must be enforced on the server during onboarding.              | Under-18 birth dates are rejected with `403 underage` regardless of client validation; the client check is feedback only.                                                                                                | ✅ Done (API 403 verified)           |
+| **R-111** | Onboarding saves must be atomic, idempotent and server-authorized.          | `POST /api/onboarding` derives the uid from the session cookie and writes `profiles/{uid}`, `preferences/{uid}`, the private age declaration and an audit log in one transaction, preserving existing fields on re-save. | ✅ Done (Firebase verified)          |
+| **R-112** | Location and profile data must stay privacy-safe and allow-listed.          | Country is fixed to IN; regions are broad enums (no city/precise location); languages and interests come from allow-lists; bios are sanitized; exact birth date stays in the private user subcollection.                 | ✅ Done (tests + Firestore verified) |
+| **R-113** | The account page must reflect onboarding state.                             | Signed-in users see either a "Complete profile" CTA or their saved profile summary; Edit profile pre-fills values including DOB from the private document.                                                               | ✅ Done (browser verified)           |
+| **R-114** | Onboarding end-to-end must be verified with Firebase before Phase 1 closes. | signup → onboarding save → account shows the profile against emulator or a real project.                                                                                                                                 | ✅ Done (real Firebase)              |
 
 ## 4. Open human actions
 
-| Item                                                    | Owner           | Blocks                           |
-| ------------------------------------------------------- | --------------- | -------------------------------- |
-| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` | Product owner   | Auth (Phase 1), rules deployment |
-| `firebase login` + `npm run rules:deploy`               | Product owner   | Rules exit criterion             |
-| Install JDK 21+                                         | Dev environment | Firebase Emulator Suite          |
-| Add owner requirements in §1                            | Product owner   | Next test-case expansion         |
+| Item                                                                | Owner           | Blocks                           |
+| ------------------------------------------------------------------- | --------------- | -------------------------------- |
+| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC | Product owner   | ✅ Done (local dev configured)   |
+| `firebase login` + `npm run rules:deploy`                           | Product owner   | ✅ Done (TC-021)                 |
+| Install JDK 21+                                                     | Dev environment | Firebase Emulator Suite (TC-022) |
+| Add owner requirements in §1                                        | Product owner   | Next test-case expansion         |
 
 ## 5. Traceability
 
@@ -121,6 +121,6 @@ Legend: ✅ = verified with captured output; 🟡 = code complete + unit/static 
 | R-109       | TC-034, TC-035                         |
 | R-110       | TC-036                                 |
 | R-111       | TC-037                                 |
-| R-112       | TC-036                                 |
+| R-112       | TC-035, TC-040                         |
 | R-113       | TC-038                                 |
 | R-114       | TC-039                                 |

@@ -20,6 +20,7 @@
     "setup:env": "node scripts/setup-env.mjs",
     "env:check": "node --env-file-if-exists=.env.local scripts/check-env.mjs",
     "evidence": "node scripts/run-evidence.mjs",
+    "verify:firebase-user": "node --env-file-if-exists=.env.local scripts/verify-firebase-user.mjs",
     "emulators": "firebase emulators:start",
     "rules:deploy": "firebase deploy --only firestore:rules,storage",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build"

@@ -1,0 +1,171 @@
+{
+  "baseUrl": "http://127.0.0.1:3210",
+  "generatedAt": "2026-10-28T08:03:46.573Z",
+  "checks": [
+    {
+      "kind": "page",
+      "path": "/",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Relationships with clear intent",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "Bondora — Privacy-first relationships, built on consent.",
+      "h1": "Relationships with clear intent and real consent.",
+      "bodyBytes": 22508,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/how-it-works",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "How it works",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "How it works · Bondora",
+      "h1": "How it works",
+      "bodyBytes": 19724,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/safety",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Safety commitments",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "Safety · Bondora",
+      "h1": "Safety commitments",
+      "bodyBytes": 20505,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/login",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Welcome back",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "Sign in · Bondora",
+      "h1": "Welcome back",
+      "bodyBytes": 18411,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/signup",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Create your account",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "Create account · Bondora",
+      "h1": "Create your account",
+      "bodyBytes": 19779,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/forgot-password",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Reset your password",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "Reset your password · Bondora",
+      "h1": "Reset your password",
+      "bodyBytes": 17911,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/account",
+      "expectedStatus": 307,
+      "actualStatus": 307,
+      "expectedText": null,
+      "expectedLocation": "/login",
+      "actualLocation": "/login",
+      "title": "",
+      "h1": "",
+      "bodyBytes": 6,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/onboarding",
+      "expectedStatus": 307,
+      "actualStatus": 307,
+      "expectedText": null,
+      "expectedLocation": "/login",
+      "actualLocation": "/login",
+      "title": "",
+      "h1": "",
+      "bodyBytes": 6,
+      "status": "PASS"
+    },
+    {
+      "kind": "page",
+      "path": "/definitely-not-a-route",
+      "expectedStatus": 404,
+      "actualStatus": 404,
+      "expectedText": "Page not found",
+      "expectedLocation": null,
+      "actualLocation": null,
+      "title": "Bondora — Privacy-first relationships, built on consent.",
+      "h1": "Page not found",
+      "bodyBytes": 10026,
+      "status": "PASS"
+    },
+    {
+      "kind": "api",
+      "name": "session POST without Origin is rejected (CSRF)",
+      "expectedStatus": 403,
+      "actualStatus": 403,
+      "body": "{\"error\":\"forbidden_origin\"}",
+      "status": "PASS"
+    },
+    {
+      "kind": "api",
+      "name": "session POST same-origin rejects a dummy token (configured or not)",
+      "expectedStatus": "401 (configured) or 503 (not configured)",
+      "actualStatus": 401,
+      "body": "{\"error\":\"invalid_token\"}",
+      "status": "PASS"
+    },
+    {
+      "kind": "api",
+      "name": "register POST without Origin is rejected (CSRF)",
+      "expectedStatus": 403,
+      "actualStatus": 403,
+      "body": "{\"error\":\"forbidden_origin\"}",
+      "status": "PASS"
+    },
+    {
+      "kind": "api",
+      "name": "session DELETE clears the __session cookie",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "body": "{\"ok\":true}",
+      "status": "PASS"
+    },
+    {
+      "kind": "api",
+      "name": "onboarding POST without Origin is rejected (CSRF)",
+      "expectedStatus": 403,
+      "actualStatus": 403,
+      "body": "{\"error\":\"forbidden_origin\"}",
+      "status": "PASS"
+    },
+    {
+      "kind": "api",
+      "name": "onboarding POST without a session returns 401",
+      "expectedStatus": 401,
+      "actualStatus": 401,
+      "body": "{\"error\":\"unauthenticated\"}",
+      "status": "PASS"
+    }
+  ]
+}

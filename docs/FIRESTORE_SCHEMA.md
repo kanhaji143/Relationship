@@ -7,8 +7,8 @@ Blueprint's relational model (section 5) adapted to Firestore. Rules followed: U
 | Collection | Key fields | Notes |
 |---|---|---|
 | `users/{uid}` | email(normalized, unique via lookup), accountStatus, emailVerifiedAt, authProviderRefs, createdAt/updatedAt, lastLoginAt | Never store plaintext passwords. Auth credentials live in Firebase Auth only. |
-| `users/{uid}/private/{doc}` | phone verification refs, minimal age-assurance result, consent snapshots | Subcollections stay out of casual queries. |
-| `profiles/{uid}` (doc id = uid) | displayName, birthDateOrMinimizedAge, bio, countryCode, regionCode, broadLocationLabel, languages, visibility, moderationStatus, photoCount | Public fields only here; no contact/private data. |
+| `users/{uid}/private/{doc}` | birthDate (exact DOB), phone verification refs, minimal age-assurance result, consent snapshots | Subcollections stay out of casual queries; exact DOB is private-only. |
+| `profiles/{uid}` (doc id = uid) | displayName, minimized age only (exact DOB null), bio, countryCode, regionCode, broadLocationLabel, languages, visibility, moderationStatus, photoCount | Public fields only here; no exact DOB, contact or private data. |
 | `profilePhotos/{photoId}` | uid, storagePath (private), sortOrder, moderationStatus, deletedAt | Signed URLs issued server-side, short-lived; EXIF stripped at upload pipeline. |
 | `preferences/{uid}` | intent enum(s), desiredIntents[], ageMin/Max, distanceLimit(optional), preferredRegions, languages, dealbreakers, discoveryPaused | |
 | `interests/{interestId}` | name, category, active | Each profile stores interest IDs on its own doc. |

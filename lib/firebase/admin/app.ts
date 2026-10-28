@@ -55,16 +55,15 @@ export function getAdminAuth(): Auth {
   return getAuth(getAdminApp());
 }
 
-let firestoreSettingsApplied = false;
+let adminDb: Firestore | null = null;
 
 export function getAdminDb(): Firestore {
-  const db = getFirestore(getAdminApp());
-  if (!firestoreSettingsApplied) {
-    // Ignore undefined fields instead of throwing; schemas are validated before writes.
-    db.settings({ ignoreUndefinedProperties: true });
-    firestoreSettingsApplied = true;
-  }
-  return db;
+  // Note: no db.settings() here. Next bundles may load this module multiple
+  // times, and settings() can only be applied once per Firestore instance —
+  // it also rejects the second call. Writes are schema-validated upstream, so
+  // `ignoreUndefinedProperties` is unnecessary.
+  adminDb ??= getFirestore(getAdminApp());
+  return adminDb;
 }
 
 export function getAdminStorage(): Storage {

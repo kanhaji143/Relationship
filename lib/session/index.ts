@@ -2,6 +2,7 @@ import "server-only";
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { getAdminAuth } from "@/lib/firebase/admin/app";
 
@@ -23,6 +24,10 @@ export async function getSessionCookie(): Promise<string | undefined> {
  * ordinary auth failures, so callers can render a signed-out state.
  */
 export async function getSessionUser(): Promise<SessionUser | null> {
+  // Session verification is time-sensitive (token expiry checks use Date.now()
+  // inside the Admin SDK) — it must never run during a prerender attempt.
+  await connection();
+
   const cookie = await getSessionCookie();
   if (!cookie) return null;
 

@@ -6,16 +6,16 @@ Privacy-first, consent-led, **adults-only (18+)** relationship platform. India-f
 
 ## Status
 
-**Phase 0 — complete** (2026-10-27) · **Phase 1 — in progress**: 1A ships auth entry pages, HttpOnly Firebase session cookies and server-side registration; 1B ships onboarding basics (name, birth date/18+ gate, broad region, languages, bio, interests) with an atomic server-side save. Photos, prompts and discovery filters next.
+**Phase 0 — complete** · **Phase 1 — in progress**: auth, HttpOnly sessions and onboarding have passed real Firebase E2E. Photos, prompts and discovery filters are next. Emulator suite still needs JDK 21+.
 
-| Phase                    | Status                                                     |
-| ------------------------ | ---------------------------------------------------------- |
-| 0 — Discovery & setup    | ✅ App boots, tooling green, docs + rules drafted          |
-| 1 — Foundations          | 🟡 1A auth + sessions and 1B onboarding built; E2E blocked |
-| 2 — Discovery & matching | —                                                          |
-| 3 — Chat & safety        | —                                                          |
-| 4 — Privacy & billing    | —                                                          |
-| 5 — Launch readiness     | —                                                          |
+| Phase                    | Status                                                               |
+| ------------------------ | -------------------------------------------------------------------- |
+| 0 — Discovery & setup    | ✅ App boots, tooling green, docs + Firestore/Storage rules deployed |
+| 1 — Foundations          | 🟡 Auth + onboarding E2E passed; photos/prompts remain               |
+| 2 — Discovery & matching | —                                                                    |
+| 3 — Chat & safety        | —                                                                    |
+| 4 — Privacy & billing    | —                                                                    |
+| 5 — Launch readiness     | —                                                                    |
 
 ## Quick start
 
@@ -25,7 +25,7 @@ npm run setup:env     # creates .env.local from .env.example (safe: never overwr
 npm run dev           # http://localhost:3000
 ```
 
-The app boots **without** Firebase. Auth entry pages render and show a setup notice; sign-in and registration turn on after the one-time, human-only setup in [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md) (including **Admin SDK credentials**, required to mint session cookies).
+The app boots **without** Firebase. This workstation is now configured for `apna-computer-ltd` (local `.env.local` + ADC; neither is committed), so auth and onboarding work here. A fresh checkout still needs the human setup in [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md), including Admin SDK credentials for session cookies.
 
 ```bash
 npm run env:check     # which env keys are missing (names only, never values)
@@ -89,7 +89,7 @@ Copy `.env.example` → `.env.local`. Public values are inlined at build time (`
 | `FIREBASE_SERVICE_ACCOUNT_KEY_PATH`             | Admin SDK locally (ADC in production)    |
 | `RAZORPAY_*`, `BILLING_TEST_MODE`               | Phase 4 billing (leave empty = disabled) |
 
-## Verification (Phase 1B)
+## Verification (Firebase live, 2026-10-28)
 
 ```
 npm run verify
@@ -98,9 +98,9 @@ npm run verify
 ✔ next build     12 routes (3 auth pages, onboarding, account, 3 APIs)
 ```
 
-Latest full evidence run: `evidence/run-2026-10-28-phase1b/` — **14/14 checks pass**. Three onboarding/auth E2E cases (plus rules/emulator setup) remain blocked on human Firebase setup (see `RFP.md` §4).
+Latest full evidence run: `evidence/run-2026-10-28-firebase-live/` — **15/15 automated checks + 7/7 browser E2E checks pass**. Only Firebase Emulator Suite remains blocked (JDK 21+ missing); real Firebase project flows passed.
 
-Rule deployment and emulator runs need a Firebase project and JDK 21+ — see [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md). Nothing in this repo has been deployed publicly.
+Emulator runs need JDK 21+ — see [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md). Firebase rules are deployed; the web app itself has not been deployed publicly.
 
 ## Delivery workflow
 

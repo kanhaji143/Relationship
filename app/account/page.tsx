@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { MarketingShell } from "@/components/layout/MarketingShell";
 import { Alert } from "@/components/ui/Alert";
 import { SignOutButton } from "@/features/auth/components/SignOutButton";
+import { logger } from "@/lib/logger";
 import { getProfileSummary, type ProfileSummary } from "@/lib/profile/server";
 import { requireSessionUser } from "@/lib/session";
 
@@ -25,8 +26,11 @@ async function AccountContent() {
   let profileError = false;
   try {
     profile = await getProfileSummary(user.uid);
-  } catch {
+  } catch (error) {
     profileError = true;
+    logger.error("account.profile.read_failed", {
+      reason: error instanceof Error ? error.name : "unknown",
+    });
   }
 
   return (

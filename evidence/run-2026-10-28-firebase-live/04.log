@@ -1,0 +1,26 @@
+# Unit tests
+command: npm test
+started: 2026-10-28T08:03:14.519Z
+duration_ms: 4973
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90mD:/Relationship Apps[39m
+
+
+[2m Test Files [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m      Tests [22m [1m[32m84 passed[39m[22m[90m (84)[39m
+[2m   Start at [22m 13:33:16
+[2m   Duration [22m 3.20s[2m (import 50%, tests 32%, worker 10%, transform 8%, environment 1%)[22m
+
+[2m    Isolate [22m [33m14 workers spawned[39m[2m · ~442ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~1.62s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+## stderr

@@ -61,7 +61,7 @@ firebase login
 firebase use --add          # select the project, alias it "default"
 ```
 
-`.firebaserc` currently contains the placeholder `YOUR_FIREBASE_PROJECT_ID`; `firebase use --add` replaces it.
+This checkout is linked to `apna-computer-ltd` in `.firebaserc`. Check the target with `firebase projects:list` / `firebase use`; use `firebase use --add` only if you intentionally want to switch projects.
 
 ## 5. Deploy security rules
 
