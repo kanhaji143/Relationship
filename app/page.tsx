@@ -98,9 +98,10 @@ export default function HomePage() {
                 Where this is going
               </h2>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
-                Phase 1 is in progress: accounts, HttpOnly sessions and onboarding basics have been
-                verified against Firebase. Photos, prompts and discovery are still being built.
-                Nothing here is a public launch, and no payment is taken.
+                Phase 1 is in progress: accounts, HttpOnly sessions, onboarding, profile prompts and
+                discovery preferences have been verified against Firebase. Photo uploads await a
+                private Storage bucket; discovery suggestions are not active yet. Nothing here is a
+                public launch, and no payment is taken.
               </p>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
                 Product decisions and limits live in the open — no fake engagement, no dark
@@ -120,9 +121,9 @@ export default function HomePage() {
               </h3>
               <ul className="text-ink-muted mt-3 space-y-2 text-sm">
                 <li>✅ Repo, docs, Firestore + Storage rules deployed</li>
-                <li>✅ Auth, HttpOnly sessions + onboarding E2E</li>
+                <li>✅ Auth, onboarding, prompts + preferences E2E</li>
                 <li>✅ Server-side 18+ gate; exact DOB stored privately</li>
-                <li>Next: profile photos + prompts (emulators need JDK 21+)</li>
+                <li>Next: private photo storage + discovery suggestions</li>
               </ul>
             </div>
           </div>

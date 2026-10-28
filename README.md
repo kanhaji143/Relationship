@@ -6,12 +6,12 @@ Privacy-first, consent-led, **adults-only (18+)** relationship platform. India-f
 
 ## Status
 
-**Phase 0 — complete** · **Phase 1 — in progress**: auth, HttpOnly sessions and onboarding have passed real Firebase E2E. Photos, prompts and discovery filters are next. Emulator suite still needs JDK 21+.
+**Phase 0 — complete** · **Phase 1 — in progress**: auth, onboarding, prompts and discovery preferences pass real Firebase E2E. Photo uploads await Storage privacy controls and a server signing identity; matching is not active yet.
 
 | Phase                    | Status                                                               |
 | ------------------------ | -------------------------------------------------------------------- |
 | 0 — Discovery & setup    | ✅ App boots, tooling green, docs + Firestore/Storage rules deployed |
-| 1 — Foundations          | 🟡 Auth + onboarding E2E passed; photos/prompts remain               |
+| 1 — Foundations          | 🟡 Auth/onboarding/prompts/filters E2E passed; photo config blocked  |
 | 2 — Discovery & matching | —                                                                    |
 | 3 — Chat & safety        | —                                                                    |
 | 4 — Privacy & billing    | —                                                                    |
@@ -94,11 +94,11 @@ Copy `.env.example` → `.env.local`. Public values are inlined at build time (`
 ```
 npm run verify
 ✔ format:check   ✔ lint   ✔ typecheck
-✔ vitest         84 tests passing
-✔ next build     12 routes (3 auth pages, onboarding, account, 3 APIs)
+✔ vitest         95 tests passing
+✔ next build     16 routes (auth, onboarding, settings and APIs)
 ```
 
-Latest full evidence run: `evidence/run-2026-10-28-firebase-live/` — **15/15 automated checks + 7/7 browser E2E checks pass**. Only Firebase Emulator Suite remains blocked (JDK 21+ missing); real Firebase project flows passed.
+Latest full evidence run: `evidence/run-2026-10-28-phase1c/` — **16/16 automated checks and 9/9 executable browser E2E checks pass**. Emulator Suite needs JDK 21+; photo upload is blocked until Storage privacy controls and server signing are approved/configured.
 
 Emulator runs need JDK 21+ — see [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md). Firebase rules are deployed; the web app itself has not been deployed publicly.
 

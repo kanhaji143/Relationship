@@ -1,0 +1,4 @@
+# Firebase Storage privacy/signing readiness probe
+command: node --env-file-if-exists=.env.local scripts/check-firebase-storage.mjs
+
+{"status":"BLOCKED","location":"ASIA-SOUTH1","publicAccessPrevention":"inherited","uniformBucketLevelAccess":false,"publicIamGrant":false,"signedUploadAvailable":false,"reason":"private_storage_or_server_signing_not_confirmed"}

@@ -1,0 +1,61 @@
+{
+  "run": "run-2026-10-28-phase1c",
+  "date": "2026-10-28",
+  "method": "Playwright-backed browser automation against the local Next.js app and configured Firebase project",
+  "privacy": "Test identity, UID, email, answer text, tokens, session-cookie value and exact DOB omitted.",
+  "checks": [
+    {
+      "id": "signup-registration-session",
+      "observed": ["registration 201", "session exchange 200", "protected account rendered"],
+      "status": "PASS"
+    },
+    {
+      "id": "signout-login",
+      "observed": ["session DELETE 200", "fresh login exchange 200", "account rendered again"],
+      "status": "PASS"
+    },
+    {
+      "id": "onboarding-save",
+      "observed": ["adult profile save 200", "account summary rendered"],
+      "status": "PASS"
+    },
+    {
+      "id": "underage-server-rejection",
+      "observed": ["authenticated under-18 API request 403 underage"],
+      "status": "PASS"
+    },
+    {
+      "id": "profile-prompts-save-reload",
+      "observed": ["two approved answers saved with PUT 200", "both answers prefilled after reload"],
+      "status": "PASS"
+    },
+    {
+      "id": "discovery-preferences-save-reload",
+      "observed": ["filters saved with PUT 200", "age/intent/region/language reloaded", "pause=true round-tripped and was restored to false", "profile intent stayed separate from desired intents"],
+      "status": "PASS"
+    },
+    {
+      "id": "prompt-invalid-payload",
+      "observed": ["unlisted prompt key with forged uid field returned 400 invalid_input"],
+      "status": "PASS"
+    },
+    {
+      "id": "preference-invalid-payload",
+      "observed": ["inverted age bounds with forged uid field returned 400 invalid_input"],
+      "status": "PASS"
+    },
+    {
+      "id": "admin-read-only-document-check",
+      "observed": ["prompt docs and audit exist", "discovery filters and audit exist", "own intent remains separate"],
+      "evidence": "16.log",
+      "status": "PASS"
+    },
+    {
+      "id": "storage-upload-not-faked",
+      "observed": ["bucket exists but uniform access is off, prevention is inherited, signer unavailable; no upload attempted"],
+      "evidence": "16-storage-prerequisite.log",
+      "status": "BLOCKED"
+    }
+  ],
+  "summary": { "passed": 9, "blocked": 1, "failed": 0 }
+}

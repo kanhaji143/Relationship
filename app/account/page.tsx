@@ -77,12 +77,26 @@ async function AccountContent() {
                     {INTENT_LABELS[profile.intent ?? "serious"]} · {profile.broadLocationLabel}
                   </p>
                 </div>
-                <Link
-                  href="/onboarding"
-                  className="border-line text-ink hover:border-brand rounded-lg border px-3 py-1.5 text-sm font-medium"
-                >
-                  Edit profile
-                </Link>
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    href="/onboarding"
+                    className="border-line text-ink hover:border-brand rounded-lg border px-3 py-1.5 text-sm font-medium"
+                  >
+                    Edit profile
+                  </Link>
+                  <Link
+                    href="/settings/prompts"
+                    className="border-line text-ink hover:border-brand rounded-lg border px-3 py-1.5 text-sm font-medium"
+                  >
+                    Edit prompts
+                  </Link>
+                  <Link
+                    href="/settings/discovery"
+                    className="border-line text-ink hover:border-brand rounded-lg border px-3 py-1.5 text-sm font-medium"
+                  >
+                    Discovery settings
+                  </Link>
+                </div>
               </div>
               {profile.bio ? (
                 <p className="text-ink-muted mt-4 text-sm leading-relaxed">{profile.bio}</p>
@@ -111,8 +125,9 @@ async function AccountContent() {
               </dl>
             </div>
             <Alert tone="info">
-              Photos, prompt answers and discovery filters arrive in the next slice. Discovery stays
-              locked until those safety checks are in place.
+              Profile prompts and discovery filters are editable now. Photo uploads await a private
+              Storage bucket; discovery suggestions stay locked until matching and safety checks are
+              complete.
             </Alert>
           </>
         ) : null}

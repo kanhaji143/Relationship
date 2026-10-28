@@ -22,20 +22,23 @@ initializeApp({ credential: applicationDefault(), projectId });
 const db = getFirestore();
 
 async function main() {
-  const [authUser, user, profile, preferences, privateAge, consents, audits] = await Promise.all([
-    getAuth().getUser(uid),
-    db.doc(`users/${uid}`).get(),
-    db.doc(`profiles/${uid}`).get(),
-    db.doc(`preferences/${uid}`).get(),
-    db.doc(`users/${uid}/private/ageAssurance`).get(),
-    db.collection("consentRecords").where("uid", "==", uid).get(),
-    db.collection("auditLogs").where("actorUid", "==", uid).get(),
-  ]);
+  const [authUser, user, profile, preferences, privateAge, consents, audits, prompts] =
+    await Promise.all([
+      getAuth().getUser(uid),
+      db.doc(`users/${uid}`).get(),
+      db.doc(`profiles/${uid}`).get(),
+      db.doc(`preferences/${uid}`).get(),
+      db.doc(`users/${uid}/private/ageAssurance`).get(),
+      db.collection("consentRecords").where("uid", "==", uid).get(),
+      db.collection("auditLogs").where("actorUid", "==", uid).get(),
+      db.collection("prompts").where("uid", "==", uid).get(),
+    ]);
 
   const profileData = profile.data() ?? {};
   const privateData = privateAge.data() ?? {};
   const purposes = consents.docs.map((doc) => doc.get("purpose")).sort();
   const actions = audits.docs.map((doc) => doc.get("action")).sort();
+  const preferenceData = preferences.data() ?? {};
   const emailLookupKey = createHash("sha256")
     .update((authUser.email ?? "").trim().toLowerCase(), "utf8")
     .digest("hex");
@@ -56,6 +59,19 @@ async function main() {
     ),
     registrationAndOnboardingAudited:
       actions.includes("auth.register") && actions.includes("profile.onboarding_completed"),
+    promptAnswersPresent: prompts.size > 0 && prompts.size <= 3,
+    discoveryFiltersPresent:
+      Array.isArray(preferenceData.desiredIntents) &&
+      typeof preferenceData.ageMin === "number" &&
+      typeof preferenceData.ageMax === "number",
+    profileIntentStayedSeparate:
+      preferenceData.intent === "serious" &&
+      Array.isArray(preferenceData.desiredIntents) &&
+      preferenceData.desiredIntents.length === 1 &&
+      preferenceData.desiredIntents[0] === "casual",
+    promptAndPreferencesAudited:
+      actions.includes("profile.prompts_updated") &&
+      actions.includes("preferences.discovery_updated"),
   };
   const passed = Object.values(checks).every(Boolean);
 

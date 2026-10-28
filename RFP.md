@@ -84,14 +84,25 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | **R-113** | The account page must reflect onboarding state.                             | Signed-in users see either a "Complete profile" CTA or their saved profile summary; Edit profile pre-fills values including DOB from the private document.                                                               | ✅ Done (browser verified)           |
 | **R-114** | Onboarding end-to-end must be verified with Firebase before Phase 1 closes. | signup → onboarding save → account shows the profile against emulator or a real project.                                                                                                                                 | ✅ Done (real Firebase)              |
 
+### 3.2 Phase 1C — prompts + discovery preferences (added 2026-10-28)
+
+| ID        | Requirement                                                          | Acceptance criteria                                                                                                                                                  | Status                                 |
+| --------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| **R-115** | Profile prompts must be editable and server-authorized.              | Owner may save 0–3 answers from an approved prompt catalog; answers are bounded/sanitized; Firestore `prompts` records are replaced atomically from the session uid. | ✅ Done (Firebase verified)            |
+| **R-116** | Discovery filters must remain distinct from relationship intent.     | `/settings/discovery` edits age range, compatible intents, broad regions, languages and discovery pause; it never overwrites the user's own `preferences.intent`.    | ✅ Done (Firebase verified)            |
+| **R-117** | Preference input must be allow-listed and privacy-preserving.        | Server validates 18–99 age bounds, 1–2 intents, allowed broad regions/languages; no city, exact distance or precise location is collected.                           | ✅ Done (tests + Firebase verified)    |
+| **R-118** | Photo upload must use a private, validated storage pipeline.         | Server-authorized upload, private object path, MIME/size limits, moderation state, metadata/EXIF handling and short-lived access; never direct public bucket access. | ⛔ Blocked (privacy/signing config)    |
+| **R-119** | Prompt and preference flows must be verified against real Firestore. | Authenticated save → reload/prefill works; unauthorized and malformed requests are rejected; audit records are present.                                              | ✅ Done (browser + Firestore verified) |
+
 ## 4. Open human actions
 
-| Item                                                                | Owner           | Blocks                           |
-| ------------------------------------------------------------------- | --------------- | -------------------------------- |
-| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC | Product owner   | ✅ Done (local dev configured)   |
-| `firebase login` + `npm run rules:deploy`                           | Product owner   | ✅ Done (TC-021)                 |
-| Install JDK 21+                                                     | Dev environment | Firebase Emulator Suite (TC-022) |
-| Add owner requirements in §1                                        | Product owner   | Next test-case expansion         |
+| Item                                                                  | Owner           | Blocks                                                |
+| --------------------------------------------------------------------- | --------------- | ----------------------------------------------------- |
+| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC   | Product owner   | ✅ Done (local dev configured)                        |
+| `firebase login` + `npm run rules:deploy`                             | Product owner   | ✅ Done (TC-021)                                      |
+| Install JDK 21+                                                       | Dev environment | Firebase Emulator Suite (TC-022)                      |
+| Approve Storage privacy controls (UBLA/PAP) + server signing identity | Product owner   | Photo uploads (R-118); bucket exists in `asia-south1` |
+| Add owner requirements in §1                                          | Product owner   | Next test-case expansion                              |
 
 ## 5. Traceability
 
@@ -124,3 +135,8 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-112       | TC-035, TC-040                         |
 | R-113       | TC-038                                 |
 | R-114       | TC-039                                 |
+| R-115       | TC-041, TC-042                         |
+| R-116       | TC-043                                 |
+| R-117       | TC-042, TC-043                         |
+| R-118       | TC-045                                 |
+| R-119       | TC-041, TC-043, TC-044                 |

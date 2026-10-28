@@ -197,6 +197,8 @@ async function routeSmoke() {
       { path: "/forgot-password", expectedStatus: 200, expectText: "Reset your password" },
       { path: "/account", expectedStatus: 307, expectLocation: "/login" },
       { path: "/onboarding", expectedStatus: 307, expectLocation: "/login" },
+      { path: "/settings/prompts", expectedStatus: 307, expectLocation: "/login" },
+      { path: "/settings/discovery", expectedStatus: 307, expectLocation: "/login" },
       { path: "/definitely-not-a-route", expectedStatus: 404, expectText: "Page not found" },
     ];
 
@@ -298,6 +300,40 @@ async function routeSmoke() {
           }),
         expectedStatus: 401,
         check: (response) => response.status === 401,
+      },
+      {
+        name: "profile prompts GET without a session returns 401",
+        run: async () => fetch(`${BASE_URL}/api/profile/prompts`),
+        expectedStatus: 401,
+        check: (response) => response.status === 401,
+      },
+      {
+        name: "discovery preferences GET without a session returns 401",
+        run: async () => fetch(`${BASE_URL}/api/preferences/discovery`),
+        expectedStatus: 401,
+        check: (response) => response.status === 401,
+      },
+      {
+        name: "profile prompts PUT without Origin is rejected",
+        run: async () =>
+          fetch(`${BASE_URL}/api/profile/prompts`, {
+            method: "PUT",
+            headers: jsonHeaders,
+            body: JSON.stringify({ answers: [] }),
+          }),
+        expectedStatus: 403,
+        check: (response) => response.status === 403,
+      },
+      {
+        name: "discovery preferences PUT without Origin is rejected",
+        run: async () =>
+          fetch(`${BASE_URL}/api/preferences/discovery`, {
+            method: "PUT",
+            headers: jsonHeaders,
+            body: JSON.stringify({}),
+          }),
+        expectedStatus: 403,
+        check: (response) => response.status === 403,
       },
     ];
 
@@ -650,9 +686,51 @@ async function main() {
     },
   ]);
 
+  runStatic("15", "Prompt and discovery preference hardening", [
+    {
+      name: "prompt saves are origin-checked, session-derived and transactional",
+      run: () => {
+        const route = read("app/api/profile/prompts/route.ts");
+        return (
+          route.includes("isSameOrigin") &&
+          route.includes("getSessionUser") &&
+          route.includes("runTransaction") &&
+          !/body\.data\.uid/.test(route)
+        );
+      },
+    },
+    {
+      name: "discovery filters preserve profile intent and use allow-lists",
+      run: () => {
+        const route = read("app/api/preferences/discovery/route.ts");
+        const schema = read("lib/validation/discovery-preferences.ts");
+        return (
+          route.includes('intent: existing.intent === "casual"') &&
+          route.includes("desiredIntents: parsed.data.desiredIntents") &&
+          schema.includes("REGION_IDS") &&
+          schema.includes("LANGUAGE_CODES") &&
+          !schema.includes("latitude")
+        );
+      },
+    },
+    {
+      name: "prompt catalog limits answers and rejects contact details",
+      run: () => {
+        const schema = read("lib/validation/prompts.ts");
+        return (
+          schema.includes("PROFILE_PROMPT_KEYS") &&
+          schema.includes(".max(3") &&
+          schema.includes(".max(240") &&
+          schema.includes("email addresses") &&
+          schema.includes("phone numbers")
+        );
+      },
+    },
+  ]);
+
   if (process.env.FIREBASE_E2E_UID) {
     await runCommand(
-      "15",
+      "16",
       "Firebase E2E user documents (read-only)",
       "npm run verify:firebase-user",
     );

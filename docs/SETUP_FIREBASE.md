@@ -45,6 +45,8 @@ One-time human steps. Everything in the repo is ready; the items below need a Go
 2. **Build → Storage → Get started** → same region, production mode.
 3. Do not add collections by hand. Schema lives in `docs/FIRESTORE_SCHEMA.md`; server code creates documents.
 
+> Before enabling photo uploads, require Uniform bucket-level access, Public access prevention = Enforced, and a server identity that can issue short-lived upload authorization (or use a server-side upload proxy). Do not make the bucket public. This project’s bucket currently exists in `asia-south1`, but uniform access is off and local ADC cannot sign uploads; the app therefore keeps photo upload disabled until the owner approves/configures this safely.
+
 ## 3. Enable Authentication
 
 1. **Build → Authentication → Get started**.

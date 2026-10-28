@@ -274,7 +274,8 @@ export function OnboardingForm({ initialData }: { initialData: OnboardingDraft |
           {submitting ? "Saving profile…" : "Save profile"}
         </Button>
         <p className="text-ink-muted text-xs">
-          Photos and prompt answers arrive in the next slice. You can edit these details later.
+          Photos require a private Storage bucket that has not been enabled yet. You can edit these
+          details later.
         </p>
       </div>
     </form>

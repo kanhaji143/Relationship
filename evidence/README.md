@@ -12,30 +12,32 @@ Execution proof for `TestCases.md`. One folder per run; every folder has a `summ
 | [`run-2026-10-28-phase1a-r2/`](run-2026-10-28-phase1a-r2/summary.md) | 2026-10-28 | Phase 1A verified (RFP §3) | ✅ 13/13 checks passed · 120.5 s · commit `967d0d9` |
 | [`run-2026-10-28-phase1b/`](run-2026-10-28-phase1b/summary.md) | 2026-10-28 | Phase 1B onboarding verified (RFP §3.1) | ✅ 14/14 checks passed · 62.5 s · commit `967d0d9` |
 | [`run-2026-10-28-firebase-live/`](run-2026-10-28-firebase-live/summary.md) | 2026-10-28 | Real Firebase auth + onboarding + rules deploy | ✅ 15/15 checks · plus 7/7 browser E2E checks · exact code revision is in `summary.md` |
+| [`run-2026-10-28-phase1c/`](run-2026-10-28-phase1c/summary.md) | 2026-10-28 | Profile prompts + discovery preferences | ✅ 16/16 automated · 9 browser checks pass, 1 photo check blocked |
 
 ## Artifacts in the current run
 
-Latest run: [`run-2026-10-28-firebase-live/`](run-2026-10-28-firebase-live/). File names below are identical in every run folder.
+Latest run: [`run-2026-10-28-phase1c/`](run-2026-10-28-phase1c/). File names below are identical in every run folder.
 
 | File | What it proves |
 |---|---|
 | `01.log` | Prettier format gate |
 | `02.log` | ESLint gate |
 | `03.log` | TypeScript gate |
-| `04.log` | 84 unit tests (age gate, consent, email, match ID, logging, env, brand, rate limit, origin, cookies, hashing, error copy, onboarding rules) |
-| `05.log` | Production build + route list (12 routes, proxy) |
-| `06-route-smoke.log` / `.json` | Page statuses, redirect targets, API CSRF/auth guards, cookie clear |
+| `04.log` | 95 unit tests, including prompt and discovery validation |
+| `05.log` | Production build + route list (16 routes, proxy) |
+| `06-route-smoke.log` / `.json` | Page statuses/redirects and API auth/CSRF guards, including new settings routes |
 | `07.log` | Env check (key names only; Firebase client config 6/6 present) |
 | `08.log` | Firestore + Storage deny-all static assertions |
 | `09.log` | Secret hygiene (gitignore + tracked-file scan) |
 | `10.log` | Docs presence, link resolution, CI parity |
 | `11.log` | Accessibility markers + honest-claim check |
 | `12.log` | Firebase client/admin/emulator wiring |
-| `13.log` | Auth session hardening (HttpOnly cookie, origin+rate-limit wiring, transaction, no browser token storage) |
+| `13.log` | Auth session hardening |
 | `14.log` | Onboarding guardrails (18+ schema, session-derived uid, atomic transaction, allow-lists) |
-| `15.log` | Read-only Firebase Auth/Firestore E2E account verification; PII omitted |
-| `15-browser-e2e.json` | Seven Playwright-backed auth/onboarding/logout/re-login/underage/privacy checks; identity and secrets omitted |
-| `16-rules-deploy.log` | Firebase CLI confirmation that Firestore + Storage rules are released |
+| `15.log` | Static prompt/preferences hardening checks |
+| `16.log` | Read-only Firebase Auth/Firestore user verification; PII omitted |
+| `15-browser-e2e.json` | Ten browser outcomes for auth, onboarding, prompts, preferences and validation; test identity omitted |
+| `16-storage-prerequisite.log` | Read-only bucket privacy/signing probe; explains the photo upload block |
 | `summary.md` / `summary.json` | Totals, timings, environment, git commit |
 
 ## Not covered here (blocked)
@@ -43,6 +45,7 @@ Latest run: [`run-2026-10-28-firebase-live/`](run-2026-10-28-firebase-live/). Fi
 | Case | Reason |
 |---|---|
 | TC-022 — emulator suite | `java -version` fails on this machine; JDK 21+ required |
+| TC-045 — photo storage | Bucket exists, but uniform bucket access/public-access prevention/server signing are not ready; owner must approve/configure them |
 
 ## How to reproduce
 

@@ -24,6 +24,10 @@
 | 20  | 2026-10-28 | Exact birth date is **private-only** (`users/{uid}/private/ageAssurance`); `profiles/{uid}.birthDate` stays null       | Public profile docs must not expose a high-risk identifier; owner-only edit form reads the private value server-side | Store full DOB in the public-facing profile document (unnecessary exposure)               |
 | 21  | 2026-10-28 | Verify auth/onboarding against the owner's **real Firebase project** using local ADC; keep emulator as a separate gate | Real project available and E2E completed; no service-account JSON committed; JDK absent so emulator remains blocked  | Pretend emulator passed or use a mock Firebase adapter                                    |
 
+| 22 | 2026-10-28 | Profile prompts use a fixed catalog, max 3 responses, contact-data rejection and `pending` moderation | Prevents arbitrary prompt injection/contact sharing; owner edits remain server-authorized and transactional | Free-form prompts or immediately public, unmoderated answers |
+| 23 | 2026-10-28 | Discovery filters are separate from profile intent; only broad regions are offered | Filter edits must not rewrite the user's stated intent or collect precise location | Couple intent to preferences; use city/GPS before discovery policy is complete |
+| 24 | 2026-10-28 | Do not enable photo uploads until Storage uniform access, public-access prevention and server signing are verified | Bucket exists, but local ADC cannot sign and access controls are not strict; no billing/access changes without owner approval | Public object URLs or direct client writes; silently changing bucket/billing config |
+
 ## Open items requiring human action (tracked in docs/LEGAL_CHECKLIST_INDIA.md)
 
 - Final brand name + trademark/domain clearance (client)
