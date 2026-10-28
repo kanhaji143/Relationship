@@ -11,7 +11,7 @@ Execution proof for `TestCases.md`. One folder per run; every folder has a `summ
 | [`run-2026-10-28-phase1a/`](run-2026-10-28-phase1a/summary.md) | 2026-10-28 | Phase 1A first attempt (RFP §3) | ❌ 12/13 — same-origin API check bug (fixed); kept as failure evidence |
 | [`run-2026-10-28-phase1a-r2/`](run-2026-10-28-phase1a-r2/summary.md) | 2026-10-28 | Phase 1A verified (RFP §3) | ✅ 13/13 checks passed · 120.5 s · commit `967d0d9` |
 | [`run-2026-10-28-phase1b/`](run-2026-10-28-phase1b/summary.md) | 2026-10-28 | Phase 1B onboarding verified (RFP §3.1) | ✅ 14/14 checks passed · 62.5 s · commit `967d0d9` |
-| [`run-2026-10-28-firebase-live/`](run-2026-10-28-firebase-live/summary.md) | 2026-10-28 | Real Firebase auth + onboarding + rules deploy | ✅ 15/15 checks · plus 7/7 browser E2E checks · commit `ecdc9f6` |
+| [`run-2026-10-28-firebase-live/`](run-2026-10-28-firebase-live/summary.md) | 2026-10-28 | Real Firebase auth + onboarding + rules deploy | ✅ 15/15 checks · plus 7/7 browser E2E checks · code commit `3fb424d` |
 
 ## Artifacts in the current run
 
