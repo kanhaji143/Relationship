@@ -1,15 +1,15 @@
 {
   "run": "evidence/run-2026-10-28-firebase-live",
-  "startedAt": "2026-10-28T08:04:49.156Z",
-  "finishedAt": "2026-10-28T08:05:59.822Z",
-  "durationMs": 70666,
+  "startedAt": "2026-10-28T08:09:45.062Z",
+  "finishedAt": "2026-10-28T08:10:56.615Z",
+  "durationMs": 71553,
   "environment": {
     "node": "v24.20.0",
     "npm": "11.19.0",
     "platform": "win32",
     "arch": "x64",
     "next": "16.4.3",
-    "gitCommit": "e3ec75d",
+    "gitCommit": "7d86869",
     "gitBranch": "master"
   },
   "totals": {
@@ -24,7 +24,7 @@
       "command": "npm run format:check",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 4999,
+      "durationMs": 5006,
       "log": "01.log"
     },
     {
@@ -33,7 +33,7 @@
       "command": "npm run lint",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 10429,
+      "durationMs": 10418,
       "log": "02.log"
     },
     {
@@ -42,7 +42,7 @@
       "command": "npm run typecheck",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 6969,
+      "durationMs": 7559,
       "log": "03.log"
     },
     {
@@ -51,7 +51,7 @@
       "command": "npm test",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 4752,
+      "durationMs": 4711,
       "log": "04.log"
     },
     {
@@ -60,7 +60,7 @@
       "command": "npm run build",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 19534,
+      "durationMs": 19762,
       "log": "05.log"
     },
     {
@@ -69,7 +69,7 @@
       "command": "next start -p 3210 + fetch routes",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 5323,
+      "durationMs": 5393,
       "log": "06-route-smoke.log"
     },
     {
@@ -78,7 +78,7 @@
       "command": "npm run env:check",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 902,
+      "durationMs": 905,
       "log": "07.log"
     },
     {
@@ -150,7 +150,7 @@
       "command": "npm run verify:firebase-user",
       "status": "PASS",
       "exitCode": 0,
-      "durationMs": 17600,
+      "durationMs": 17650,
       "log": "15.log"
     }
   ]

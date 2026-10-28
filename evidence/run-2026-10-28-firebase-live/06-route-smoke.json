@@ -1,6 +1,6 @@
 {
   "baseUrl": "http://127.0.0.1:3210",
-  "generatedAt": "2026-10-28T08:05:41.170Z",
+  "generatedAt": "2026-10-28T08:10:37.916Z",
   "checks": [
     {
       "kind": "page",
@@ -12,7 +12,7 @@
       "actualLocation": null,
       "title": "Bondora — Privacy-first relationships, built on consent.",
       "h1": "Relationships with clear intent and real consent.",
-      "bodyBytes": 22508,
+      "bodyBytes": 22612,
       "status": "PASS"
     },
     {
