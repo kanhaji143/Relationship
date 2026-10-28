@@ -98,8 +98,8 @@ export default function HomePage() {
                 Where this is going
               </h2>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
-                Phase 0 is finished: the app boots, the security rules are drafted, and the data
-                model is documented. Next up is Phase 1 — accounts, age assurance, and onboarding.
+                Phase 1 is in progress: accounts, HttpOnly sessions and onboarding basics have been
+                verified against Firebase. Photos, prompts and discovery are still being built.
                 Nothing here is a public launch, and no payment is taken.
               </p>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
@@ -119,10 +119,10 @@ export default function HomePage() {
                 Build status
               </h3>
               <ul className="text-ink-muted mt-3 space-y-2 text-sm">
-                <li>✅ Repo + docs + rules drafts</li>
-                <li>✅ Next.js shell, brand config, tooling</li>
-                <li>🟡 Firebase project setup (human action)</li>
-                <li>Next: Phase 1 — auth + onboarding</li>
+                <li>✅ Repo, docs, Firestore + Storage rules deployed</li>
+                <li>✅ Auth, HttpOnly sessions + onboarding E2E</li>
+                <li>✅ Server-side 18+ gate; exact DOB stored privately</li>
+                <li>Next: profile photos + prompts (emulators need JDK 21+)</li>
               </ul>
             </div>
           </div>
