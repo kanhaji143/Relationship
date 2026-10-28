@@ -2,6 +2,7 @@
 
 **Generated from:** `RFP.md` §2 (owner input space §1 was empty at generation time)
 **Executed:** 2026-10-27 · run `evidence/phase0-2026-10-27/`
+**Re-verified:** 2026-10-28 · run `evidence/run-2026-10-28/`
 **Result:** **21/21 executable cases passed · 2 blocked · 0 failed** (23 total)
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
@@ -320,7 +321,7 @@
 - **Expected outcome:** All executed checks PASS and evidence files exist.
 - **Validation points:** no PASS without a log; timestamps and git commit recorded.
 - **Evidence:** `evidence/phase0-2026-10-27/summary.json`, `summary.md`
-- **Actual:** PASS — 12/12 checks, 44.5 s, all logs present, environment + commit recorded.
+- **Actual:** PASS — 12/12 checks; all logs present; environment + commit recorded (44.5 s baseline run, 207.1 s re-run).
 - **Status:** ✅ PASS
 
 ## TC-020 — Secret hygiene
@@ -384,12 +385,13 @@
 
 ## Execution log
 
-| Attempt | Date       | Runner   | Command            | Result                                                                     |
-| ------- | ---------- | -------- | ------------------ | -------------------------------------------------------------------------- |
-| 1       | 2026-10-27 | opencode | `npm run evidence` | ❌ 11/12 — TC-023 regex matched the honest _denial_ ("no E2EE claim")      |
-| 2       | 2026-10-27 | opencode | `npm run evidence` | ❌ 11/12 — format check included the generated evidence summary            |
-| 3       | 2026-10-27 | opencode | `npm run evidence` | ✅ 12/12 · 44.5 s · authoritative capture in `evidence/phase0-2026-10-27/` |
+| Attempt | Date       | Runner   | Command            | Result                                                                |
+| ------- | ---------- | -------- | ------------------ | --------------------------------------------------------------------- |
+| 1       | 2026-10-27 | opencode | `npm run evidence` | ❌ 11/12 — TC-023 regex matched the honest _denial_ ("no E2EE claim") |
+| 2       | 2026-10-27 | opencode | `npm run evidence` | ❌ 11/12 — format check included the generated evidence summary       |
+| 3       | 2026-10-27 | opencode | `npm run evidence` | ✅ 12/12 · 44.5 s · capture in `evidence/phase0-2026-10-27/`          |
+| 4       | 2026-10-28 | opencode | `npm run evidence` | ✅ 12/12 · 207.1 s · re-verification in `evidence/run-2026-10-28/`    |
 
-> Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the authoritative evidence set.
+> Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the Phase 0 capture; run 4 re-verifies the same code the next day. The evidence script now names each run by date automatically.
 >
 > TC-021 and TC-022 stay BLOCKED until the human actions in `RFP.md` §3 are completed. They must not be reported as passed.

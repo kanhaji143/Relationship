@@ -7,8 +7,11 @@ Execution proof for `TestCases.md`. One folder per run; every folder has a `summ
 | Run | Date | Scope | Result |
 |---|---|---|---|
 | [`phase0-2026-10-27/`](phase0-2026-10-27/summary.md) | 2026-10-27 | Phase 0 baseline (RFP §2) | ✅ 12/12 checks passed · 44.5 s · commit `f3df165` |
+| [`run-2026-10-28/`](run-2026-10-28/summary.md) | 2026-10-28 | Phase 0 re-run (RFP §2) | ✅ 12/12 checks passed · 207.1 s · commit `5d23cb1` |
 
 ## Artifacts in the current run
+
+Latest run: [`run-2026-10-28/`](run-2026-10-28/). File names below are identical in every run folder.
 
 | File | What it proves |
 |---|---|

@@ -1,0 +1,46 @@
+{
+  "baseUrl": "http://127.0.0.1:3210",
+  "generatedAt": "2026-10-28T03:19:56.455Z",
+  "checks": [
+    {
+      "path": "/",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Relationships with clear intent",
+      "title": "Bondora — Privacy-first relationships, built on consent.",
+      "h1": "Relationships with clear intent and real consent.",
+      "bodyBytes": 22924,
+      "status": "PASS"
+    },
+    {
+      "path": "/how-it-works",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "How it works",
+      "title": "How it works · Bondora",
+      "h1": "How it works",
+      "bodyBytes": 19231,
+      "status": "PASS"
+    },
+    {
+      "path": "/safety",
+      "expectedStatus": 200,
+      "actualStatus": 200,
+      "expectedText": "Safety commitments",
+      "title": "Safety · Bondora",
+      "h1": "Safety commitments",
+      "bodyBytes": 20068,
+      "status": "PASS"
+    },
+    {
+      "path": "/definitely-not-a-route",
+      "expectedStatus": 404,
+      "actualStatus": 404,
+      "expectedText": "Page not found",
+      "title": "Bondora — Privacy-first relationships, built on consent.",
+      "h1": "Page not found",
+      "bodyBytes": 10026,
+      "status": "PASS"
+    }
+  ]
+}

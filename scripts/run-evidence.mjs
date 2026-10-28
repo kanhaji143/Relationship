@@ -20,8 +20,17 @@ const BASE_URL = `http://127.0.0.1:${PORT}`;
 function parseArgs() {
   const args = process.argv.slice(2);
   const index = args.indexOf("--out");
-  const name = index >= 0 && args[index + 1] ? args[index + 1] : "evidence/latest";
+  const name = index >= 0 && args[index + 1] ? args[index + 1] : `evidence/run-${todayStamp()}`;
   return { name };
+}
+
+function todayStamp() {
+  const now = new Date();
+  return [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
 }
 
 const outName = parseArgs().name;

@@ -1,0 +1,5 @@
+# Route smoke (next start :3210)[1m[38;2;173;127;168m▲ Next.js 16.4.3[39m[22m
+- Local:         http://localhost:3210
+- Network:       http://192.168.1.112:3210
+[32m[1m✓[22m[39m Ready in 916ms
+[32m[1m✓[22m[39m Running next.config.ts took 298ms

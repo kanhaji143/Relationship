@@ -1,0 +1,7 @@
+# Accessibility and honest-claim markers
+
+[PASS] skip link present in root layout
+[PASS] visible focus styles defined
+[PASS] reduced-motion support defined
+[PASS] provisional brand label rendered
+[PASS] no positive end-to-end-encryption claim in UI copy
