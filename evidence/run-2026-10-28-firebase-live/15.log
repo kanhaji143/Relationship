@@ -1,7 +1,7 @@
 # Firebase E2E user documents (read-only)
 command: npm run verify:firebase-user
-started: 2026-10-28T08:03:47.662Z
-duration_ms: 17456
+started: 2026-10-28T08:05:42.222Z
+duration_ms: 17600
 exit_code: 0
 status: PASS
 

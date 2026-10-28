@@ -1,7 +1,7 @@
 # Env check
 command: npm run env:check
-started: 2026-10-28T08:03:46.574Z
-duration_ms: 927
+started: 2026-10-28T08:05:41.170Z
+duration_ms: 902
 exit_code: 0
 status: PASS
 
