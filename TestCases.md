@@ -1,9 +1,9 @@
-﻿# Test Cases — Phase 0 baseline + Phase 1A auth entry
+﻿# Test Cases — Phase 0 baseline + Phase 1A/1B auth & onboarding
 
-**Generated from:** `RFP.md` §2 (Phase 0) and §3 (Phase 1A)
-**Executed:** 2026-10-27 (Phase 0) · Phase 1A re-verified 2026-10-28
-**Phase 1A evidence:** `evidence/run-2026-10-28-phase1a-r2/` (latest full run)
-**Result:** **29/33 passed · 4 blocked · 0 failed**
+**Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1A) and §3.1 (Phase 1B)
+**Executed:** 2026-10-27 (Phase 0) · Phase 1A verified 2026-10-28 · Phase 1B verified 2026-10-28
+**Latest evidence:** `evidence/run-2026-10-28-phase1b/`
+**Result:** **32/39 passed · 7 blocked · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment
@@ -57,6 +57,12 @@
 | TC-031 | Auth utility unit coverage        | R-107            | ✅ PASS                          |
 | TC-032 | End-to-end Firebase auth          | R-108            | ⛔ BLOCKED (no project/JDK)      |
 | TC-033 | Generic auth error copy           | R-106            | ✅ PASS                          |
+| TC-034 | Onboarding page protection        | R-109            | ✅ PASS                          |
+| TC-035 | Onboarding validation rules       | R-110, R-112     | ✅ PASS                          |
+| TC-036 | Onboarding API guards             | R-109, R-110     | ✅ PASS                          |
+| TC-037 | Atomic onboarding save            | R-111            | ⛔ BLOCKED (no Firebase project) |
+| TC-038 | Account reflects profile          | R-113            | ⛔ BLOCKED (no Firebase project) |
+| TC-039 | Onboarding end-to-end             | R-114            | ⛔ BLOCKED (no project/JDK)      |
 
 ---
 
@@ -539,6 +545,92 @@
 - **Actual:** PASS — 9/9 error-copy tests pass; forgot-password sets the same success state for unknown-email errors and only surfaces network/rate-limit failures.
 - **Status:** ✅ PASS
 
+## TC-034 — Onboarding page protection
+
+- **Requirement:** R-109
+- **Preconditions:** production build; no session cookie.
+- **Steps:**
+  1. `GET /onboarding` with `redirect: manual`.
+  2. Assert 307 and `Location: /login` (proxy guard runs before render).
+  3. Inspect the page: it also calls `requireSessionUser()` behind Suspense.
+- **Expected outcome:** Unauthenticated visitors never receive onboarding HTML.
+- **Validation points:** status, redirect target, defence in depth (proxy + page).
+- **Evidence:** `evidence/run-2026-10-28-phase1b/06-route-smoke.json`
+- **Actual:** PASS — 307 to `/login`; dev-server check matched (`/onboarding -> 307`).
+- **Status:** ✅ PASS
+
+## TC-035 — Onboarding validation rules
+
+- **Requirement:** R-110, R-112
+- **Preconditions:** `lib/validation/onboarding.ts` + Vitest.
+- **Steps:**
+  1. Run `npm test`.
+  2. Assert under-18 and impossible birth dates are rejected.
+  3. Assert interests need 3–8 allow-listed unique ids; languages 1–4 listed codes.
+  4. Assert country must be `IN`; bios are capped at 300 and reject markup/control chars.
+  5. Assert missing region/bio default safely.
+- **Expected outcome:** All rules enforced in one shared schema used by client and server.
+- **Validation points:** issue paths, defaults, no free-text region/country.
+- **Evidence:** `evidence/run-2026-10-28-phase1b/04.log`
+- **Actual:** PASS — 14 files, 84/84 tests; onboarding suite covers all five rule groups.
+- **Status:** ✅ PASS
+
+## TC-036 — Onboarding API guards
+
+- **Requirement:** R-109, R-110
+- **Preconditions:** production server; no Firebase required for the guard paths.
+- **Steps:**
+  1. `POST /api/onboarding` without an `Origin` header → expect 403 `forbidden_origin`.
+  2. `POST /api/onboarding` with same-origin but no session cookie → expect 401 `unauthenticated`.
+  3. Confirm the route derives the uid from `getSessionUser()`, never from the body.
+- **Expected outcome:** CSRF and identity checks run before any write logic.
+- **Validation points:** status codes, error codes, check order.
+- **Evidence:** `evidence/run-2026-10-28-phase1b/06-route-smoke.json`; dev check `{"error":"unauthenticated"} HTTP 401`
+- **Actual:** PASS — both guard responses captured; static check 14 confirms session-derived uid.
+- **Status:** ✅ PASS
+
+## TC-037 — Atomic onboarding save
+
+- **Requirement:** R-111
+- **Preconditions:** valid session + Firestore (project or emulator).
+- **Steps:**
+  1. Save a valid onboarding payload; assert `profiles/{uid}`, `preferences/{uid}`, `users/{uid}/private/ageAssurance` and an audit log are written.
+  2. Re-save with a changed display name; assert `createdAt`, `photoCount` and `moderationStatus` are preserved.
+  3. Kill the transaction mid-way (fault injection) and assert no partial writes.
+- **Expected outcome:** Atomic, idempotent writes that never clobber existing state.
+- **Validation points:** transaction contents, field preservation, audit action `profile.onboarding_completed`.
+- **Evidence:** _none — not executed_; static structure in `14.log`
+- **Actual:** NOT EXECUTED — requires Firebase session + Firestore. Static check confirms the transaction writes all four targets.
+- **Status:** ⛔ BLOCKED — product-owner Firebase setup + JDK 21+ (`RFP.md` §4)
+
+## TC-038 — Account reflects profile
+
+- **Requirement:** R-113
+- **Preconditions:** signed-in session with/without a saved profile.
+- **Steps:**
+  1. Sign in before onboarding; `/account` shows the "Complete profile" CTA.
+  2. Complete onboarding; `/account` shows name, intent, broad region, languages and interest count.
+  3. Click "Edit profile" → `/onboarding` prefills from the saved profile.
+- **Expected outcome:** The account page mirrors onboarding state from the server, not client state.
+- **Validation points:** server read via `getProfileSummary`, CTA vs summary branches.
+- **Evidence:** _none — not executed_
+- **Actual:** NOT EXECUTED — requires a working session (no Firebase project). Code path reviewed; summary rendering is guarded for missing fields.
+- **Status:** ⛔ BLOCKED — product-owner Firebase setup (`RFP.md` §4)
+
+## TC-039 — Onboarding end-to-end
+
+- **Requirement:** R-114
+- **Preconditions:** Firebase project or emulators (JDK 21+).
+- **Steps:**
+  1. Signup → session → `/onboarding`.
+  2. Submit a valid profile; assert `/account` shows it.
+  3. Submit an under-18 birth date; assert `403 underage` and no profile write.
+- **Expected outcome:** Full signup → onboarding → account loop works against real Firebase.
+- **Validation points:** underage rejection server-side, profile persistence, redirects.
+- **Evidence:** _none — not executed_
+- **Actual:** NOT EXECUTED — no Firebase project/emulator; not faked.
+- **Status:** ⛔ BLOCKED — product-owner Firebase setup + JDK 21+ (`RFP.md` §4)
+
 ---
 
 ## Execution log
@@ -551,9 +643,10 @@
 | 4       | 2026-10-28 | opencode | `npm run evidence`                                             | ✅ 12/12 · 207.1 s · re-verification in `evidence/run-2026-10-28/`                                                       |
 | 5       | 2026-10-28 | opencode | `npm run evidence -- --out evidence/run-2026-10-28-phase1a`    | ❌ 12/13 — same-origin API check compared against `request.url` (normalised to `localhost`) instead of the `Host` header |
 | 6       | 2026-10-28 | opencode | `npm run evidence -- --out evidence/run-2026-10-28-phase1a-r2` | ✅ 13/13 · 120.5 s · Phase 1A capture                                                                                    |
+| 7       | 2026-10-28 | opencode | `npm run evidence -- --out evidence/run-2026-10-28-phase1b`    | ✅ 14/14 · Phase 1B capture                                                                                              |
 
 > Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the Phase 0 capture; run 4 re-verifies the same code the next day. The evidence script now names each run by date automatically.
 >
 > Attempt 5 exposed a real CSRF-check bug: `request.url` is normalised to `localhost`, so a same-origin request to `127.0.0.1` was rejected. `requestOrigin()` now derives the origin from the `Host` header (honouring `x-forwarded-proto`), and run 6 re-executed every gate. Attempt 5's failed artifacts are kept in `evidence/run-2026-10-28-phase1a/`.
 >
-> TC-021, TC-022, TC-028 and TC-032 stay BLOCKED until the human actions in `RFP.md` §4 are completed. They must not be reported as passed.
+> TC-021, TC-022, TC-028, TC-032, TC-037, TC-038 and TC-039 stay BLOCKED until the human actions in `RFP.md` §4 are completed. They must not be reported as passed.

@@ -6,12 +6,12 @@ Privacy-first, consent-led, **adults-only (18+)** relationship platform. India-f
 
 ## Status
 
-**Phase 0 — complete** (2026-10-27) · **Phase 1 — in progress**: slice 1A ships auth entry pages, HttpOnly Firebase session cookies and server-side registration. Onboarding + age assurance next.
+**Phase 0 — complete** (2026-10-27) · **Phase 1 — in progress**: 1A ships auth entry pages, HttpOnly Firebase session cookies and server-side registration; 1B ships onboarding basics (name, birth date/18+ gate, broad region, languages, bio, interests) with an atomic server-side save. Photos, prompts and discovery filters next.
 
 | Phase                    | Status                                                     |
 | ------------------------ | ---------------------------------------------------------- |
 | 0 — Discovery & setup    | ✅ App boots, tooling green, docs + rules drafted          |
-| 1 — Foundations          | 🟡 1A auth entry + sessions built; E2E blocked on Firebase |
+| 1 — Foundations          | 🟡 1A auth + sessions and 1B onboarding built; E2E blocked |
 | 2 — Discovery & matching | —                                                          |
 | 3 — Chat & safety        | —                                                          |
 | 4 — Privacy & billing    | —                                                          |
@@ -89,16 +89,16 @@ Copy `.env.example` → `.env.local`. Public values are inlined at build time (`
 | `FIREBASE_SERVICE_ACCOUNT_KEY_PATH`             | Admin SDK locally (ADC in production)    |
 | `RAZORPAY_*`, `BILLING_TEST_MODE`               | Phase 4 billing (leave empty = disabled) |
 
-## Verification (Phase 1A)
+## Verification (Phase 1B)
 
 ```
 npm run verify
 ✔ format:check   ✔ lint   ✔ typecheck
-✔ vitest         72 tests passing
-✔ next build     10 routes (3 auth pages, account, 2 auth APIs)
+✔ vitest         84 tests passing
+✔ next build     12 routes (3 auth pages, onboarding, account, 3 APIs)
 ```
 
-Latest full evidence run: `evidence/run-2026-10-28-phase1a-r2/` — **13/13 checks pass**. Two auth cases remain blocked on human Firebase setup, and rules/emulator checks stay blocked on project/JDK (see `RFP.md` §4).
+Latest full evidence run: `evidence/run-2026-10-28-phase1b/` — **14/14 checks pass**. Three onboarding/auth E2E cases (plus rules/emulator setup) remain blocked on human Firebase setup (see `RFP.md` §4).
 
 Rule deployment and emulator runs need a Firebase project and JDK 21+ — see [`docs/SETUP_FIREBASE.md`](docs/SETUP_FIREBASE.md). Nothing in this repo has been deployed publicly.
 

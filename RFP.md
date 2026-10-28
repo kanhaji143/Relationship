@@ -73,6 +73,17 @@ Added 2026-10-28. Scope is deliberately limited to what can be built and tested 
 
 Legend: ✅ = verified with captured output; 🟡 = code complete + unit/static checks, but the Firebase-dependent execution is still blocked (TC-028, TC-032).
 
+### 3.1 Phase 1B — onboarding basics (added 2026-10-28)
+
+| ID        | Requirement                                                                 | Acceptance criteria                                                                                                                                                                                                      | Status                            |
+| --------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
+| **R-109** | Onboarding must exist and be session-protected.                             | `/onboarding` collects display name, birth date, intent, broad region, languages, bio and interests; unauthenticated visitors are redirected to `/login` before any HTML.                                                | 🟡 Built; E2E blocked             |
+| **R-110** | The 18+ gate must be enforced on the server during onboarding.              | Under-18 birth dates are rejected with `403 underage` regardless of client validation; the client check is feedback only.                                                                                                | ✅ Done (unit-tested)             |
+| **R-111** | Onboarding saves must be atomic, idempotent and server-authorized.          | `POST /api/onboarding` derives the uid from the session cookie and writes `profiles/{uid}`, `preferences/{uid}`, the private age declaration and an audit log in one transaction, preserving existing fields on re-save. | 🟡 Built; transaction E2E blocked |
+| **R-112** | Location and profile data must stay privacy-safe and allow-listed.          | Country is fixed to IN; regions are broad enums (no city/precise location); languages and interests come from allow-lists; bios are length-capped and sanitized.                                                         | ✅ Done (unit-tested)             |
+| **R-113** | The account page must reflect onboarding state.                             | Signed-in users see either a "Complete profile" CTA or their saved profile summary (name, intent, broad region, languages, interests).                                                                                   | 🟡 Built; E2E blocked             |
+| **R-114** | Onboarding end-to-end must be verified with Firebase before Phase 1 closes. | signup → onboarding save → account shows the profile against emulator or a real project.                                                                                                                                 | ⛔ Blocked (no project/JDK)       |
+
 ## 4. Open human actions
 
 | Item                                                    | Owner           | Blocks                           |
@@ -107,3 +118,9 @@ Legend: ✅ = verified with captured output; 🟡 = code complete + unit/static 
 | R-106       | TC-030, TC-033                         |
 | R-107       | TC-031                                 |
 | R-108       | TC-032                                 |
+| R-109       | TC-034, TC-035                         |
+| R-110       | TC-036                                 |
+| R-111       | TC-037                                 |
+| R-112       | TC-036                                 |
+| R-113       | TC-038                                 |
+| R-114       | TC-039                                 |

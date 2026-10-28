@@ -196,6 +196,7 @@ async function routeSmoke() {
       { path: "/signup", expectedStatus: 200, expectText: "Create your account" },
       { path: "/forgot-password", expectedStatus: 200, expectText: "Reset your password" },
       { path: "/account", expectedStatus: 307, expectLocation: "/login" },
+      { path: "/onboarding", expectedStatus: 307, expectLocation: "/login" },
       { path: "/definitely-not-a-route", expectedStatus: 404, expectText: "Page not found" },
     ];
 
@@ -275,6 +276,28 @@ async function routeSmoke() {
             response.status === 200 && cookie.includes("__session=") && /max-age=0/i.test(cookie)
           );
         },
+      },
+      {
+        name: "onboarding POST without Origin is rejected (CSRF)",
+        run: async () =>
+          fetch(`${BASE_URL}/api/onboarding`, {
+            method: "POST",
+            headers: jsonHeaders,
+            body: JSON.stringify({}),
+          }),
+        expectedStatus: 403,
+        check: (response) => response.status === 403,
+      },
+      {
+        name: "onboarding POST without a session returns 401",
+        run: async () =>
+          fetch(`${BASE_URL}/api/onboarding`, {
+            method: "POST",
+            headers: { ...jsonHeaders, origin: BASE_URL },
+            body: JSON.stringify({}),
+          }),
+        expectedStatus: 401,
+        check: (response) => response.status === 401,
       },
     ];
 
@@ -552,6 +575,52 @@ async function main() {
         ];
         return files.every(
           (file) => !/localStorage|sessionStorage|document\.cookie/.test(read(file)),
+        );
+      },
+    },
+  ]);
+
+  runStatic("14", "Onboarding guardrails", [
+    {
+      name: "onboarding schema enforces the 18+ gate server-side",
+      run: () => {
+        const schema = read("lib/validation/onboarding.ts");
+        return schema.includes("isAdultBirthDate") && schema.includes("isPlausibleBirthDate");
+      },
+    },
+    {
+      name: "save route derives the uid from the session, never the body",
+      run: () => {
+        const route = read("app/api/onboarding/route.ts");
+        return (
+          route.includes("getSessionUser") &&
+          !/body\.data\.(uid|userId)/.test(route) &&
+          !/json\.uid/.test(route)
+        );
+      },
+    },
+    {
+      name: "profile, preferences, age declaration and audit are written atomically",
+      run: () => {
+        const route = read("app/api/onboarding/route.ts");
+        return (
+          route.includes("runTransaction") &&
+          route.includes("profileRef") &&
+          route.includes("preferencesRef") &&
+          route.includes("ageAssuranceRef") &&
+          route.includes("auditRef")
+        );
+      },
+    },
+    {
+      name: "country, languages, regions and interests are allow-listed",
+      run: () => {
+        const schema = read("lib/validation/onboarding.ts");
+        return (
+          schema.includes("LANGUAGE_CODES") &&
+          schema.includes("INTEREST_IDS") &&
+          schema.includes("REGION_IDS") &&
+          schema.includes("ONBOARDING_COUNTRY")
         );
       },
     },
