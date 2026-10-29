@@ -1,0 +1,11 @@
+Moderation action and audit-log tests - 2026-10-29
+
+$ npx vitest run "app/api/admin/reports/[reportId]/action/route.test.ts"
+Test Files  1 passed (1)
+Tests  5 passed (5)
+
+$ npx vitest run app/api/admin/audit-logs/route.test.ts
+Test Files  1 passed (1)
+Tests  2 passed (2)
+
+Result: 7 focused tests pass. Full suite: 203/203 tests pass (see 02-quality-gates.log).

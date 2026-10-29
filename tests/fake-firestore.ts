@@ -128,6 +128,7 @@ export function createFakeDb(initial: Record<string, DocData> = {}) {
       query({ kind: "query", path, field, value }),
     orderBy: (field: string, direction: "asc" | "desc" = "asc"): QueryTarget =>
       query({ kind: "query", path, orderField: field, orderDirection: direction }),
+    limit: (count: number): QueryTarget => query({ kind: "query", path, max: count }),
   });
 
   const transaction = {

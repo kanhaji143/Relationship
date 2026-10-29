@@ -3,7 +3,7 @@
 **Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1), §3.3 (Phase 2) and §3.4 (Phase 3)
 **Executed:** Phase 0/1, Phase 2 (emulator + approved live) and Phase 3 chat/safety slice on 2026-10-29
 **Latest evidence:** `evidence/run-2026-10-29-phase3-safety/`, `evidence/run-2026-10-29-phase3-chat/`, `evidence/run-2026-10-29-phase2-live/`, `evidence/run-2026-10-29-phase2-emulator/`, and `evidence/run-2026-10-29-phase2-complete/`
-**Result:** **61 passed · 1 blocked · 0 failed**
+**Result:** **63 passed · 1 blocked · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment
@@ -86,6 +86,8 @@
 | TC-060 | Messages routes protected             | R-303, R-301              | ✅ PASS                   |
 | TC-061 | Report intake validation/guards       | R-306                     | ✅ PASS                   |
 | TC-062 | Admin report queue role gate          | R-307                     | ✅ PASS                   |
+| TC-063 | Moderation action append + audit      | R-307                     | ✅ PASS                   |
+| TC-064 | Admin audit log endpoint              | R-307                     | ✅ PASS                   |
 
 ---
 
@@ -350,6 +352,33 @@
 - **Validation points:** role gate, status filter, response shape, session/origin guards.
 - **Evidence:** `evidence/run-2026-10-29-phase3-safety/01-report-tests.log`
 - **Actual result:** PASS — 4 admin queue tests pass.
+- **Status:** ✅ PASS
+
+### TC-063 - Moderation action append and audit
+
+- **Requirement:** R-307
+- **Preconditions:** Action route test double simulates staff, reports and moderation actions.
+- **Steps:**
+  1. Run `npx vitest run "app/api/admin/reports/[reportId]/action/route.test.ts"`.
+  2. Apply resolve, dismiss and other action types as staff.
+  3. Attempt invalid action type, unknown report, non-staff and anonymous callers.
+- **Expected outcome:** Actions append a moderation row and audit row, update report status, and invalid/unauthorized cases return 400/404/403/401 without writes.
+- **Validation points:** append-only writes, report status transition, reason code, restricted notes, role gate.
+- **Evidence:** `evidence/run-2026-10-29-phase3-safety/03-moderation-tests.log`
+- **Actual result:** PASS — 5 moderation action tests pass.
+- **Status:** ✅ PASS
+
+### TC-064 - Admin audit log endpoint
+
+- **Requirement:** R-307
+- **Preconditions:** Audit log route test double simulates staff, ordinary users and audit rows.
+- **Steps:**
+  1. Run `npx vitest run app/api/admin/audit-logs/route.test.ts`.
+  2. Request the feed as staff and as an ordinary user.
+- **Expected outcome:** Staff receive recent audit rows; ordinary users receive 403; unauthenticated callers receive 401.
+- **Validation points:** role gate, response shape, session guard.
+- **Evidence:** `evidence/run-2026-10-29-phase3-safety/03-moderation-tests.log`
+- **Actual result:** PASS — 2 audit log tests pass.
 - **Status:** ✅ PASS
 
 ## TC-002 - Lint gate
@@ -1016,6 +1045,7 @@
 | 16      | 2026-10-29 | opencode | `node --env-file-if-exists=.env.local scripts/run-phase2-live-validation.mjs --confirm-live-writes`              | ✅ Live candidate/session/mutual-match check passed; temporary users cleaned; 2 audit events retained                    |
 | 17      | 2026-10-29 | opencode | `npm run test:phase3:emulator` + focused `npx vitest run` chat/safety suites                                     | ✅ Phase 3 chat/safety slice: 39 focused tests + 4/4 emulator tests; route smoke 307/401; production build passes        |
 | 18      | 2026-10-29 | opencode | `npx vitest run` report/admin suites + full suite                                                                | ✅ Phase 3 safety slice: 11 report tests + 4 queue tests; 196/196 unit tests; production build passes                    |
+| 19      | 2026-10-29 | opencode | `npx vitest run` moderation/audit suites + full suite                                                            | ✅ Phase 3 moderation slice: 5 action tests + 2 audit tests; 203/203 unit tests; production build passes                 |
 
 > Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the Phase 0 capture; run 4 re-verifies the same code the next day. The evidence script now names each run by date automatically.
 >

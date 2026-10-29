@@ -109,16 +109,16 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 
 ### 3.4 Phase 3 — Chat, safety & moderation (added 2026-10-29)
 
-| ID        | Requirement                                                | Acceptance criteria                                                                                                                         | Status                             |
-| --------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| **R-301** | Chat must be participant-only.                             | A conversation is readable/writable only by the two matched participants; non-participants receive 404 so thread existence is not leaked.   | ✅ Done (route + emulator tests)   |
-| **R-302** | Messages must be validated and rate-limited server-side.   | Text-only, 1–1000 trimmed characters, control characters rejected, uid from session, 30 messages/minute/user, server timestamp on write.    | ✅ Done (tests)                    |
-| **R-303** | Conversation list and thread must be account-scoped.       | `/messages` lists only the viewer's active matches with partner summary and last message; blocked/unmatched threads are hidden.             | ✅ Done (emulator verified)        |
-| **R-304** | Unmatch must end chat for both participants.               | Participant-only, idempotent, sets match `unmatched` and conversation `closed`, records an audit event; further sends return 409.           | ✅ Done (route + emulator)         |
-| **R-305** | Blocking must immediately stop contact in both directions. | One-way deterministic block, self-block rejected, repeat is idempotent, closes active match/chat, and all chat sends return 403.            | ✅ Done (route + emulator)         |
-| **R-306** | Reports must enter a moderation queue.                     | Allowed category taxonomy, target user or conversation required, priority mapping, reporter cannot report themselves, duplicate guard.      | ✅ Done (route tests)              |
-| **R-307** | Admin/moderator actions must be role-gated and audited.    | Admin routes reject non-staff; report queue is staff-only; append-only moderation actions and audit-log endpoint remain for the next slice. | 🚧 In progress (queue + role gate) |
-| **R-308** | Phase 3 E2E must be captured before the phase closes.      | Send/read, non-participant denial, unmatch and block flows pass against the emulator with cleanup and evidence.                             | ✅ Done (emulator verified)        |
+| ID        | Requirement                                                | Acceptance criteria                                                                                                                       | Status                           |
+| --------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| **R-301** | Chat must be participant-only.                             | A conversation is readable/writable only by the two matched participants; non-participants receive 404 so thread existence is not leaked. | ✅ Done (route + emulator tests) |
+| **R-302** | Messages must be validated and rate-limited server-side.   | Text-only, 1–1000 trimmed characters, control characters rejected, uid from session, 30 messages/minute/user, server timestamp on write.  | ✅ Done (tests)                  |
+| **R-303** | Conversation list and thread must be account-scoped.       | `/messages` lists only the viewer's active matches with partner summary and last message; blocked/unmatched threads are hidden.           | ✅ Done (emulator verified)      |
+| **R-304** | Unmatch must end chat for both participants.               | Participant-only, idempotent, sets match `unmatched` and conversation `closed`, records an audit event; further sends return 409.         | ✅ Done (route + emulator)       |
+| **R-305** | Blocking must immediately stop contact in both directions. | One-way deterministic block, self-block rejected, repeat is idempotent, closes active match/chat, and all chat sends return 403.          | ✅ Done (route + emulator)       |
+| **R-306** | Reports must enter a moderation queue.                     | Allowed category taxonomy, target user or conversation required, priority mapping, reporter cannot report themselves, duplicate guard.    | ✅ Done (route tests)            |
+| **R-307** | Admin/moderator actions must be role-gated and audited.    | Admin routes reject non-staff; moderation actions are append-only with reason codes and restricted notes; audit-log feed is staff-only.   | ✅ Done (actions + audit log)    |
+| **R-308** | Phase 3 E2E must be captured before the phase closes.      | Send/read, non-participant denial, unmatch and block flows pass against the emulator with cleanup and evidence.                           | ✅ Done (emulator verified)      |
 
 ## 4. Open human actions
 
@@ -182,5 +182,5 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-304       | TC-055, TC-059                         |
 | R-305       | TC-056, TC-059                         |
 | R-306       | TC-057, TC-061                         |
-| R-307       | TC-058, TC-062                         |
+| R-307       | TC-058, TC-062, TC-063, TC-064         |
 | R-308       | TC-059                                 |

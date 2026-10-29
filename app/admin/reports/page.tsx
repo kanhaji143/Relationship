@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { MarketingShell } from "@/components/layout/MarketingShell";
 import { getStaffRole, listReports } from "@/lib/admin/server";
 import { requireSessionUser } from "@/lib/session";
+import { ModerationActionForm } from "./ModerationActionForm";
 
 export const metadata: Metadata = {
   title: "Moderation queue",
@@ -54,6 +55,7 @@ async function QueueContent() {
                 </p>
               ) : null}
               <p className="text-ink-muted mt-2 text-xs">{report.createdAt ?? "just now"}</p>
+              <ModerationActionForm reportId={report.id} />
             </li>
           ))}
         </ul>

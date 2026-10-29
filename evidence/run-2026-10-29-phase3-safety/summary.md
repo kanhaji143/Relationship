@@ -8,6 +8,8 @@
 
 - `01-report-tests.log` — 11 focused tests (8 report route + 3 priority) and 4 admin queue tests
 - `02-quality-gates.log` — format, lint, typecheck and 196/196 unit tests
+- `03-moderation-tests.log` — 5 moderation action tests and 2 audit-log tests
+- `04-quality-gates.log` — format, lint, typecheck and 203/203 unit tests
 
 ## Verified scenarios
 
@@ -16,3 +18,9 @@
 3. Self-reports, missing targets, unknown categories and duplicate open reports are rejected without writes.
 4. Staff users can read the queue and filter by status; ordinary users and anonymous callers receive 403/401.
 5. Production build includes `/admin/reports` behind the session proxy guard.
+
+## Moderation slice additions
+
+6. Moderation actions append an action + audit row, update report status, and support restricted notes.
+7. The audit-log endpoint returns recent rows for staff and rejects everyone else.
+8. Production build includes the action route and audit-log endpoint.

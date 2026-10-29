@@ -1,0 +1,31 @@
+
+> bondora@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> bondora@0.1.0 lint
+> eslint
+
+
+> bondora@0.1.0 typecheck
+> tsc --noEmit
+
+
+> bondora@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  36 passed (36)
+      Tests  203 passed (203)
+   Start at  14:03:13
+   Duration  14.34s (import 83%, tests 11%, worker 3%, transform 3%)
+
+     Import  83 modules were evaluated 131 times · 13.05s total, 83% of tracked time
+             ~1.64s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
