@@ -4,6 +4,8 @@ import { getStaffRole } from "@/lib/admin/server";
 import { getAdminDb } from "@/lib/firebase/admin/app";
 import { COLLECTIONS } from "@/lib/firebase/collections";
 
+type FirestoreDoc = { id: string; get: (field: string) => unknown };
+
 /** Staff-only, read-only audit log feed. */
 export async function GET(request: Request) {
   const session = await getSessionUser();
@@ -16,20 +18,26 @@ export async function GET(request: Request) {
   const limit = Math.min(Number(url.searchParams.get("limit") ?? "50"), 100);
   const snapshot = await getAdminDb().collection(COLLECTIONS.auditLogs).limit(limit).get();
 
-  const logs = snapshot.docs
-    .map((doc) => ({
+  const toIso = (value: unknown): string | null =>
+    value && typeof (value as { toDate?: unknown }).toDate === "function"
+      ? (value as { toDate: () => Date }).toDate().toISOString()
+      : null;
+
+  const logs = snapshot.docs.map((doc) => {
+    const data = doc.data() as Record<string, unknown> | undefined;
+    return {
       id: doc.id,
-      actorUid: String(doc.get("actorUid")),
-      action: String(doc.get("action")),
-      targetType: doc.get("targetType") ?? null,
-      targetId: doc.get("targetId") ?? null,
-      reasonCode: doc.get("reasonCode") ?? null,
-      createdAt:
-        doc.get("createdAt") && typeof doc.get("createdAt").toDate === "function"
-          ? doc.get("createdAt").toDate().toISOString()
-          : null,
-    }))
-    .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
+      actorUid: String(data?.actorUid ?? ""),
+      action: String(data?.action ?? ""),
+      targetType: (data?.targetType as string | null) ?? null,
+      targetId: (data?.targetId as string | null) ?? null,
+      reasonCode: (data?.reasonCode as string | null) ?? null,
+      createdAt: toIso(data?.createdAt),
+    };
+  })
+    .sort((a: { createdAt: string | null }, b: { createdAt: string | null }) =>
+      (b.createdAt ?? "").localeCompare(a.createdAt ?? ""),
+    );
 
   return Response.json({ role, logs }, { headers: { "cache-control": "no-store" } });
 }

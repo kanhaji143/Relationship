@@ -20,19 +20,24 @@ export async function GET(request: Request) {
     .limit(50)
     .get();
 
+  const toIso = (value: unknown): string | null =>
+    value && typeof (value as { toDate?: unknown }).toDate === "function"
+      ? (value as { toDate: () => Date }).toDate().toISOString()
+      : null;
+
   const appeals = snapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      appellantUid: String(doc.get("appellantUid")),
-      targetType: String(doc.get("targetType")),
-      targetId: String(doc.get("targetId")),
-      reason: String(doc.get("reason")),
-      status: String(doc.get("status")),
-      createdAt:
-        doc.get("createdAt") && typeof doc.get("createdAt").toDate === "function"
-          ? doc.get("createdAt").toDate().toISOString()
-          : null,
-    }))
+    .map((doc) => {
+      const data = doc.data() as Record<string, unknown> | undefined;
+      return {
+        id: doc.id,
+        appellantUid: String(data?.appellantUid ?? ""),
+        targetType: String(data?.targetType ?? ""),
+        targetId: String(data?.targetId ?? ""),
+        reason: String(data?.reason ?? ""),
+        status: String(data?.status ?? ""),
+        createdAt: toIso(data?.createdAt),
+      };
+    })
     .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
 
   return Response.json({ role, appeals }, { headers: { "cache-control": "no-store" } });

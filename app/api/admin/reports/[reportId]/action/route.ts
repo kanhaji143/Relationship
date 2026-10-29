@@ -1,4 +1,4 @@
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldValue, Timestamp, type Transaction } from "firebase-admin/firestore";
 
 import { getAdminDb } from "@/lib/firebase/admin/app";
 import { COLLECTIONS } from "@/lib/firebase/collections";
@@ -48,7 +48,7 @@ export async function POST(request: Request, context: Context) {
   const actionRef = db.collection(COLLECTIONS.moderationActions).doc();
   const auditRef = db.collection(COLLECTIONS.auditLogs).doc();
 
-  const result = await db.runTransaction(async (transaction) => {
+  const result = await db.runTransaction(async (transaction: Transaction) => {
     const report = await transaction.get(reportRef);
     if (!report.exists) return { status: "not_found" as const };
 

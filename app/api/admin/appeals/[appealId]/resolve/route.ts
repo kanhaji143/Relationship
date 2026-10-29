@@ -1,4 +1,4 @@
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, type Transaction } from "firebase-admin/firestore";
 
 import { getAdminDb } from "@/lib/firebase/admin/app";
 import { COLLECTIONS } from "@/lib/firebase/collections";
@@ -41,7 +41,7 @@ export async function POST(request: Request, context: Context) {
   const appealRef = db.collection(COLLECTIONS.appeals).doc(appealId);
   const auditRef = db.collection(COLLECTIONS.auditLogs).doc();
 
-  const result = await db.runTransaction(async (transaction) => {
+  const result = await db.runTransaction(async (transaction: Transaction) => {
     const appeal = await transaction.get(appealRef);
     if (!appeal.exists) return { status: "not_found" as const };
     if (appeal.get("status") !== "open" && appeal.get("status") !== "reviewing") {

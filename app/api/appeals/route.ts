@@ -65,11 +65,11 @@ export async function POST(request: Request) {
     .limit(100)
     .get();
   const duplicate = existing.docs.some((doc) => {
-    const status = doc.get("status");
+    const data = doc.data() as Record<string, unknown> | undefined;
     return (
-      doc.get("targetType") === targetType &&
-      doc.get("targetId") === targetId &&
-      (status === "open" || status === "reviewing")
+      data?.targetType === targetType &&
+      data?.targetId === targetId &&
+      (data?.status === "open" || data?.status === "reviewing")
     );
   });
   if (duplicate) return jsonError(409, "already_appealed");
@@ -104,6 +104,11 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
+  const toIso = (value: unknown): string | null =>
+    value && typeof (value as { toDate?: unknown }).toDate === "function"
+      ? (value as { toDate: () => Date }).toDate().toISOString()
+      : null;
+
   const session = await getSessionUser();
   if (!session) return jsonError(401, "unauthenticated");
 
@@ -114,23 +119,19 @@ export async function GET() {
     .get();
 
   const appeals = snapshot.docs
-    .map((doc) => ({
-      id: doc.id,
-      targetType: String(doc.get("targetType")),
-      targetId: String(doc.get("targetId")),
-      reason: String(doc.get("reason")),
-      status: String(doc.get("status")),
-      createdAt:
-        doc.get("createdAt") && typeof doc.get("createdAt").toDate === "function"
-          ? doc.get("createdAt").toDate().toISOString()
-          : null,
-      resolvedAt:
-        doc.get("resolvedAt") && typeof doc.get("resolvedAt").toDate === "function"
-          ? doc.get("resolvedAt").toDate().toISOString()
-          : null,
-      resolutionNote:
-        typeof doc.get("resolutionNote") === "string" ? doc.get("resolutionNote") : null,
-    }))
+    .map((doc) => {
+      const data = doc.data() as Record<string, unknown> | undefined;
+      return {
+        id: doc.id,
+        targetType: String(data?.targetType ?? ""),
+        targetId: String(data?.targetId ?? ""),
+        reason: String(data?.reason ?? ""),
+        status: String(data?.status ?? ""),
+        createdAt: toIso(data?.createdAt),
+        resolvedAt: toIso(data?.resolvedAt),
+        resolutionNote: typeof data?.resolutionNote === "string" ? data.resolutionNote : null,
+      };
+    })
     .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
 
   return Response.json({ appeals }, { headers: { "cache-control": "no-store" } });
