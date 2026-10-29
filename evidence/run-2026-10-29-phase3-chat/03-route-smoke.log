@@ -1,0 +1,18 @@
+Phase 3 route smoke — production build (next start -p 3005), 2026-10-29
+
+$ curl -s -o NUL -w "messages HTTP %{http_code} -> %{redirect_url}\n" http://127.0.0.1:3005/messages
+messages HTTP 307 -> http://127.0.0.1:3005/login
+
+$ curl -s -o NUL -w "thread HTTP %{http_code} -> %{redirect_url}\n" http://127.0.0.1:3005/messages/abc
+thread HTTP 307 -> http://127.0.0.1:3005/login
+
+$ curl -s -o NUL -w "discover HTTP %{http_code} -> %{redirect_url}\n" http://127.0.0.1:3005/discover
+discover HTTP 307 -> http://127.0.0.1:3005/login
+
+$ curl -s -o NUL -w "api conversations HTTP %{http_code}\n" http://127.0.0.1:3005/api/conversations
+api conversations HTTP 401
+
+$ curl -s -o NUL -w "home HTTP %{http_code}\n" http://127.0.0.1:3005/
+home HTTP 200
+
+Result: PASS — unauthenticated /messages and /messages/:id redirect to /login before HTML streaming; the conversation API returns 401; the public home page stays 200.

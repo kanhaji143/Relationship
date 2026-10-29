@@ -34,5 +34,7 @@ export const config = {
     "/likes/:path*",
     "/matches",
     "/matches/:path*",
+    "/messages",
+    "/messages/:path*",
   ],
 };

@@ -1,0 +1,44 @@
+{
+  "run": "run-2026-10-29-phase3-chat",
+  "date": "2026-10-29",
+  "project": "demo-bondora",
+  "scope": "Phase 3 slice 1: participant-only chat, conversation list, unmatch, block/unblock",
+  "result": "PASS",
+  "testCases": {
+    "TC-053": "PASS",
+    "TC-054": "PASS",
+    "TC-055": "PASS",
+    "TC-056": "PASS",
+    "TC-059": "PASS",
+    "TC-060": "PASS"
+  },
+  "notInSlice": {
+    "TC-057": "PENDING (reports/moderation queue)",
+    "TC-058": "PENDING (admin roles)"
+  },
+  "checks": [
+    "participant-only send and read; non-participants receive 404",
+    "message validation and 30/minute/user rate limit",
+    "conversation list with partner, timestamp and last-message preview",
+    "unmatch closes chat, is idempotent and is audited",
+    "block closes match/chat, blocks sends (403) and is audited; unblock is idempotent",
+    "protected /messages pages redirect unauthenticated visitors to /login"
+  ],
+  "qualityGates": {
+    "focusedTests": "39/39 PASS",
+    "emulatorTests": "4/4 PASS",
+    "fullUnitTests": "181/181 PASS",
+    "formatCheck": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "productionBuild": "PASS",
+    "routeSmoke": "307 / 401 / 200 as expected"
+  },
+  "evidence": [
+    "01-unit-tests.log",
+    "02-emulator-e2e.log",
+    "03-route-smoke.log",
+    "04-quality-gates.log"
+  ],
+  "dataHandling": "Synthetic emulator fixtures only; no live project writes, no billing/rules/Storage changes, and no credentials or tokens in logs."
+}

@@ -1,0 +1,13 @@
+
+> bondora@0.1.0 test:phase3:emulator
+> vitest run --config vitest.emulator.config.mts app/api/conversations/phase3.emulator.e2e.ts
+
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  13:24:52
+   Duration  3.77s (tests 55%, import 42%, transform 3%)
+

@@ -107,6 +107,19 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | **R-207** | Discovery and matching must be verified against Firestore.     | Authenticated candidate fetch, like, mutual match and conversation creation work end-to-end against the emulator or linked project.  | ✅ Done (emulator + live verified) |
 | **R-208** | Discovery/matching E2E must be captured before Phase 2 closes. | Full like→match→conversation flow verified against the emulator or linked Firebase with audit records.                               | ✅ Done (emulator + live verified) |
 
+### 3.4 Phase 3 — Chat, safety & moderation (added 2026-10-29)
+
+| ID        | Requirement                                                | Acceptance criteria                                                                                                                       | Status                           |
+| --------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| **R-301** | Chat must be participant-only.                             | A conversation is readable/writable only by the two matched participants; non-participants receive 404 so thread existence is not leaked. | ✅ Done (route + emulator tests) |
+| **R-302** | Messages must be validated and rate-limited server-side.   | Text-only, 1–1000 trimmed characters, control characters rejected, uid from session, 30 messages/minute/user, server timestamp on write.  | ✅ Done (tests)                  |
+| **R-303** | Conversation list and thread must be account-scoped.       | `/messages` lists only the viewer's active matches with partner summary and last message; blocked/unmatched threads are hidden.           | ✅ Done (emulator verified)      |
+| **R-304** | Unmatch must end chat for both participants.               | Participant-only, idempotent, sets match `unmatched` and conversation `closed`, records an audit event; further sends return 409.         | ✅ Done (route + emulator)       |
+| **R-305** | Blocking must immediately stop contact in both directions. | One-way deterministic block, self-block rejected, repeat is idempotent, closes active match/chat, and all chat sends return 403.          | ✅ Done (route + emulator)       |
+| **R-306** | Reports must enter a moderation queue.                     | Allowed category taxonomy, target user or conversation required, priority mapping, reporter cannot report themselves, duplicate guard.    | ⏳ Planned (Phase 3 slice 2)     |
+| **R-307** | Admin/moderator actions must be role-gated and audited.    | Admin routes reject non-staff, moderation actions are append-only, restricted notes never reach ordinary users.                           | ⏳ Planned (Phase 3 slice 3)     |
+| **R-308** | Phase 3 E2E must be captured before the phase closes.      | Send/read, non-participant denial, unmatch and block flows pass against the emulator with cleanup and evidence.                           | ✅ Done (emulator verified)      |
+
 ## 4. Open human actions
 
 | Item                                                                  | Owner           | Blocks                                                    |
@@ -163,3 +176,11 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-206       | TC-046, TC-050                         |
 | R-207       | TC-051, TC-052                         |
 | R-208       | TC-051, TC-052                         |
+| R-301       | TC-053, TC-054, TC-059, TC-060         |
+| R-302       | TC-053                                 |
+| R-303       | TC-054, TC-059, TC-060                 |
+| R-304       | TC-055, TC-059                         |
+| R-305       | TC-056, TC-059                         |
+| R-306       | TC-057                                 |
+| R-307       | TC-058                                 |
+| R-308       | TC-059                                 |

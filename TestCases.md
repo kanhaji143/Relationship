@@ -1,9 +1,9 @@
-﻿# Test Cases - Phase 0/1 foundations + Phase 2 discovery (emulator- and live-verified)
+﻿# Test Cases - Phase 0/1 foundations + Phase 2 discovery + Phase 3 chat/safety
 
-**Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1) and §3.3 (Phase 2)
-**Executed:** Phase 0/1 and Phase 2 discovery/matching verification (emulator + approved live run) on 2026-10-29
-**Latest evidence:** `evidence/run-2026-10-29-phase2-live/`, `evidence/run-2026-10-29-phase2-emulator/`, and `evidence/run-2026-10-29-phase2-complete/`
-**Result:** **51 passed · 1 blocked · 0 failed**
+**Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1), §3.3 (Phase 2) and §3.4 (Phase 3)
+**Executed:** Phase 0/1, Phase 2 (emulator + approved live) and Phase 3 chat/safety slice on 2026-10-29
+**Latest evidence:** `evidence/run-2026-10-29-phase3-chat/`, `evidence/run-2026-10-29-phase2-live/`, `evidence/run-2026-10-29-phase2-emulator/`, and `evidence/run-2026-10-29-phase2-complete/`
+**Result:** **57 passed · 1 blocked · 2 pending · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment
@@ -22,60 +22,68 @@
 
 ## Summary
 
-| ID     | Test                               | Requirement         | Status                    |
-| ------ | ---------------------------------- | ------------------- | ------------------------- |
-| TC-001 | Formatting gate                    | R-010, NFR-004      | ✅ PASS                   |
-| TC-002 | Lint gate                          | R-010               | ✅ PASS                   |
-| TC-003 | Typecheck gate                     | R-010               | ✅ PASS                   |
-| TC-004 | Full unit suite                    | R-010               | ✅ PASS                   |
-| TC-005 | 18+ age gate boundary              | R-005               | ✅ PASS                   |
-| TC-006 | Consent + password policy          | R-005               | ✅ PASS                   |
-| TC-007 | Email normalization/rejection      | R-005               | ✅ PASS                   |
-| TC-008 | Canonical match + paths            | R-006               | ✅ PASS                   |
-| TC-009 | Log redaction                      | R-009, NFR-001      | ✅ PASS                   |
-| TC-010 | Env validation                     | R-003               | ✅ PASS                   |
-| TC-011 | Production build                   | R-001               | ✅ PASS                   |
-| TC-012 | Route smoke (200/404)              | R-001               | ✅ PASS                   |
-| TC-013 | Brand override                     | R-002               | ✅ PASS                   |
-| TC-014 | Env bootstrap/check                | R-004               | ✅ PASS                   |
-| TC-015 | Rules deny by default              | R-007, NFR-005      | ✅ PASS                   |
-| TC-016 | Firebase wiring + emulator config  | R-008               | ✅ PASS                   |
-| TC-017 | Docs presence + valid links        | R-011               | ✅ PASS                   |
-| TC-018 | CI parity                          | R-010               | ✅ PASS                   |
-| TC-019 | Evidence reproducibility           | R-012               | ✅ PASS                   |
-| TC-020 | Secret hygiene                     | NFR-001             | ✅ PASS                   |
-| TC-021 | Deploy security rules              | R-007               | ✅ PASS                   |
-| TC-022 | Start Firebase emulators           | R-008               | ✅ PASS                   |
-| TC-023 | Accessibility + honest claims      | NFR-002, NFR-003    | ✅ PASS                   |
-| TC-024 | Auth pages render                  | R-101               | ✅ PASS                   |
-| TC-025 | Session cookie hardening           | R-102               | ✅ PASS                   |
-| TC-026 | CSRF origin rejection              | R-103               | ✅ PASS                   |
-| TC-027 | Auth rate limiting                 | R-103               | ✅ PASS                   |
-| TC-028 | Registration transaction           | R-104               | ✅ PASS                   |
-| TC-029 | Protected account route            | R-105               | ✅ PASS                   |
-| TC-030 | No browser token storage           | R-102, R-106        | ✅ PASS                   |
-| TC-031 | Auth utility unit coverage         | R-107               | ✅ PASS                   |
-| TC-032 | End-to-end Firebase auth           | R-108               | ✅ PASS                   |
-| TC-033 | Generic auth error copy            | R-106               | ✅ PASS                   |
-| TC-034 | Onboarding page protection         | R-109               | ✅ PASS                   |
-| TC-035 | Onboarding validation rules        | R-110, R-112        | ✅ PASS                   |
-| TC-036 | Onboarding API guards              | R-109, R-110        | ✅ PASS                   |
-| TC-037 | Atomic onboarding save             | R-111               | ✅ PASS                   |
-| TC-038 | Account reflects profile           | R-113               | ✅ PASS                   |
-| TC-039 | Onboarding end-to-end              | R-114               | ✅ PASS                   |
-| TC-040 | Exact DOB stays private            | R-112               | ✅ PASS                   |
-| TC-041 | Prompt save + reload               | R-115, R-119        | ✅ PASS                   |
-| TC-042 | Prompt validation                  | R-115, R-117        | ✅ PASS                   |
-| TC-043 | Discovery preferences E2E          | R-116, R-117, R-119 | ✅ PASS                   |
-| TC-044 | Prompt/preferences route guards    | R-119               | ✅ PASS                   |
-| TC-045 | Photo storage security readiness   | R-118               | ⛔ BLOCKED (owner config) |
-| TC-046 | Discovery eligibility filters      | R-201, R-206        | ✅ PASS                   |
-| TC-047 | Discovery ranking score            | R-202               | ✅ PASS                   |
-| TC-048 | Like/pass authorization + matching | R-203, R-204        | ✅ PASS                   |
-| TC-049 | Protected discovery routes         | R-205               | ✅ PASS                   |
-| TC-050 | Candidate API data mapping         | R-201, R-206        | ✅ PASS                   |
-| TC-051 | Firebase emulator mutual-like E2E  | R-203, R-207, R-208 | ✅ PASS                   |
-| TC-052 | Live Firebase Phase 2 validation   | R-207, R-208        | ✅ PASS                   |
+| ID     | Test                                  | Requirement               | Status                    |
+| ------ | ------------------------------------- | ------------------------- | ------------------------- |
+| TC-001 | Formatting gate                       | R-010, NFR-004            | ✅ PASS                   |
+| TC-002 | Lint gate                             | R-010                     | ✅ PASS                   |
+| TC-003 | Typecheck gate                        | R-010                     | ✅ PASS                   |
+| TC-004 | Full unit suite                       | R-010                     | ✅ PASS                   |
+| TC-005 | 18+ age gate boundary                 | R-005                     | ✅ PASS                   |
+| TC-006 | Consent + password policy             | R-005                     | ✅ PASS                   |
+| TC-007 | Email normalization/rejection         | R-005                     | ✅ PASS                   |
+| TC-008 | Canonical match + paths               | R-006                     | ✅ PASS                   |
+| TC-009 | Log redaction                         | R-009, NFR-001            | ✅ PASS                   |
+| TC-010 | Env validation                        | R-003                     | ✅ PASS                   |
+| TC-011 | Production build                      | R-001                     | ✅ PASS                   |
+| TC-012 | Route smoke (200/404)                 | R-001                     | ✅ PASS                   |
+| TC-013 | Brand override                        | R-002                     | ✅ PASS                   |
+| TC-014 | Env bootstrap/check                   | R-004                     | ✅ PASS                   |
+| TC-015 | Rules deny by default                 | R-007, NFR-005            | ✅ PASS                   |
+| TC-016 | Firebase wiring + emulator config     | R-008                     | ✅ PASS                   |
+| TC-017 | Docs presence + valid links           | R-011                     | ✅ PASS                   |
+| TC-018 | CI parity                             | R-010                     | ✅ PASS                   |
+| TC-019 | Evidence reproducibility              | R-012                     | ✅ PASS                   |
+| TC-020 | Secret hygiene                        | NFR-001                   | ✅ PASS                   |
+| TC-021 | Deploy security rules                 | R-007                     | ✅ PASS                   |
+| TC-022 | Start Firebase emulators              | R-008                     | ✅ PASS                   |
+| TC-023 | Accessibility + honest claims         | NFR-002, NFR-003          | ✅ PASS                   |
+| TC-024 | Auth pages render                     | R-101                     | ✅ PASS                   |
+| TC-025 | Session cookie hardening              | R-102                     | ✅ PASS                   |
+| TC-026 | CSRF origin rejection                 | R-103                     | ✅ PASS                   |
+| TC-027 | Auth rate limiting                    | R-103                     | ✅ PASS                   |
+| TC-028 | Registration transaction              | R-104                     | ✅ PASS                   |
+| TC-029 | Protected account route               | R-105                     | ✅ PASS                   |
+| TC-030 | No browser token storage              | R-102, R-106              | ✅ PASS                   |
+| TC-031 | Auth utility unit coverage            | R-107                     | ✅ PASS                   |
+| TC-032 | End-to-end Firebase auth              | R-108                     | ✅ PASS                   |
+| TC-033 | Generic auth error copy               | R-106                     | ✅ PASS                   |
+| TC-034 | Onboarding page protection            | R-109                     | ✅ PASS                   |
+| TC-035 | Onboarding validation rules           | R-110, R-112              | ✅ PASS                   |
+| TC-036 | Onboarding API guards                 | R-109, R-110              | ✅ PASS                   |
+| TC-037 | Atomic onboarding save                | R-111                     | ✅ PASS                   |
+| TC-038 | Account reflects profile              | R-113                     | ✅ PASS                   |
+| TC-039 | Onboarding end-to-end                 | R-114                     | ✅ PASS                   |
+| TC-040 | Exact DOB stays private               | R-112                     | ✅ PASS                   |
+| TC-041 | Prompt save + reload                  | R-115, R-119              | ✅ PASS                   |
+| TC-042 | Prompt validation                     | R-115, R-117              | ✅ PASS                   |
+| TC-043 | Discovery preferences E2E             | R-116, R-117, R-119       | ✅ PASS                   |
+| TC-044 | Prompt/preferences route guards       | R-119                     | ✅ PASS                   |
+| TC-045 | Photo storage security readiness      | R-118                     | ⛔ BLOCKED (owner config) |
+| TC-046 | Discovery eligibility filters         | R-201, R-206              | ✅ PASS                   |
+| TC-047 | Discovery ranking score               | R-202                     | ✅ PASS                   |
+| TC-048 | Like/pass authorization + matching    | R-203, R-204              | ✅ PASS                   |
+| TC-049 | Protected discovery routes            | R-205                     | ✅ PASS                   |
+| TC-050 | Candidate API data mapping            | R-201, R-206              | ✅ PASS                   |
+| TC-051 | Firebase emulator mutual-like E2E     | R-203, R-207, R-208       | ✅ PASS                   |
+| TC-052 | Live Firebase Phase 2 validation      | R-207, R-208              | ✅ PASS                   |
+| TC-053 | Message send authorization/validation | R-301, R-302              | ✅ PASS                   |
+| TC-054 | Conversation list/thread scoping      | R-301, R-303              | ✅ PASS                   |
+| TC-055 | Unmatch closes chat + audit           | R-304                     | ✅ PASS                   |
+| TC-056 | Block stops contact both ways         | R-305                     | ✅ PASS                   |
+| TC-057 | Report intake + moderation queue      | R-306                     | ⏳ PENDING                |
+| TC-058 | Admin role gate + audits              | R-307                     | ⏳ PENDING                |
+| TC-059 | Phase 3 chat/safety emulator E2E      | R-301, R-303–R-305, R-308 | ✅ PASS                   |
+| TC-060 | Messages routes protected             | R-303, R-301              | ✅ PASS                   |
 
 ---
 
@@ -197,6 +205,121 @@
 - **Evidence:** `evidence/run-2026-10-29-phase2-live/01-live-e2e.log` and `evidence/run-2026-10-29-phase2-live/02-cleanup-verification.log`
 - **Actual result:** PASS — live `apna-computer-ltd` candidate fetch/session/mutual-like flow passed; two temporary synthetic Auth users and all test fixtures were cleaned up; independent re-read found 0 residual synthetic users/profiles and 2 retained audit rows without PII. No billing, rules or Storage settings changed.
 - **Status:** ✅ PASS — live test ran with owner approval.
+
+### TC-053 - Message send authorization and validation
+
+- **Requirement:** R-301, R-302
+- **Preconditions:** Route test double simulates participants, blocks and match state; rate limiter mocked.
+- **Steps:**
+  1. Run `npx vitest run "app/api/conversations/[conversationId]/messages/route.test.ts" lib/validation/messaging.test.ts`.
+  2. Send a valid message as a participant and inspect the created document and conversation timestamp.
+  3. Attempt anonymous, cross-origin, empty-text, non-participant, blocked and closed-conversation sends.
+  4. Exceed the mocked send rate limit.
+- **Expected outcome:** Valid send returns 201 and stores `senderUid`, `text`, `unreviewed` moderation state and server timestamps; all invalid/unauthorized cases return 400/401/403/404/409/429 without writes.
+- **Validation points:** session-derived sender, transaction gate order, stored field shape, no writes on rejection, `retry-after` header.
+- **Evidence:** `evidence/run-2026-10-29-phase3-chat/01-unit-tests.log`
+- **Actual result:** PASS — 39 focused tests across 6 files cover valid send (201, stored sender/body/moderation state, conversation timestamp), anonymous (401), cross-origin (403), invalid text (400), non-participant (404), blocked (403), closed (409) and rate-limited (429) sends.
+- **Status:** ✅ PASS
+
+### TC-054 - Conversation list and thread scoping
+
+- **Requirement:** R-301, R-303
+- **Preconditions:** Emulator seed with two synthetic participants and one active match/conversation.
+- **Steps:**
+  1. Run `npm run test:phase3:emulator` with emulator host variables set.
+  2. Send a message as participant A, then read the thread as participant A.
+  3. Call `GET /api/conversations` and inspect the preview.
+  4. Repeat the read/send as a non-participant.
+- **Expected outcome:** Participants see the partner, the message and the preview; non-participants receive 404 with no data.
+- **Validation points:** participantUids gate, partner mapping, ordering, last-message preview, 404 for outsiders.
+- **Evidence:** `evidence/run-2026-10-29-phase3-chat/02-emulator-e2e.log`
+- **Actual result:** PASS — emulator thread returns the partner (`Bob`), the sent message and `canSend: true`; `GET /api/conversations` returns the same thread with preview `Hello Bob`; non-participant reads and sends both return 404.
+- **Status:** ✅ PASS
+
+### TC-055 - Unmatch closes chat and is audited
+
+- **Requirement:** R-304
+- **Preconditions:** Active match/conversation fixture.
+- **Steps:**
+  1. Run the unmatch route test and the emulator suite.
+  2. Unmatch as a participant.
+  3. Re-run unmatch to confirm idempotency.
+  4. Try sending a message after unmatch.
+- **Expected outcome:** Match becomes `unmatched`, conversation `closed`, an audit row is appended, the duplicate call writes nothing, and sends return 409.
+- **Validation points:** participant gate, status transitions, audit action, idempotent second call.
+- **Evidence:** `evidence/run-2026-10-29-phase3-chat/01-unit-tests.log`, `02-emulator-e2e.log`
+- **Actual result:** PASS — route tests and the emulator suite confirm the match becomes `unmatched`, chat `closed`, an audit row is written, repeat calls write nothing (`already_ended`) and later sends return 409.
+- **Status:** ✅ PASS
+
+### TC-056 - Block stops contact both ways
+
+- **Requirement:** R-305
+- **Preconditions:** Active match/conversation fixture and an existing target user document.
+- **Steps:**
+  1. Run the block/unblock route tests and the emulator suite.
+  2. Block as participant A; repeat the block.
+  3. Attempt a send from A and a read as A.
+  4. Delete the block and confirm it is idempotent when absent.
+- **Expected outcome:** One deterministic block row exists, self-block is rejected, duplicates return `already_blocked`, match/chat close, sends return 403, and unblock removes the row with an audit event.
+- **Validation points:** directional block id, no writes on repeats, status transitions, 403 on send, unblock audit.
+- **Evidence:** `evidence/run-2026-10-29-phase3-chat/01-unit-tests.log`, `02-emulator-e2e.log`
+- **Actual result:** PASS — one deterministic block row is written, match/chat close, repeated block is idempotent, self-block is 400, sends return 403, thread is read-only, and unblock removes the row with an audit event.
+- **Status:** ✅ PASS
+
+### TC-057 - Report intake and moderation queue
+
+- **Requirement:** R-306
+- **Preconditions:** Report route and moderation queue implemented.
+- **Steps:**
+  1. Submit reports for each allowed category with a target user or conversation.
+  2. Attempt self-report, unknown category and duplicate report.
+  3. Read the moderator queue as staff.
+- **Expected outcome:** Valid reports enter the queue with priority, duplicates are suppressed, and invalid/self reports are rejected.
+- **Validation points:** taxonomy, target requirement, priority mapping, duplicate guard, staff-only queue.
+- **Evidence:** Not yet produced.
+- **Actual result:** Not implemented; Phase 3 slice 2.
+- **Status:** ⏳ PENDING
+
+### TC-058 - Admin role gate and audited moderation actions
+
+- **Requirement:** R-307
+- **Preconditions:** Staff role claims/records and admin routes implemented.
+- **Steps:**
+  1. Call admin report/audit endpoints as an ordinary user and as staff.
+  2. Apply a moderation action as staff.
+  3. Read the audit trail.
+- **Expected outcome:** Ordinary users receive 403; staff actions are recorded append-only and restricted notes stay hidden from users.
+- **Validation points:** role gate, append-only moderation action, audit visibility.
+- **Evidence:** Not yet produced.
+- **Actual result:** Not implemented; Phase 3 slice 3.
+- **Status:** ⏳ PENDING
+
+### TC-059 - Phase 3 chat/safety emulator E2E
+
+- **Requirement:** R-301, R-303, R-304, R-305, R-308
+- **Preconditions:** `demo-bondora` Firestore emulator running; emulator environment variables set; synthetic fixtures only.
+- **Steps:**
+  1. Run `npm run test:phase3:emulator`.
+  2. Execute send/read, conversation list, non-participant denial, unmatch and block scenarios.
+  3. Confirm fixture cleanup.
+- **Expected outcome:** All scenarios pass against the emulator without touching the linked project.
+- **Validation points:** emulator host guard, status codes, Firestore state, cleanup.
+- **Evidence:** `evidence/run-2026-10-29-phase3-chat/02-emulator-e2e.log`
+- **Actual result:** PASS — 4/4 emulator tests pass (send/read, list preview, non-participant denial, unmatch, block) with synthetic fixtures deleted after each test; the linked project was not contacted.
+- **Status:** ✅ PASS
+
+### TC-060 - Messages routes protected
+
+- **Requirement:** R-301, R-303
+- **Preconditions:** Production build served locally on port 3005; no session cookie.
+- **Steps:**
+  1. Request `/messages`, `/messages/abc`, `/discover` and `/` without a session cookie.
+  2. Request `/api/conversations` without a session cookie.
+- **Expected outcome:** Protected pages return 307 to `/login`; the API returns 401; the public home page stays 200.
+- **Validation points:** proxy matcher, status codes, redirect location, API auth.
+- **Evidence:** `evidence/run-2026-10-29-phase3-chat/03-route-smoke.log`
+- **Actual result:** PASS — `/messages` and `/messages/abc` now 307 to `/login` (proxy matcher extended), `/discover` 307, `/api/conversations` 401, home 200.
+- **Status:** ✅ PASS
 
 ## TC-002 — Lint gate
 
@@ -860,6 +983,7 @@
 | 14      | 2026-10-29 | opencode | `firebase emulators:start --project demo-bondora --only auth,firestore,storage` + `npm run test:phase2:emulator` | ✅ TC-022 emulator startup; TC-051 3/3 route-to-Firestore emulator tests; no linked-project writes                       |
 | 15      | 2026-10-29 | opencode | `npm run evidence -- --out evidence/run-2026-10-29-phase2-complete`                                              | ✅ 15/15 checks; 142 tests; production build and protected-route smoke pass                                              |
 | 16      | 2026-10-29 | opencode | `node --env-file-if-exists=.env.local scripts/run-phase2-live-validation.mjs --confirm-live-writes`              | ✅ Live candidate/session/mutual-match check passed; temporary users cleaned; 2 audit events retained                    |
+| 17      | 2026-10-29 | opencode | `npm run test:phase3:emulator` + focused `npx vitest run` chat/safety suites                                     | ✅ Phase 3 chat/safety slice: 39 focused tests + 4/4 emulator tests; route smoke 307/401; production build passes        |
 
 > Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the Phase 0 capture; run 4 re-verifies the same code the next day. The evidence script now names each run by date automatically.
 >

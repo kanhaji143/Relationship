@@ -4,6 +4,7 @@ import { Suspense } from "react";
 
 import { MarketingShell } from "@/components/layout/MarketingShell";
 import { getMatchesForUser } from "@/lib/discovery/relations";
+import { canonicalMatchId } from "@/lib/firebase/collections";
 import { requireSessionUser } from "@/lib/session";
 
 export const metadata: Metadata = {
@@ -48,6 +49,12 @@ async function MatchesContent() {
             >
               <p className="text-ink font-semibold">{person.displayName}</p>
               <p className="text-ink-muted mt-1 text-sm">{person.broadLocationLabel}</p>
+              <Link
+                href={`/messages/${canonicalMatchId(user.uid, person.uid)}`}
+                className="border-line text-ink hover:border-brand mt-3 inline-flex min-h-11 items-center rounded-lg border px-4 py-2 text-sm font-medium"
+              >
+                Message
+              </Link>
             </li>
           ))}
         </ul>

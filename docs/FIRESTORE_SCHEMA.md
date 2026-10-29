@@ -15,9 +15,9 @@ Blueprint's relational model (section 5) adapted to Firestore. Rules followed: U
 | `prompts/{promptId}` | uid, promptKey, responseText, moderationStatus | |
 | `likes/{pairHash}` | fromUid, toUid, action(like/pass), createdAt/updatedAt | Document ID is SHA-256 of the ordered `(fromUid,toUid)` pair; transaction enforces one action per direction and checks eligibility/blocks. |
 | `matches/{matchId}` | userA(uid, canonical lower), userB(uid), status(active/ended), matchedAt, endedAt | Canonical pair uniqueness via deterministic doc id `userA_userB`. |
-| `conversations/{matchId}` (doc id = matchId) | participantUids[2], status, createdAt, lastMessageAt | 1:1 with matches. |
-| `conversations/{matchId}/messages/{msgId}` | senderUid, type, body OR private attachment path, moderationStatus, createdAt, deletedAt | Participant authorization enforced server-side; read/write only via Functions-authorized paths. |
-| `blocks/{autoId}` | blockerUid, blockedUid, createdAt | Unique pair; self-block prevented; both-direction checks in discovery/matching. |
+| `conversations/{matchId}` (doc id = matchId) | participantUids[2], status(active/closed), createdAt, lastMessageAt, lastMessageSenderUid, updatedAt | 1:1 with matches; closed on unmatch or block. |
+| `conversations/{matchId}/messages/{msgId}` | senderUid, type(text), body, moderationStatus(unreviewed), createdAt, deletedAt | Participant + active-match + no-block authorization enforced in the send route transaction; text-only until Storage is approved. |
+| `blocks/{pairHash}` | blockerUid, blockedUid, createdAt | Document ID is SHA-256 of the ordered `(blockerUid, blockedUid)` pair, so repeats are idempotent. Self-block prevented; both-direction checks in discovery, chat and matching. |
 | `reports/{reportId}` | reporterUid, targetUid(null), targetMessageId(null), category, description, status, priority, createdAt, resolvedAt | Validation taxonomy: NCII, threats, impersonation, minors, danger = highest priority. |
 | `moderationActions/{actionId}` | moderatorUid, targetUid, reportId(null), actionType, reasonCode, notes(restricted), createdAt, expiresAt | Notes visible to staff roles only. |
 | `consentRecords/{recordId}` | uid, purpose, policyVersion, choice, locale, capturedAt, withdrawnAt | Granular, per-purpose, append-style. |

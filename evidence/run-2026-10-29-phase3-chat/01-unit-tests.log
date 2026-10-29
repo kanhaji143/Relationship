@@ -1,0 +1,12 @@
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  6 passed (6)
+      Tests  39 passed (39)
+   Start at  13:24:40
+   Duration  4.40s (import 82%, transform 11%, tests 5%, worker 2%)
+
+    Isolate  6 workers spawned · ~357ms startup each (spawn + environment, per file)
+             at least ~714ms faster with isolate: false — reuses workers across files instead of one per file
+

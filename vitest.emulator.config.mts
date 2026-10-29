@@ -16,7 +16,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["app/api/discover/**/*.emulator.e2e.ts"],
+    include: ["app/api/**/*.emulator.e2e.ts"],
     maxWorkers: 1,
     testTimeout: 30_000,
     hookTimeout: 30_000,
