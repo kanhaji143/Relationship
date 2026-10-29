@@ -8,7 +8,8 @@ import {
   userPrivateDoc,
 } from "@/lib/firebase/collections";
 import { ageFromBirthDate } from "@/lib/discovery/age";
-import { compatibilityScore } from "@/lib/discovery/scoring";
+import { buildCandidateFeed, type CandidateSource } from "@/lib/discovery/build-feed";
+import { toDiscoveryParticipant } from "@/lib/discovery/participant";
 import { logger } from "@/lib/logger";
 import { consumeRateLimit } from "@/lib/rate-limit/fixed-window";
 import { getSessionUser } from "@/lib/session";
@@ -139,37 +140,17 @@ export async function GET() {
       }
     }
 
-    const candidates: {
-      uid: string;
-      displayName: string;
-      bio: string;
-      broadLocationLabel: string;
-      languages: string[];
-      interestIds: string[];
-      intent: string;
-      age: number;
-      score: number;
-    }[] = [];
+    const viewerParticipant = toDiscoveryParticipant({
+      uid,
+      user: viewerUserSnap.data() ?? {},
+      profile: viewerProfile,
+      preferences: viewerPrefs,
+      privateAge: { birthDate: viewerAgeSnap.get("birthDate") },
+      blockedUids: [...blockedUids],
+    });
+    if (!viewerParticipant) return jsonError(409, "profile_incomplete");
 
-    const now = Date.now();
-    const viewerIntent = viewerPrefs.intent;
-    const desiredIntents = Array.isArray(viewerPrefs.desiredIntents)
-      ? viewerPrefs.desiredIntents
-      : [viewerIntent];
-    const ageMin = typeof viewerPrefs.ageMin === "number" ? viewerPrefs.ageMin : 18;
-    const ageMax = typeof viewerPrefs.ageMax === "number" ? viewerPrefs.ageMax : 99;
-    const preferredRegions = Array.isArray(viewerPrefs.preferredRegions)
-      ? viewerPrefs.preferredRegions
-      : [];
-    const preferredLanguages = Array.isArray(viewerPrefs.preferredLanguages)
-      ? viewerPrefs.preferredLanguages
-      : [];
-
-    const viewerInterests = Array.isArray(viewerProfile.interestIds)
-      ? viewerProfile.interestIds
-      : [];
-    const viewerLanguages = Array.isArray(viewerProfile.languages) ? viewerProfile.languages : [];
-
+    const candidateSources: CandidateSource[] = [];
     for (let index = 0; index < profileDocs.length; index += 1) {
       const doc = profileDocs[index]!;
       const data = doc.data();
@@ -177,92 +158,35 @@ export async function GET() {
       const accountData = candidateUserDocs[index]?.data();
       const candidatePrefs = candidatePreferenceDocs[index]?.data();
       const candidateAgeData = candidateAgeDocs[index]?.data();
-      if (!accountData || accountData.accountStatus !== "active" || !candidatePrefs) continue;
+      if (!accountData || !candidatePrefs) continue;
 
-      const candidateAge = ageFromBirthDate(candidateAgeData?.birthDate);
-      if (candidateAge === null || candidateAge < MIN_AGE || candidateAge > MAX_AGE) continue;
-      const candidateIntent = candidatePrefs.intent;
-      const candidateRegion = data.regionCode ?? null;
-      const candidateLanguages = Array.isArray(data.languages) ? data.languages : [];
-      const candidateInterests = Array.isArray(data.interestIds) ? data.interestIds : [];
-      const sharedInterests = candidateInterests.filter((i) => viewerInterests.includes(i)).length;
-
-      // Hard filters
-      if (!desiredIntents.includes(candidateIntent)) continue;
-      if (candidateAge < ageMin || candidateAge > ageMax) continue;
-      if (candidatePrefs.discoveryPaused === true) continue;
-      if (
-        Array.isArray(candidatePrefs.desiredIntents) &&
-        !candidatePrefs.desiredIntents.includes(viewerIntent)
-      )
-        continue;
-      if (typeof candidatePrefs.ageMin === "number" && viewerAge < candidatePrefs.ageMin) continue;
-      if (typeof candidatePrefs.ageMax === "number" && viewerAge > candidatePrefs.ageMax) continue;
-      if (
-        preferredRegions.length > 0 &&
-        (candidateRegion === null || !preferredRegions.includes(candidateRegion))
-      )
-        continue;
-      if (
-        preferredLanguages.length > 0 &&
-        !candidateLanguages.some((l) => preferredLanguages.includes(l))
-      )
-        continue;
-      if (
-        Array.isArray(candidatePrefs.preferredLanguages) &&
-        candidatePrefs.preferredLanguages.length > 0 &&
-        !candidatePrefs.preferredLanguages.some((language: string) =>
-          viewerLanguages.includes(language),
-        )
-      )
-        continue;
-      if (
-        Array.isArray(candidatePrefs.preferredRegions) &&
-        candidatePrefs.preferredRegions.length > 0 &&
-        (typeof viewerProfile.regionCode !== "string" ||
-          !candidatePrefs.preferredRegions.includes(viewerProfile.regionCode))
-      )
-        continue;
-
-      // Score
-      const sharedLanguages = candidateLanguages.filter((l) =>
-        preferredLanguages.includes(l),
-      ).length;
-      const totalLanguages = Math.max(preferredLanguages.length, 1);
-      const sharedPromptAnswers = [...(candidatePromptKeys.get(candidateUid) ?? [])].filter((key) =>
-        viewerPromptKeys.has(key),
-      ).length;
-      const preferredAgeMidpoint = (ageMin + ageMax) / 2;
-      const createdAt =
-        typeof data.createdAt?.toMillis === "function" ? data.createdAt.toMillis() : Date.now();
-
-      const score = compatibilityScore({
-        sharedInterests,
-        totalInterests: Math.max(candidateInterests.length, 1),
-        sharedLanguages,
-        totalLanguages,
-        sharedPromptAnswers,
-        candidateAge,
-        preferredAgeMidpoint,
-        candidateCreatedAt: createdAt,
-        now,
-      });
-
-      candidates.push({
+      const participant = toDiscoveryParticipant({
         uid: candidateUid,
-        displayName: data.displayName ?? "",
-        bio: data.bio ?? "",
-        broadLocationLabel: data.broadLocationLabel ?? "India",
-        languages: candidateLanguages,
-        interestIds: candidateInterests,
-        intent: candidateIntent,
-        age: candidateAge,
-        score,
+        user: accountData,
+        profile: data,
+        preferences: candidatePrefs,
+        privateAge: candidateAgeData ?? {},
+        blockedUids: [],
+      });
+      if (!participant) continue;
+
+      candidateSources.push({
+        participant,
+        displayName: typeof data.displayName === "string" ? data.displayName : "",
+        bio: typeof data.bio === "string" ? data.bio : "",
+        broadLocationLabel:
+          typeof data.broadLocationLabel === "string" ? data.broadLocationLabel : "India",
+        promptKeys: [...(candidatePromptKeys.get(candidateUid) ?? [])],
       });
     }
 
-    // Sort by score descending
-    candidates.sort((a, b) => b.score - a.score);
+    const candidates = buildCandidateFeed(
+      viewerParticipant,
+      candidateSources,
+      seenUids,
+      viewerPromptKeys,
+      Date.now(),
+    );
 
     return Response.json(
       { candidates: candidates.slice(0, 10) },

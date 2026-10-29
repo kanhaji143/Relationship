@@ -1,0 +1,8 @@
+# Onboarding guardrails
+
+[PASS] onboarding schema enforces the 18+ gate server-side
+[PASS] save route derives the uid from the session, never the body
+[PASS] profile, preferences, age declaration and audit are written atomically
+[PASS] country, languages, regions and interests are allow-listed
+[PASS] exact birth date is written only to the private user document
+[PASS] edit onboarding draft is loaded server-side from profile + private DOB

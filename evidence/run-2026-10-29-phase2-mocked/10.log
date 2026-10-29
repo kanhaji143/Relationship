@@ -1,0 +1,5 @@
+# Docs and CI parity
+
+[PASS] required workflow documents exist
+[PASS] README links resolve to files in the repo
+[PASS] CI runs the same quality gates

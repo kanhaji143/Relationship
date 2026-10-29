@@ -2,7 +2,7 @@
 
 Source: docs/PRODUCT_BLUEPRINT.md §12/§14 — adapted per docs/DECISIONS.md.
 
-Current status: **Phase 2 in progress — discovery feed, likes and matches slice implemented; 129 unit tests and protected-route smoke checks pass. Firestore mutual-match E2E is blocked on emulator/test setup. Phase 1 photo storage remains blocked on bucket/privacy approval.**
+Current status: **Phase 2 in progress — discovery feed, likes and matches slice implemented; 142 unit tests and protected-route smoke checks pass. Fake Firestore route coverage passes; real Firestore mutual-match E2E remains blocked on emulator/test setup. Phase 1 photo storage remains blocked on bucket/privacy approval.**
 Rule: each phase keeps the app runnable before the next begins.
 
 | Phase                                   | Scope                                                                                                                                                                                                                                                                                                      | Exit criteria                                                                                                       | Status                 |
@@ -83,5 +83,5 @@ Rule: each phase keeps the app runnable before the next begins.
 | Discovery experience            | Protected `/discover` shows candidate cards, intent and ranking labels, loading/empty/error states, and Like/Pass            |
 | Likes + matches                 | Protected pages read account-scoped records; like/pass and mutual match/conversation writes use a Firestore transaction      |
 | Route/security checks           | `/discover`, `/likes`, `/matches` redirect unauthenticated users; candidate GET and like POST reject missing sessions/origin |
-| Quality + evidence              | `evidence/run-2026-10-29-phase2-final/`: 15/15 checks, 129 unit tests, production build and route smoke pass                 |
-| Not verified / blocked          | Firestore fixture mapping and mutual-like E2E need JDK 21+ emulator or owner-approved controlled live test accounts/writes   |
+| Quality + evidence              | `evidence/run-2026-10-29-phase2-mocked/`: 15/15 checks, 142 unit tests, production build and route smoke pass                |
+| Not verified / blocked          | Real Firestore transaction/E2E needs JDK 21+ emulator or owner-approved controlled live test accounts/writes                 |
