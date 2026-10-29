@@ -2,7 +2,7 @@
 
 Source: docs/PRODUCT_BLUEPRINT.md Â§12/Â§14 â€” adapted per docs/DECISIONS.md.
 
-Current status: **Phase 3 complete — participant-only chat, message rules, unmatch, block/unblock, report intake, priority mapping, staff-only moderation queue, append-only moderation actions, audit-log endpoint and appeals flow are implemented and tested. Phase 4 (privacy & billing) is next. Phase 1 photo storage server pipeline is implemented and tested (EXIF stripping, private paths, signed URLs); direct client access stays denied by Storage rules.**
+Current status: **Phase 3 complete — participant-only chat, message rules, unmatch, block/unblock, report intake, priority mapping, staff-only moderation queue, append-only moderation actions, audit-log endpoint and appeals flow are implemented and tested. Phase 4 is in progress: privacy center is implemented; billing/Razorpay remains. Phase 1 photo storage server pipeline is implemented and tested (EXIF stripping, private paths, signed URLs); direct client access stays denied by Storage rules.**
 Rule: each phase keeps the app runnable before the next begins.
 
 | Phase                                     | Scope                                                                                                                                                                                                                                                                                                                       | Exit criteria                                                                                                              | Status                                                |

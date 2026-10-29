@@ -107,6 +107,14 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | **R-207** | Discovery and matching must be verified against Firestore.     | Authenticated candidate fetch, like, mutual match and conversation creation work end-to-end against the emulator or linked project.  | ✅ Done (emulator + live verified) |
 | **R-208** | Discovery/matching E2E must be captured before Phase 2 closes. | Full like→match→conversation flow verified against the emulator or linked Firebase with audit records.                               | ✅ Done (emulator + live verified) |
 
+### 3.5 Phase 4 - Privacy & billing (added 2026-10-29)
+
+| ID        | Requirement                                                     | Acceptance criteria                                                                                                     | Status                        |
+| --------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **R-401** | Privacy center must let users control visibility and discovery. | Profile visibility, discovery pause, online status and message requests are editable and synced to profile/preferences. | ✅ Done (route + UI)          |
+| **R-402** | Users must be able to request data export and deletion.         | Export/delete requests are recorded with a 30-day due date; users can list their requests.                              | ✅ Done (route tests pending) |
+| **R-403** | Billing must start in test mode only.                           | Razorpay adapter in test mode with checkout, webhook signature verification, idempotency and cancellation.              | ⏳ Planned                    |
+
 ### 3.4 Phase 3 — Chat, safety & moderation (added 2026-10-29)
 
 | ID        | Requirement                                                | Acceptance criteria                                                                                                                       | Status                           |
@@ -186,3 +194,5 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-307       | TC-058, TC-062, TC-063, TC-064         |
 | R-308       | TC-059                                 |
 | R-309       | TC-065, TC-066                         |
+| R-401       | TC-068                                 |
+| R-402       | TC-069                                 |

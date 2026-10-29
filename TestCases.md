@@ -3,7 +3,7 @@
 **Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1), §3.3 (Phase 2) and §3.4 (Phase 3)
 **Executed:** Phase 0/1, Phase 2 (emulator + approved live) and Phase 3 chat/safety slice on 2026-10-29
 **Latest evidence:** `evidence/run-2026-10-29-phase3-safety/`, `evidence/run-2026-10-29-phase3-chat/`, `evidence/run-2026-10-29-phase2-live/`, `evidence/run-2026-10-29-phase2-emulator/`, and `evidence/run-2026-10-29-phase2-complete/`
-**Result:** **67 passed · 0 blocked · 0 failed**
+**Result:** **69 passed · 0 blocked · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment

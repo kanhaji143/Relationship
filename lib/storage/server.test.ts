@@ -46,6 +46,23 @@ describe("validateAndNormalizePhoto", () => {
     expect(result).toEqual({ ok: false, error: "unreadable" });
   });
 
+  it("strips EXIF metadata from a JPEG", async () => {
+    const input = await sharp({
+      create: { width: 8, height: 8, channels: 3, background: "blue" },
+    })
+      .jpeg()
+      .withExif({ IFD0: { ImageDescription: "secret" } })
+      .toBuffer();
+
+    const result = await validateAndNormalizePhoto(input, "image/jpeg");
+
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const metadata = await sharp(result.buffer).metadata();
+      expect(metadata.exif).toBeUndefined();
+    }
+  });
+
   it("exposes the configured allow-list and size limit", () => {
     expect(ALLOWED_PHOTO_MIME.has("image/jpeg")).toBe(true);
     expect(ALLOWED_PHOTO_MIME.has("image/png")).toBe(true);

@@ -6,13 +6,7 @@ import { COLLECTIONS } from "@/lib/firebase/collections";
 import { jsonError } from "@/lib/http/json";
 import { isAllowedOrigin } from "@/lib/http/origin";
 import { requestOrigin } from "@/lib/http/request";
-import {
-  createPhotoReadUrl,
-  deletePhoto,
-  photoStoragePath,
-  uploadPhoto,
-  validateAndNormalizePhoto,
-} from "@/lib/storage/server";
+import { createPhotoReadUrl, uploadPhoto, validateAndNormalizePhoto } from "@/lib/storage/server";
 import { consumeRateLimit } from "@/lib/rate-limit/fixed-window";
 import { getSessionUser } from "@/lib/session";
 
