@@ -86,13 +86,13 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 
 ### 3.2 Phase 1C — prompts + discovery preferences (added 2026-10-28)
 
-| ID        | Requirement                                                          | Acceptance criteria                                                                                                                                                  | Status                                 |
-| --------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| **R-115** | Profile prompts must be editable and server-authorized.              | Owner may save 0–3 answers from an approved prompt catalog; answers are bounded/sanitized; Firestore `prompts` records are replaced atomically from the session uid. | ✅ Done (Firebase verified)            |
-| **R-116** | Discovery filters must remain distinct from relationship intent.     | `/settings/discovery` edits age range, compatible intents, broad regions, languages and discovery pause; it never overwrites the user's own `preferences.intent`.    | ✅ Done (Firebase verified)            |
-| **R-117** | Preference input must be allow-listed and privacy-preserving.        | Server validates 18–99 age bounds, 1–2 intents, allowed broad regions/languages; no city, exact distance or precise location is collected.                           | ✅ Done (tests + Firebase verified)    |
-| **R-118** | Photo upload must use a private, validated storage pipeline.         | Server-authorized upload, private object path, MIME/size limits, moderation state, metadata/EXIF handling and short-lived access; never direct public bucket access. | ⛔ Blocked (privacy/signing config)    |
-| **R-119** | Prompt and preference flows must be verified against real Firestore. | Authenticated save → reload/prefill works; unauthorized and malformed requests are rejected; audit records are present.                                              | ✅ Done (browser + Firestore verified) |
+| ID        | Requirement                                                          | Acceptance criteria                                                                                                                                                            | Status                                 |
+| --------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
+| **R-115** | Profile prompts must be editable and server-authorized.              | Owner may save 0–3 answers from an approved prompt catalog; answers are bounded/sanitized; Firestore `prompts` records are replaced atomically from the session uid.           | ✅ Done (Firebase verified)            |
+| **R-116** | Discovery filters must remain distinct from relationship intent.     | `/settings/discovery` edits age range, compatible intents, broad regions, languages and discovery pause; it never overwrites the user's own `preferences.intent`.              | ✅ Done (Firebase verified)            |
+| **R-117** | Preference input must be allow-listed and privacy-preserving.        | Server validates 18–99 age bounds, 1–2 intents, allowed broad regions/languages; no city, exact distance or precise location is collected.                                     | ✅ Done (tests + Firebase verified)    |
+| **R-118** | Photo upload must use a private, validated storage pipeline.         | Server-authorized upload, private object path, MIME/size limits, EXIF stripping, moderation state, short-lived signed read URLs; direct client access denied by Storage rules. | ✅ Done (server pipeline + tests)      |
+| **R-119** | Prompt and preference flows must be verified against real Firestore. | Authenticated save → reload/prefill works; unauthorized and malformed requests are rejected; audit records are present.                                                        | ✅ Done (browser + Firestore verified) |
 
 ### 3.3 Phase 2 — Discovery & matching (added 2026-10-28)
 
@@ -123,15 +123,15 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 
 ## 4. Open human actions
 
-| Item                                                                  | Owner           | Blocks                                                    |
-| --------------------------------------------------------------------- | --------------- | --------------------------------------------------------- |
-| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC   | Product owner   | ✅ Done (local dev configured)                            |
-| `firebase login` + `npm run rules:deploy`                             | Product owner   | ✅ Done (TC-021)                                          |
-| Install JDK 21+                                                       | Dev environment | ✅ Installed locally for TC-022/TC-051                    |
-| Approve controlled live Firebase test writes                          | Product owner   | ✅ Approved in chat (2026-10-29)                          |
-| Run live Phase 2 Firebase spot-check with synthetic accounts          | Agent           | ✅ Done (TC-052); fixtures deleted, 2 audit rows retained |
-| Approve Storage privacy controls (UBLA/PAP) + server signing identity | Product owner   | Photo uploads (R-118); bucket exists in `asia-south1`     |
-| Add owner requirements in §1                                          | Product owner   | Next test-case expansion                                  |
+| Item                                                                  | Owner           | Blocks                                                         |
+| --------------------------------------------------------------------- | --------------- | -------------------------------------------------------------- |
+| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC   | Product owner   | ✅ Done (local dev configured)                                 |
+| `firebase login` + `npm run rules:deploy`                             | Product owner   | ✅ Done (TC-021)                                               |
+| Install JDK 21+                                                       | Dev environment | ✅ Installed locally for TC-022/TC-051                         |
+| Approve controlled live Firebase test writes                          | Product owner   | ✅ Approved in chat (2026-10-29)                               |
+| Run live Phase 2 Firebase spot-check with synthetic accounts          | Agent           | ✅ Done (TC-052); fixtures deleted, 2 audit rows retained      |
+| Approve Storage privacy controls (UBLA/PAP) + server signing identity | Product owner   | ✅ Approved in chat (2026-10-29) — server pipeline implemented |
+| Add owner requirements in §1                                          | Product owner   | Next test-case expansion                                       |
 
 ## 5. Traceability
 
@@ -167,7 +167,7 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-115       | TC-041, TC-042                         |
 | R-116       | TC-043                                 |
 | R-117       | TC-042, TC-043                         |
-| R-118       | TC-045                                 |
+| R-118       | TC-045, TC-067                         |
 | R-119       | TC-041, TC-043, TC-044                 |
 | R-201       | TC-046, TC-047, TC-050                 |
 | R-202       | TC-047                                 |

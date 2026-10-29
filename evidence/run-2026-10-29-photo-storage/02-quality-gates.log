@@ -1,0 +1,38 @@
+
+> bondora@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> bondora@0.1.0 lint
+> eslint
+
+
+D:\Relationship Apps\app\api\me\photos\route.ts
+  11:3  warning  'deletePhoto' is defined but never used       @typescript-eslint/no-unused-vars
+  12:3  warning  'photoStoragePath' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 2 problems (0 errors, 2 warnings)
+
+
+> bondora@0.1.0 typecheck
+> tsc --noEmit
+
+
+> bondora@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  39 passed (39)
+      Tests  218 passed (218)
+   Start at  15:33:33
+   Duration  18.36s (import 81%, tests 9%, transform 7%, worker 2%)
+
+     Import  96 modules were evaluated 154 times · 18.71s total, 81% of tracked time
+             ~2.55s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
