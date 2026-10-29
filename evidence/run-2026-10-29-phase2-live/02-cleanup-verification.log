@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "projectId": "apna-computer-ltd",
+  "residualSyntheticAuthUsers": 0,
+  "residualSyntheticProfiles": 0,
+  "sampledLikeAuditRecords": 2,
+  "sampledAuditRecordsWithPii": 0,
+  "auditShapeClean": true
+}

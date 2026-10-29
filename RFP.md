@@ -104,19 +104,20 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | **R-204** | Self and duplicate likes must be prevented.                    | Self-action returns 400; re-recording same action returns `already_recorded`; changing action updates the record.                    | ✅ Done (route tests)              |
 | **R-205** | Discovery, likes and matches pages must be session-protected.  | `/discover`, `/likes`, `/matches` redirect unauthenticated visitors to `/login` before rendering.                                    | ✅ Done (route smoke)              |
 | **R-206** | Candidate feed must exclude already-seen and blocked users.    | Already liked/passed users and blocked pairs are filtered from the candidate list.                                                   | ✅ Done (mocked route tests)       |
-| **R-207** | Discovery and matching must be verified against Firestore.     | Authenticated candidate fetch, like, mutual match and conversation creation work end-to-end against the emulator or linked project.  | ✅ Done (emulator verified)        |
-| **R-208** | Discovery/matching E2E must be captured before Phase 2 closes. | Full like→match→conversation flow verified against the emulator or linked Firebase with audit records.                               | ✅ Done (emulator verified)        |
+| **R-207** | Discovery and matching must be verified against Firestore.     | Authenticated candidate fetch, like, mutual match and conversation creation work end-to-end against the emulator or linked project.  | ✅ Done (emulator + live verified) |
+| **R-208** | Discovery/matching E2E must be captured before Phase 2 closes. | Full like→match→conversation flow verified against the emulator or linked Firebase with audit records.                               | ✅ Done (emulator + live verified) |
 
 ## 4. Open human actions
 
-| Item                                                                            | Owner           | Blocks                                                |
-| ------------------------------------------------------------------------------- | --------------- | ----------------------------------------------------- |
-| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC             | Product owner   | ✅ Done (local dev configured)                        |
-| `firebase login` + `npm run rules:deploy`                                       | Product owner   | ✅ Done (TC-021)                                      |
-| Install JDK 21+                                                                 | Dev environment | ✅ Installed locally for TC-022/TC-051                |
-| Approve controlled live Firebase test writes (only if emulator is insufficient) | Product owner   | Optional live-project variant of R-207/R-208          |
-| Approve Storage privacy controls (UBLA/PAP) + server signing identity           | Product owner   | Photo uploads (R-118); bucket exists in `asia-south1` |
-| Add owner requirements in §1                                                    | Product owner   | Next test-case expansion                              |
+| Item                                                                  | Owner           | Blocks                                                    |
+| --------------------------------------------------------------------- | --------------- | --------------------------------------------------------- |
+| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC   | Product owner   | ✅ Done (local dev configured)                            |
+| `firebase login` + `npm run rules:deploy`                             | Product owner   | ✅ Done (TC-021)                                          |
+| Install JDK 21+                                                       | Dev environment | ✅ Installed locally for TC-022/TC-051                    |
+| Approve controlled live Firebase test writes                          | Product owner   | ✅ Approved in chat (2026-10-29)                          |
+| Run live Phase 2 Firebase spot-check with synthetic accounts          | Agent           | ✅ Done (TC-052); fixtures deleted, 2 audit rows retained |
+| Approve Storage privacy controls (UBLA/PAP) + server signing identity | Product owner   | Photo uploads (R-118); bucket exists in `asia-south1`     |
+| Add owner requirements in §1                                          | Product owner   | Next test-case expansion                                  |
 
 ## 5. Traceability
 
@@ -160,5 +161,5 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-204       | TC-048                                 |
 | R-205       | TC-049                                 |
 | R-206       | TC-046, TC-050                         |
-| R-207       | TC-051                                 |
-| R-208       | TC-051                                 |
+| R-207       | TC-051, TC-052                         |
+| R-208       | TC-051, TC-052                         |

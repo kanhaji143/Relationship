@@ -1,0 +1,30 @@
+
+> bondora@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> bondora@0.1.0 lint
+> eslint
+
+
+> bondora@0.1.0 typecheck
+> tsc --noEmit
+
+
+> bondora@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  25 passed (25)
+      Tests  142 passed (142)
+   Start at  13:05:29
+   Duration  7.39s (import 74%, tests 16%, worker 6%, transform 5%)
+
+    Isolate  25 workers spawned · ~324ms startup each (spawn + environment, per file)
+             at least ~3.73s faster with isolate: false — reuses workers across files instead of one per file
+

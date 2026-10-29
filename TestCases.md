@@ -1,9 +1,9 @@
-﻿# Test Cases - Phase 0/1 foundations + Phase 2 discovery (emulator-verified)
+﻿# Test Cases - Phase 0/1 foundations + Phase 2 discovery (emulator- and live-verified)
 
 **Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1) and §3.3 (Phase 2)
-**Executed:** Phase 0/1 and Phase 2 discovery/matching emulator verification on 2026-10-29
-**Latest evidence:** `evidence/run-2026-10-29-phase2-complete/` and `evidence/run-2026-10-29-phase2-emulator/`
-**Result:** **50 passed · 1 blocked · 0 failed**
+**Executed:** Phase 0/1 and Phase 2 discovery/matching verification (emulator + approved live run) on 2026-10-29
+**Latest evidence:** `evidence/run-2026-10-29-phase2-live/`, `evidence/run-2026-10-29-phase2-emulator/`, and `evidence/run-2026-10-29-phase2-complete/`
+**Result:** **51 passed · 1 blocked · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment
@@ -75,6 +75,7 @@
 | TC-049 | Protected discovery routes         | R-205               | ✅ PASS                   |
 | TC-050 | Candidate API data mapping         | R-201, R-206        | ✅ PASS                   |
 | TC-051 | Firebase emulator mutual-like E2E  | R-203, R-207, R-208 | ✅ PASS                   |
+| TC-052 | Live Firebase Phase 2 validation   | R-207, R-208        | ✅ PASS                   |
 
 ---
 
@@ -179,6 +180,23 @@
 - **Evidence:** `evidence/run-2026-10-29-phase2-emulator/02-emulator-e2e.log`
 - **Actual result:** PASS — 3/3 emulator integration tests verify mutual like/match/audit creation, candidate feed privacy/block filtering and blocked-like rejection. Session identity is test-fixtured; no linked-project writes occurred.
 - **Status:** ✅ PASS — emulator-only test data.
+
+### TC-052 - Live Firebase Phase 2 validation
+
+- **Requirement:** R-207, R-208
+- **Preconditions:** Explicit owner approval for live Phase 2 test writes; project ID is `apna-computer-ltd`; Firebase Admin credentials and local app server are configured.
+- **Steps:**
+  1. Run `node --env-file-if-exists=.env.local scripts/run-phase2-live-validation.mjs --confirm-live-writes`.
+  2. The script creates two temporary synthetic Auth users and matching Firestore fixtures; no real user data is used.
+  3. Obtain server sessions, fetch candidate cards, send reciprocal likes, and verify the canonical match, conversation and audit records.
+  4. Verify a two-way block prevents a like/match and duplicate retries are idempotent.
+  5. Confirm test Auth users, profiles, preferences, private age docs, likes, match, conversation and block fixtures are cleaned up; append-only audit records are counted and retained.
+  6. Independently re-read the live project to confirm zero residual synthetic Auth users/profiles and no PII in retained audit rows.
+- **Expected outcome:** Live Phase 2 flow works in `apna-computer-ltd`; only synthetic temporary data is written, no configuration/billing/rules/storage changes occur, and credentials/tokens are never logged.
+- **Validation points:** project guard, session-derived UID, response codes, Firestore match/conversation/audit, cleanup count and preserved audit retention.
+- **Evidence:** `evidence/run-2026-10-29-phase2-live/01-live-e2e.log` and `evidence/run-2026-10-29-phase2-live/02-cleanup-verification.log`
+- **Actual result:** PASS — live `apna-computer-ltd` candidate fetch/session/mutual-like flow passed; two temporary synthetic Auth users and all test fixtures were cleaned up; independent re-read found 0 residual synthetic users/profiles and 2 retained audit rows without PII. No billing, rules or Storage settings changed.
+- **Status:** ✅ PASS — live test ran with owner approval.
 
 ## TC-002 — Lint gate
 
@@ -841,11 +859,12 @@
 | 13      | 2026-10-29 | opencode | `npm run evidence -- --out evidence/run-2026-10-29-phase2-mocked`                                                | ✅ 15/15 checks; 142 tests; fake Firestore route coverage passes; live mutual-match E2E remains blocked                  |
 | 14      | 2026-10-29 | opencode | `firebase emulators:start --project demo-bondora --only auth,firestore,storage` + `npm run test:phase2:emulator` | ✅ TC-022 emulator startup; TC-051 3/3 route-to-Firestore emulator tests; no linked-project writes                       |
 | 15      | 2026-10-29 | opencode | `npm run evidence -- --out evidence/run-2026-10-29-phase2-complete`                                              | ✅ 15/15 checks; 142 tests; production build and protected-route smoke pass                                              |
+| 16      | 2026-10-29 | opencode | `node --env-file-if-exists=.env.local scripts/run-phase2-live-validation.mjs --confirm-live-writes`              | ✅ Live candidate/session/mutual-match check passed; temporary users cleaned; 2 audit events retained                    |
 
 > Attempts 1 and 2 failed for **tooling** reasons, not product defects: the E2EE check was over-broad and generated evidence is now excluded from Prettier. Both were fixed and the full suite re-executed. Run 3 is the Phase 0 capture; run 4 re-verifies the same code the next day. The evidence script now names each run by date automatically.
 >
 > Attempt 5 exposed a real CSRF-check bug: `request.url` is normalised to `localhost`, so a same-origin request to `127.0.0.1` was rejected. `requestOrigin()` now derives the origin from the `Host` header (honouring `x-forwarded-proto`), and run 6 re-executed every gate. Attempt 5's failed artifacts are kept in `evidence/run-2026-10-28-phase1a/`.
 >
-> TC-021, TC-028, TC-032, TC-037–044 were subsequently executed against `apna-computer-ltd` and now PASS; see latest run. TC-022 and TC-051 now pass against the local `demo-bondora` emulator. TC-045 remains blocked because private Storage settings and server-side signing are not ready; no billing or bucket permissions were changed. E2E evidence omits user email, UID, password, token, cookie value and exact DOB.
+> TC-021, TC-028, TC-032, TC-037–044 were subsequently executed against `apna-computer-ltd` and now PASS; see latest run. TC-022 and TC-051 pass against the local emulator; TC-052 also passed against `apna-computer-ltd` using two disposable synthetic users. Their Auth/data fixtures were deleted, while two append-only audit rows were retained. TC-045 remains blocked on Storage privacy/signing approval; no billing, Rules or Storage settings were changed. Evidence contains no emails, UIDs, passwords, tokens or cookie values.
 >
 > Phase 2 evidence attempts 10 and 11 are retained as interim development snapshots. Attempt 13 verifies mocked Firestore route logic; attempt 14 verifies transaction behavior against the emulator only, not the linked production project.

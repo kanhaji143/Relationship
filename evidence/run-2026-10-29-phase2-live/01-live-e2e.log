@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "projectId": "apna-computer-ltd",
+  "checks": [
+    "two temporary synthetic Auth users and test-only profile fixtures created",
+    "both live Auth ID tokens exchanged for local HttpOnly session cookies",
+    "candidate feed returns the approved synthetic partner without exact DOB",
+    "two-way block excluded the candidate and rejected the like",
+    "mutual likes created one canonical match/conversation and two audit events; retry was idempotent"
+  ]
+}
+{"cleanupFailures":0,"temporaryAuthUsersDeleted":2,"appendOnlyAuditRecordsRetained":2}
