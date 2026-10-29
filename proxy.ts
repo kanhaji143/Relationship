@@ -38,5 +38,7 @@ export const config = {
     "/messages/:path*",
     "/admin",
     "/admin/:path*",
+    "/appeals",
+    "/appeals/:path*",
   ],
 };

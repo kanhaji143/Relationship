@@ -1,0 +1,99 @@
+
+> bondora@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> bondora@0.1.0 lint
+> eslint
+
+
+> bondora@0.1.0 typecheck
+> tsc --noEmit
+
+
+> bondora@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  38 passed (38)
+      Tests  213 passed (213)
+   Start at  15:28:30
+   Duration  15.84s (import 85%, tests 9%, worker 3%, transform 3%)
+
+     Import  89 modules were evaluated 145 times · 15.68s total, 85% of tracked time
+             ~2.22s faster with isolate: false — shared modules are evaluated once per worker instead of once per file
+             learn more: https://vitest.dev/guide/improving-performance#test-isolation
+
+
+> bondora@0.1.0 build
+> next build
+
+▲ Next.js 16.4.3 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 66ms
+- Cache Components enabled
+- Partial Prefetching enabled
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.3s
+  Running TypeScript ...
+  Finished TypeScript in 7.6s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/33) ...
+  Generating static pages using 3 workers (8/33) 
+  Generating static pages using 3 workers (16/33) 
+  Generating static pages using 3 workers (24/33) 
+✓ Generating static pages using 3 workers (33/33) in 1669ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ◐ /account
+├ ◐ /admin/reports
+├ ƒ /api/admin/appeals
+├ ƒ /api/admin/appeals/[appealId]/resolve
+├ ƒ /api/admin/audit-logs
+├ ƒ /api/admin/reports
+├ ƒ /api/admin/reports/[reportId]/action
+├ ƒ /api/appeals
+├ ƒ /api/auth/register
+├ ƒ /api/auth/session
+├ ƒ /api/blocks
+├ ƒ /api/blocks/[targetUid]
+├ ƒ /api/conversations
+├ ƒ /api/conversations/[conversationId]/messages
+├ ƒ /api/discover/candidates
+├ ƒ /api/discover/like
+├ ƒ /api/matches/[matchId]/unmatch
+├ ƒ /api/onboarding
+├ ƒ /api/preferences/discovery
+├ ƒ /api/profile/prompts
+├ ƒ /api/reports
+├ ◐ /discover
+├ ○ /forgot-password
+├ ○ /how-it-works
+├ ◐ /likes
+├ ○ /login
+├ ◐ /matches
+├ ◐ /messages
+├   /messages/[conversationId]
+│ └ ◐ /messages/[conversationId]
+├ ◐ /onboarding
+├ ○ /safety
+├ ◐ /settings/discovery
+├ ◐ /settings/prompts
+└ ○ /signup
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)             prerendered as static content
+◐  (Partial Prerender)  prerendered as static HTML with dynamic server-streamed content
+ƒ  (Dynamic)            server-rendered on demand
+

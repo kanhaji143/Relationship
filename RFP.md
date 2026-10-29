@@ -119,6 +119,7 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | **R-306** | Reports must enter a moderation queue.                     | Allowed category taxonomy, target user or conversation required, priority mapping, reporter cannot report themselves, duplicate guard.    | ✅ Done (route tests)            |
 | **R-307** | Admin/moderator actions must be role-gated and audited.    | Admin routes reject non-staff; moderation actions are append-only with reason codes and restricted notes; audit-log feed is staff-only.   | ✅ Done (actions + audit log)    |
 | **R-308** | Phase 3 E2E must be captured before the phase closes.      | Send/read, non-participant denial, unmatch and block flows pass against the emulator with cleanup and evidence.                           | ✅ Done (emulator verified)      |
+| **R-309** | Appeals must be submittable and reviewable.                | Authenticated users can appeal a moderation action or report; staff can list and resolve appeals; duplicate open appeals are rejected.    | ✅ Done (route tests)            |
 
 ## 4. Open human actions
 
@@ -184,3 +185,4 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-306       | TC-057, TC-061                         |
 | R-307       | TC-058, TC-062, TC-063, TC-064         |
 | R-308       | TC-059                                 |
+| R-309       | TC-065, TC-066                         |

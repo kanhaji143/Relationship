@@ -18,6 +18,7 @@ export const COLLECTIONS = {
   conversations: "conversations",
   blocks: "blocks",
   reports: "reports",
+  appeals: "appeals",
   moderationActions: "moderationActions",
   consentRecords: "consentRecords",
   verificationRecords: "verificationRecords",

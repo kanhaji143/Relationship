@@ -3,7 +3,7 @@
 **Generated from:** `RFP.md` §2 (Phase 0), §3 (Phase 1), §3.3 (Phase 2) and §3.4 (Phase 3)
 **Executed:** Phase 0/1, Phase 2 (emulator + approved live) and Phase 3 chat/safety slice on 2026-10-29
 **Latest evidence:** `evidence/run-2026-10-29-phase3-safety/`, `evidence/run-2026-10-29-phase3-chat/`, `evidence/run-2026-10-29-phase2-live/`, `evidence/run-2026-10-29-phase2-emulator/`, and `evidence/run-2026-10-29-phase2-complete/`
-**Result:** **63 passed · 1 blocked · 0 failed**
+**Result:** **65 passed · 1 blocked · 0 failed**
 **Rule:** a case is only PASS when its command/output is captured in the evidence folder. Missing prerequisites produce a BLOCKED result, never a fake pass.
 
 ## Environment
@@ -88,6 +88,8 @@
 | TC-062 | Admin report queue role gate          | R-307                     | ✅ PASS                   |
 | TC-063 | Moderation action append + audit      | R-307                     | ✅ PASS                   |
 | TC-064 | Admin audit log endpoint              | R-307                     | ✅ PASS                   |
+| TC-065 | Appeal submission                     | R-309                     | ✅ PASS                   |
+| TC-066 | Appeal resolution                     | R-309                     | ✅ PASS                   |
 
 ---
 
@@ -379,6 +381,35 @@
 - **Validation points:** role gate, response shape, session guard.
 - **Evidence:** `evidence/run-2026-10-29-phase3-safety/03-moderation-tests.log`
 - **Actual result:** PASS — 2 audit log tests pass.
+- **Status:** ✅ PASS
+
+### TC-065 - Appeal submission
+
+- **Requirement:** R-309
+- **Preconditions:** Appeal route test double simulates moderation actions, reports and existing appeals; rate limiter mocked.
+- **Steps:**
+  1. Run `npx vitest run app/api/appeals/route.test.ts`.
+  2. File an appeal against a moderation action and a report.
+  3. Attempt duplicate open appeal, missing target and invalid body.
+  4. Verify only the caller's appeals are returned by GET.
+- **Expected outcome:** Valid appeals return 201 with an audit row; duplicates return 409; missing targets return 404; GET is account-scoped.
+- **Validation points:** target existence, duplicate guard, session/origin guards, account scoping.
+- **Evidence:** `evidence/run-2026-10-29-phase3-safety/05-appeals-tests.log`
+- **Actual result:** PASS — 6 appeal submission tests and 1 account-scoped read test pass.
+- **Status:** ✅ PASS
+
+### TC-066 - Appeal resolution
+
+- **Requirement:** R-309
+- **Preconditions:** Admin appeal route test double simulates staff, ordinary users and appeals.
+- **Steps:**
+  1. Run `npx vitest run app/api/admin/appeals/route.test.ts`.
+  2. Resolve an open appeal as staff.
+  3. Attempt to resolve an already-resolved appeal, an unknown appeal, and calls as non-staff/anonymous.
+- **Expected outcome:** Staff can list and resolve appeals with an audit row; invalid and unauthorized cases return 409/404/403/401.
+- **Validation points:** role gate, status transition, audit row, session guard.
+- **Evidence:** `evidence/run-2026-10-29-phase3-safety/05-appeals-tests.log`
+- **Actual result:** PASS — 3 queue tests and 3 resolution tests pass.
 - **Status:** ✅ PASS
 
 ## TC-002 - Lint gate
