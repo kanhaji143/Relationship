@@ -16,7 +16,7 @@
 | Next.js          | 16.4.3                                                                   |
 | Test runner      | Vitest 5.0.5                                                             |
 | Firebase CLI     | 15.34.0                                                                  |
-| Java             | ❌ not installed (blocks emulators)                                      |
+| Java             | ✅ Microsoft OpenJDK 21.0.13                                             |
 | Firebase project | ✅ `apna-computer-ltd` (Firestore `asia-south1`; Email/Password enabled) |
 | Git at run time  | `master` · see latest evidence summary for exact revision                |
 
@@ -134,7 +134,7 @@
 - **Validation points:** Response codes, deterministic directional like IDs, canonical match ID, participant list and audit write count.
 - **Evidence:** `evidence/run-2026-10-29-phase2-mocked/04.log`
 - **Actual result:** PASS — fake Admin Firestore route tests cover self-action rejection, same-action idempotency, both block directions, reciprocal preference rejection, pass→like update, and one canonical match/conversation/audit write.
-- **Status:** ✅ PASS — live Firestore execution remains TC-051.
+- **Status:** ✅ PASS — emulator integration is verified by TC-051; no linked-project writes were made.
 
 ### TC-049 - Protected discovery routes
 
@@ -161,7 +161,7 @@
 - **Validation points:** Candidate IDs, reciprocal eligibility, score ordering and output allow-list.
 - **Evidence:** `evidence/run-2026-10-29-phase2-mocked/04.log`
 - **Actual result:** PASS — fake Admin Firestore route tests map user/profile/preferences/private-age records, filter blocked/seen/inactive/paused/incompatible candidates, rank deterministically, and omit exact DOB.
-- **Status:** ✅ PASS — live Firestore reads remain unverified.
+- **Status:** ✅ PASS — fake Firestore and emulator reads are covered; no linked-project reads/writes were made for this Phase 2 run.
 
 ### TC-051 - Firebase emulator mutual-like end-to-end
 
