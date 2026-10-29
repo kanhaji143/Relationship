@@ -82,12 +82,31 @@ export async function POST(request: Request) {
         transaction.get(preferencesRef),
       ]);
 
-      if (!userSnapshot.exists) throw new MissingAccountRecordError();
-
       const now = FieldValue.serverTimestamp();
       const existingProfile = profileSnapshot.data() ?? {};
       const existingPreferences = preferencesSnapshot.data() ?? {};
       const createdAt = existingProfile.createdAt ?? now;
+
+      // A verified session is authoritative. If a development/emulator Auth
+      // user exists without its account document (for example after an
+      // emulator restart), repair the minimal account record atomically so
+      // onboarding can complete instead of returning a misleading 409.
+      if (!userSnapshot.exists) {
+        transaction.set(
+          userRef,
+          {
+            uid,
+            emailNormalized: session.email?.trim().toLowerCase() ?? null,
+            accountStatus: "active",
+            role: "user",
+            emailVerifiedAt: session.emailVerified ? now : null,
+            createdAt: now,
+            updatedAt: now,
+            lastLoginAt: now,
+          },
+          { merge: true },
+        );
+      }
 
       transaction.set(
         profileRef,
