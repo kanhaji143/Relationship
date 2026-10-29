@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:phase2:emulator": "vitest run --config vitest.emulator.config.mts",
     "test:watch": "vitest",
     "setup:env": "node scripts/setup-env.mjs",
     "env:check": "node --env-file-if-exists=.env.local scripts/check-env.mjs",

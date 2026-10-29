@@ -1,0 +1,12 @@
+
+> bondora@0.1.0 test:phase2:emulator
+> vitest run --config vitest.emulator.config.mts
+
+
+ RUN  v5.0.5 D:/Relationship Apps
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  11:20:15
+   Duration  27.61s (import 88%, tests 9%, transform 4%)

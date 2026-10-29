@@ -103,13 +103,18 @@ export async function GET() {
       (doc) => !seenUids.has(doc.id) && !blockedUids.has(doc.id),
     );
     const candidateUids = profileDocs.map((doc) => doc.id);
-    const candidateUserDocs = await db.getAll(...candidateUids.map((id) => db.doc(userDoc(id))));
-    const candidatePreferenceDocs = await db.getAll(
-      ...candidateUids.map((id) => db.doc(preferencesDoc(id))),
-    );
-    const candidateAgeDocs = await db.getAll(
-      ...candidateUids.map((id) => db.doc(userPrivateDoc(id, "ageAssurance"))),
-    );
+    const candidateUserDocs =
+      candidateUids.length > 0
+        ? await db.getAll(...candidateUids.map((id) => db.doc(userDoc(id))))
+        : [];
+    const candidatePreferenceDocs =
+      candidateUids.length > 0
+        ? await db.getAll(...candidateUids.map((id) => db.doc(preferencesDoc(id))))
+        : [];
+    const candidateAgeDocs =
+      candidateUids.length > 0
+        ? await db.getAll(...candidateUids.map((id) => db.doc(userPrivateDoc(id, "ageAssurance"))))
+        : [];
 
     const [viewerPromptsSnap, candidatePromptBatches] = await Promise.all([
       db.collection(COLLECTIONS.prompts).where("uid", "==", uid).get(),
