@@ -30,6 +30,12 @@ export function SiteHeader() {
           >
             Sign in
           </Link>
+          <Link
+            href="/signup"
+            className="bg-brand-strong hidden rounded-lg px-3 py-1.5 text-sm font-semibold text-white hover:opacity-90 sm:inline-flex"
+          >
+            Join preview
+          </Link>
         </div>
       </div>
     </header>

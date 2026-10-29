@@ -49,6 +49,12 @@ export default function HomePage() {
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link
               className="bg-brand-strong hover:bg-brand rounded-lg px-5 py-3 text-sm font-semibold text-white transition-colors"
+              href="/signup"
+            >
+              Create your account
+            </Link>
+            <Link
+              className="bg-brand-strong hover:bg-brand rounded-lg px-5 py-3 text-sm font-semibold text-white transition-colors"
               href="/how-it-works"
             >
               How it works
@@ -60,6 +66,9 @@ export default function HomePage() {
               Our safety commitments
             </Link>
           </div>
+          <p className="text-ink-muted mt-4 text-sm">
+            Development preview · free testing · no payments taken
+          </p>
 
           {!firebaseReady ? (
             <p className="border-line text-ink-muted mt-8 max-w-2xl rounded-lg border border-dashed bg-white/40 px-4 py-3 text-sm dark:bg-white/[0.02]">
@@ -98,10 +107,10 @@ export default function HomePage() {
                 Where this is going
               </h2>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
-                Phase 2 discovery and matching are now in development. Accounts, HttpOnly sessions,
-                onboarding, prompts and discovery preferences have been verified against Firebase;
-                discovery suggestions and mutual matches are not live yet. Photo uploads still await
-                private Storage controls. This is not a public launch, and no payment is taken.
+                The core Bondora experience is ready for controlled testing: profiles, discovery,
+                mutual matches, private chat, safety reports, moderation and privacy controls.
+                Advanced features such as video, verification and billing are intentionally
+                postponed. This is a development preview, and no payment is taken.
               </p>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
                 Product decisions and limits live in the open — no fake engagement, no dark
@@ -120,11 +129,12 @@ export default function HomePage() {
                 Build status
               </h3>
               <ul className="text-ink-muted mt-3 space-y-2 text-sm">
-                <li>✅ Repo, docs, Firestore + Storage rules deployed</li>
-                <li>✅ Auth, onboarding, prompts + preferences E2E</li>
-                <li>✅ Server-side 18+ gate; exact DOB stored privately</li>
-                <li>🟡 Phase 2: server-side discovery filters and ranking are being built</li>
-                <li>⏸️ Photo uploads: waiting on private Storage controls</li>
+                <li>✅ Auth, onboarding, prompts and preferences</li>
+                <li>✅ Discovery, likes, matches and ranking</li>
+                <li>✅ Participant-only chat and safety controls</li>
+                <li>✅ Reports, moderation, appeals and audit logs</li>
+                <li>✅ Private photo pipeline and privacy center</li>
+                <li>⏸️ Video, verification, billing and advanced features</li>
               </ul>
             </div>
           </div>
