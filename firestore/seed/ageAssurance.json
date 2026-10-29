@@ -1,0 +1,6 @@
+[
+  { "uid": "demo-user-001", "birthDate": "1990-01-01" },
+  { "uid": "demo-user-002", "birthDate": "1988-05-12" },
+  { "uid": "demo-user-003", "birthDate": "1994-09-20" },
+  { "uid": "demo-user-004", "birthDate": "1985-03-03" }
+]

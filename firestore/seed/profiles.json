@@ -1,0 +1,62 @@
+[
+  {
+    "uid": "demo-user-001",
+    "displayName": "Asha Demo",
+    "birthDate": null,
+    "pronouns": null,
+    "bio": "Fictional seed profile for emulator testing.",
+    "countryCode": "IN",
+    "regionCode": "south",
+    "broadLocationLabel": "Southern India",
+    "languages": ["en-IN", "hi-IN"],
+    "visibility": "visible",
+    "moderationStatus": "approved",
+    "photoCount": 0,
+    "interestIds": ["books", "music", "travel"]
+  },
+  {
+    "uid": "demo-user-002",
+    "displayName": "Ravi Demo",
+    "birthDate": null,
+    "pronouns": null,
+    "bio": "Fictional seed profile for emulator testing.",
+    "countryCode": "IN",
+    "regionCode": "north",
+    "broadLocationLabel": "Northern India",
+    "languages": ["en-IN", "hi-IN"],
+    "visibility": "visible",
+    "moderationStatus": "approved",
+    "photoCount": 0,
+    "interestIds": ["books", "cooking", "hiking"]
+  },
+  {
+    "uid": "demo-user-003",
+    "displayName": "Meera Demo",
+    "birthDate": null,
+    "pronouns": null,
+    "bio": "Fictional seed profile for emulator testing.",
+    "countryCode": "IN",
+    "regionCode": "west",
+    "broadLocationLabel": "Western India",
+    "languages": ["en-IN", "mr-IN"],
+    "visibility": "visible",
+    "moderationStatus": "approved",
+    "photoCount": 0,
+    "interestIds": ["art", "music", "travel"]
+  },
+  {
+    "uid": "demo-user-004",
+    "displayName": "Kabir Demo",
+    "birthDate": null,
+    "pronouns": null,
+    "bio": "Fictional seed profile for emulator testing.",
+    "countryCode": "IN",
+    "regionCode": "east",
+    "broadLocationLabel": "Eastern India",
+    "languages": ["en-IN", "bn-IN"],
+    "visibility": "hidden",
+    "moderationStatus": "rejected",
+    "photoCount": 0,
+    "interestIds": ["gaming"]
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "reporterUid": "demo-user-001",
+    "targetUid": "demo-user-004",
+    "category": "spam",
+    "description": "Fictional seed report for moderation queue testing.",
+    "status": "open",
+    "priority": "medium"
+  }
+]

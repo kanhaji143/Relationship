@@ -26,7 +26,8 @@
     "emulators": "firebase emulators:start",
     "rules:deploy": "firebase deploy --only firestore:rules,storage",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
-    "test:phase3:emulator": "vitest run --config vitest.emulator.config.mts app/api/conversations/phase3.emulator.e2e.ts"
+    "test:phase3:emulator": "vitest run --config vitest.emulator.config.mts app/api/conversations/phase3.emulator.e2e.ts",
+    "seed:emulator": "node --env-file-if-exists=.env.local scripts/seed-emulator.mjs"
   },
   "dependencies": {
     "firebase": "^13.1.0",

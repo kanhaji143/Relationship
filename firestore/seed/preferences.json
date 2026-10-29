@@ -1,0 +1,38 @@
+[
+  {
+    "uid": "demo-user-001",
+    "intent": "serious",
+    "desiredIntents": ["serious"],
+    "ageMin": 25,
+    "ageMax": 40,
+    "distanceLimitKm": null,
+    "preferredRegions": ["south", "north"],
+    "preferredLanguages": ["en-IN", "hi-IN"],
+    "dealbreakers": [],
+    "discoveryPaused": false
+  },
+  {
+    "uid": "demo-user-002",
+    "intent": "serious",
+    "desiredIntents": ["serious"],
+    "ageMin": 25,
+    "ageMax": 40,
+    "distanceLimitKm": null,
+    "preferredRegions": ["north", "south"],
+    "preferredLanguages": ["en-IN", "hi-IN"],
+    "dealbreakers": [],
+    "discoveryPaused": false
+  },
+  {
+    "uid": "demo-user-003",
+    "intent": "casual",
+    "desiredIntents": ["casual", "serious"],
+    "ageMin": 24,
+    "ageMax": 38,
+    "distanceLimitKm": null,
+    "preferredRegions": ["west"],
+    "preferredLanguages": ["en-IN", "mr-IN"],
+    "dealbreakers": [],
+    "discoveryPaused": false
+  }
+]

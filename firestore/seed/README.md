@@ -8,3 +8,11 @@ Rules:
 4. Import into the **emulator only** (`demo-bondora` project). Never import into a real Firebase project.
 
 The import script lands in Phase 1, together with the first collections (`users`, `profiles`, `preferences`, `consentRecords`).
+
+## Usage (emulator only)
+
+```bash
+FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 GCLOUD_PROJECT=demo-bondora npm run seed:emulator
+```
+
+The script refuses to run without `FIRESTORE_EMULATOR_HOST` or against any project other than `demo-bondora`. All records are fictional; IDs are deterministic (`demo-user-001`) so bugs are reproducible. Re-running overwrites the seed documents.

@@ -1,0 +1,12 @@
+[
+  {
+    "matchId": "demo-user-001_demo-user-002",
+    "senderUid": "demo-user-001",
+    "body": "Hello from the seed data."
+  },
+  {
+    "matchId": "demo-user-001_demo-user-002",
+    "senderUid": "demo-user-002",
+    "body": "Hi! Nice to meet you."
+  }
+]

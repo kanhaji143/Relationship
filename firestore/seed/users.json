@@ -1,0 +1,30 @@
+[
+  {
+    "uid": "demo-user-001",
+    "emailNormalized": "demo-user-001@example.com",
+    "accountStatus": "active",
+    "role": "user",
+    "emailVerifiedAt": "2026-10-29T09:00:00.000Z"
+  },
+  {
+    "uid": "demo-user-002",
+    "emailNormalized": "demo-user-002@example.com",
+    "accountStatus": "active",
+    "role": "user",
+    "emailVerifiedAt": "2026-10-29T09:00:00.000Z"
+  },
+  {
+    "uid": "demo-user-003",
+    "emailNormalized": "demo-user-003@example.com",
+    "accountStatus": "active",
+    "role": "user",
+    "emailVerifiedAt": "2026-10-29T09:00:00.000Z"
+  },
+  {
+    "uid": "demo-user-004",
+    "emailNormalized": "demo-user-004@example.com",
+    "accountStatus": "suspended",
+    "role": "user",
+    "emailVerifiedAt": "2026-10-29T09:00:00.000Z"
+  }
+]

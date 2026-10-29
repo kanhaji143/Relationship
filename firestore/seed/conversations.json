@@ -1,0 +1,12 @@
+[
+  {
+    "matchId": "demo-user-001_demo-user-002",
+    "participantUids": ["demo-user-001", "demo-user-002"],
+    "status": "active"
+  },
+  {
+    "matchId": "demo-user-003_demo-user-004",
+    "participantUids": ["demo-user-003", "demo-user-004"],
+    "status": "active"
+  }
+]
