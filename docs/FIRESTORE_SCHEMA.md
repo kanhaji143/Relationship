@@ -13,7 +13,7 @@ Blueprint's relational model (section 5) adapted to Firestore. Rules followed: U
 | `preferences/{uid}` | intent enum(s), desiredIntents[], ageMin/Max, distanceLimit(optional), preferredRegions, languages, dealbreakers, discoveryPaused | |
 | `interests/{interestId}` | name, category, active | Each profile stores interest IDs on its own doc. |
 | `prompts/{promptId}` | uid, promptKey, responseText, moderationStatus | |
-| `likes/{autoId}` | fromUid, toUid, action(like/pass), createdAt | Unique (from,to) pairs enforced in transaction + block/self checks. |
+| `likes/{pairHash}` | fromUid, toUid, action(like/pass), createdAt/updatedAt | Document ID is SHA-256 of the ordered `(fromUid,toUid)` pair; transaction enforces one action per direction and checks eligibility/blocks. |
 | `matches/{matchId}` | userA(uid, canonical lower), userB(uid), status(active/ended), matchedAt, endedAt | Canonical pair uniqueness via deterministic doc id `userA_userB`. |
 | `conversations/{matchId}` (doc id = matchId) | participantUids[2], status, createdAt, lastMessageAt | 1:1 with matches. |
 | `conversations/{matchId}/messages/{msgId}` | senderUid, type, body OR private attachment path, moderationStatus, createdAt, deletedAt | Participant authorization enforced server-side; read/write only via Functions-authorized paths. |
@@ -39,7 +39,7 @@ Blueprint's relational model (section 5) adapted to Firestore. Rules followed: U
 
 ## Writing rules (enforced in code + reviews)
 
-1. Unique pairs (likes/blocks) and canonical matches via deterministic doc IDs or transactional checks.
+1. Unique directional likes use a deterministic pair hash; blocks use a unique pair/index; matches use the canonical sorted UID pair ID. Like/pass, mutual match, conversation and audit writes are transactional.
 2. All timestamps UTC (`Timestamp` type), server-injected.
 3. Soft-delete (`deletedAt`) for messages/photos where needed; hard deletion only via tested privacy-deletion workflow with documented retention exceptions; audit records preserved.
 4. Moderation notes and private contact data never appear in any client-readable payload.

@@ -22,7 +22,7 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-3">
           <span className="bg-accent-soft text-accent hidden rounded-full px-3 py-1 text-xs font-medium sm:inline">
-            Phase 1 · development preview
+            Phase 2 · development preview
           </span>
           <Link
             href="/login"

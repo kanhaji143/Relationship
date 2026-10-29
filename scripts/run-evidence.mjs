@@ -199,6 +199,9 @@ async function routeSmoke() {
       { path: "/onboarding", expectedStatus: 307, expectLocation: "/login" },
       { path: "/settings/prompts", expectedStatus: 307, expectLocation: "/login" },
       { path: "/settings/discovery", expectedStatus: 307, expectLocation: "/login" },
+      { path: "/discover", expectedStatus: 307, expectLocation: "/login" },
+      { path: "/likes", expectedStatus: 307, expectLocation: "/login" },
+      { path: "/matches", expectedStatus: 307, expectLocation: "/login" },
       { path: "/definitely-not-a-route", expectedStatus: 404, expectText: "Page not found" },
     ];
 
@@ -310,6 +313,34 @@ async function routeSmoke() {
       {
         name: "discovery preferences GET without a session returns 401",
         run: async () => fetch(`${BASE_URL}/api/preferences/discovery`),
+        expectedStatus: 401,
+        check: (response) => response.status === 401,
+      },
+      {
+        name: "discovery candidates GET without a session returns 401",
+        run: async () => fetch(`${BASE_URL}/api/discover/candidates`),
+        expectedStatus: 401,
+        check: (response) => response.status === 401,
+      },
+      {
+        name: "discovery like POST without Origin is rejected",
+        run: async () =>
+          fetch(`${BASE_URL}/api/discover/like`, {
+            method: "POST",
+            headers: jsonHeaders,
+            body: JSON.stringify({ targetUid: "test", action: "like" }),
+          }),
+        expectedStatus: 403,
+        check: (response) => response.status === 403,
+      },
+      {
+        name: "discovery like POST same-origin without session returns 401",
+        run: async () =>
+          fetch(`${BASE_URL}/api/discover/like`, {
+            method: "POST",
+            headers: { ...jsonHeaders, origin: BASE_URL },
+            body: JSON.stringify({ targetUid: "test", action: "like" }),
+          }),
         expectedStatus: 401,
         check: (response) => response.status === 401,
       },

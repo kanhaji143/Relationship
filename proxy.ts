@@ -28,5 +28,11 @@ export const config = {
     "/settings/prompts/:path*",
     "/settings/discovery",
     "/settings/discovery/:path*",
+    "/discover",
+    "/discover/:path*",
+    "/likes",
+    "/likes/:path*",
+    "/matches",
+    "/matches/:path*",
   ],
 };

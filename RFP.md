@@ -94,15 +94,29 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | **R-118** | Photo upload must use a private, validated storage pipeline.         | Server-authorized upload, private object path, MIME/size limits, moderation state, metadata/EXIF handling and short-lived access; never direct public bucket access. | ⛔ Blocked (privacy/signing config)    |
 | **R-119** | Prompt and preference flows must be verified against real Firestore. | Authenticated save → reload/prefill works; unauthorized and malformed requests are rejected; audit records are present.                                              | ✅ Done (browser + Firestore verified) |
 
+### 3.3 Phase 2 — Discovery & matching (added 2026-10-28)
+
+| ID        | Requirement                                                     | Acceptance criteria                                                                                                                  | Status                  |
+| --------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------------- |
+| **R-201** | Discovery candidates must be filtered server-side.              | Eligibility checks account status, visibility, moderation, blocks, intent compatibility, age range, region and language preferences. | 🟡 In progress          |
+| **R-202** | Candidate ranking must be deterministic and explainable.        | Compatibility score blends age/language (40%), shared interests (30%), prompt answers (20%) and freshness (10%), clamped [0,1].      | ✅ Done (unit-tested)   |
+| **R-203** | Like/pass actions must be server-authorized and idempotent.     | `POST /api/discover/like` derives uid from session, validates target, records action, creates match + conversation on mutual like.   | 🟡 In progress          |
+| **R-204** | Self and duplicate likes must be prevented.                     | Self-action returns 400; re-recording same action returns `already_recorded`; changing action updates the record.                    | 🟡 In progress          |
+| **R-205** | Discovery, likes and matches pages must be session-protected.   | `/discover`, `/likes`, `/matches` redirect unauthenticated visitors to `/login` before rendering.                                    | ✅ Done (route smoke)   |
+| **R-206** | Candidate feed must exclude already-seen and blocked users.     | Already liked/passed users and blocked pairs are filtered from the candidate list.                                                   | 🟡 In progress          |
+| **R-207** | Discovery and matching must be verified against real Firestore. | Authenticated candidate fetch, like, mutual match and conversation creation work end-to-end against the linked project.              | ⛔ Blocked (test setup) |
+| **R-208** | Discovery/matching E2E must be captured before Phase 2 closes.  | Full like→match→conversation flow verified against real Firebase with audit records.                                                 | ⛔ Blocked (test setup) |
+
 ## 4. Open human actions
 
-| Item                                                                  | Owner           | Blocks                                                |
-| --------------------------------------------------------------------- | --------------- | ----------------------------------------------------- |
-| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC   | Product owner   | ✅ Done (local dev configured)                        |
-| `firebase login` + `npm run rules:deploy`                             | Product owner   | ✅ Done (TC-021)                                      |
-| Install JDK 21+                                                       | Dev environment | Firebase Emulator Suite (TC-022)                      |
-| Approve Storage privacy controls (UBLA/PAP) + server signing identity | Product owner   | Photo uploads (R-118); bucket exists in `asia-south1` |
-| Add owner requirements in §1                                          | Product owner   | Next test-case expansion                              |
+| Item                                                                                 | Owner           | Blocks                                                   |
+| ------------------------------------------------------------------------------------ | --------------- | -------------------------------------------------------- |
+| Create Firebase project + fill `NEXT_PUBLIC_FIREBASE_*` + Admin ADC                  | Product owner   | ✅ Done (local dev configured)                           |
+| `firebase login` + `npm run rules:deploy`                                            | Product owner   | ✅ Done (TC-021)                                         |
+| Install JDK 21+                                                                      | Dev environment | Firebase Emulator Suite (TC-022, TC-048, TC-050, TC-051) |
+| Provide two controlled adult test accounts and approve isolated Firebase test writes | Product owner   | R-207/R-208 mutual-like E2E (TC-048, TC-051)             |
+| Approve Storage privacy controls (UBLA/PAP) + server signing identity                | Product owner   | Photo uploads (R-118); bucket exists in `asia-south1`    |
+| Add owner requirements in §1                                                         | Product owner   | Next test-case expansion                                 |
 
 ## 5. Traceability
 
@@ -140,3 +154,11 @@ Legend: ✅ = verified with captured output; 🟡 = implementation present but s
 | R-117       | TC-042, TC-043                         |
 | R-118       | TC-045                                 |
 | R-119       | TC-041, TC-043, TC-044                 |
+| R-201       | TC-046, TC-047, TC-050                 |
+| R-202       | TC-047                                 |
+| R-203       | TC-048, TC-051                         |
+| R-204       | TC-048                                 |
+| R-205       | TC-049                                 |
+| R-206       | TC-046, TC-050                         |
+| R-207       | TC-051                                 |
+| R-208       | TC-051                                 |

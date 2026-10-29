@@ -1,0 +1,6 @@
+# Auth session hardening
+
+[PASS] session cookie is HttpOnly, SameSite=Lax and Secure in production
+[PASS] both auth routes enforce same-origin and rate limiting
+[PASS] registration verifies the ID token and writes in a transaction
+[PASS] no browser storage of auth tokens

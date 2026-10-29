@@ -1,0 +1,16 @@
+# Env check
+command: npm run env:check
+started: 2026-10-29T04:27:45.631Z
+duration_ms: 1015
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 env:check
+> node --env-file-if-exists=.env.local scripts/check-env.mjs
+
+✔ .env.local found (18 keys)
+  Firebase client config: 6/6 filled
+
+## stderr

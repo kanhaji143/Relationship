@@ -1,0 +1,6 @@
+# Firebase wiring
+
+[PASS] emulator ports configured (auth 9099, firestore 8080, storage 9199, ui 4000)
+[PASS] client SDK wires auth + firestore emulators behind the env flag
+[PASS] admin SDK is server-only and supports ADC + service account
+[PASS] no Firebase API key hard-coded in source

@@ -1,0 +1,14 @@
+# Typecheck
+command: npm run typecheck
+started: 2026-10-29T04:12:55.052Z
+duration_ms: 6800
+exit_code: 0
+status: PASS
+
+## stdout
+
+> bondora@0.1.0 typecheck
+> tsc --noEmit
+
+
+## stderr

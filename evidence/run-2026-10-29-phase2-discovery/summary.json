@@ -1,0 +1,157 @@
+{
+  "run": "evidence/run-2026-10-29-phase2-discovery",
+  "startedAt": "2026-10-29T04:12:35.720Z",
+  "finishedAt": "2026-10-29T04:19:59.359Z",
+  "durationMs": 443639,
+  "environment": {
+    "node": "v24.20.0",
+    "npm": "11.19.0",
+    "platform": "win32",
+    "arch": "x64",
+    "next": "16.4.3",
+    "gitCommit": "14add50",
+    "gitBranch": "master"
+  },
+  "totals": {
+    "total": 15,
+    "passed": 15,
+    "failed": 0
+  },
+  "results": [
+    {
+      "id": "01",
+      "title": "Format check",
+      "command": "npm run format:check",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 7539,
+      "log": "01.log"
+    },
+    {
+      "id": "02",
+      "title": "Lint",
+      "command": "npm run lint",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 11789,
+      "log": "02.log"
+    },
+    {
+      "id": "03",
+      "title": "Typecheck",
+      "command": "npm run typecheck",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 6800,
+      "log": "03.log"
+    },
+    {
+      "id": "04",
+      "title": "Unit tests",
+      "command": "npm test",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 6522,
+      "log": "04.log"
+    },
+    {
+      "id": "05",
+      "title": "Production build",
+      "command": "npm run build",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 392155,
+      "log": "05.log"
+    },
+    {
+      "id": "06",
+      "title": "Route smoke",
+      "command": "next start -p 3210 + fetch routes",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 16658,
+      "log": "06-route-smoke.log"
+    },
+    {
+      "id": "07",
+      "title": "Env check",
+      "command": "npm run env:check",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 1307,
+      "log": "07.log"
+    },
+    {
+      "id": "08",
+      "title": "Security rules deny by default",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "08.log"
+    },
+    {
+      "id": "09",
+      "title": "Secret hygiene",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "09.log"
+    },
+    {
+      "id": "10",
+      "title": "Docs and CI parity",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "10.log"
+    },
+    {
+      "id": "11",
+      "title": "Accessibility and honest-claim markers",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "11.log"
+    },
+    {
+      "id": "12",
+      "title": "Firebase wiring",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "12.log"
+    },
+    {
+      "id": "13",
+      "title": "Auth session hardening",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "13.log"
+    },
+    {
+      "id": "14",
+      "title": "Onboarding guardrails",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "14.log"
+    },
+    {
+      "id": "15",
+      "title": "Prompt and discovery preference hardening",
+      "command": "(static checks)",
+      "status": "PASS",
+      "exitCode": 0,
+      "durationMs": 0,
+      "log": "15.log"
+    }
+  ]
+}

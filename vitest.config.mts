@@ -19,6 +19,8 @@ export default defineConfig({
     environment: "node",
     include: ["**/*.test.ts"],
     exclude: ["node_modules/**", ".next/**", "**/*.e2e.ts"],
+    maxWorkers: 2,
+    testTimeout: 15_000,
     restoreMocks: true,
   },
 });

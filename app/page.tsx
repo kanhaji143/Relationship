@@ -98,10 +98,10 @@ export default function HomePage() {
                 Where this is going
               </h2>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
-                Phase 1 is in progress: accounts, HttpOnly sessions, onboarding, profile prompts and
-                discovery preferences have been verified against Firebase. Photo uploads await a
-                private Storage bucket; discovery suggestions are not active yet. Nothing here is a
-                public launch, and no payment is taken.
+                Phase 2 discovery and matching are now in development. Accounts, HttpOnly sessions,
+                onboarding, prompts and discovery preferences have been verified against Firebase;
+                discovery suggestions and mutual matches are not live yet. Photo uploads still await
+                private Storage controls. This is not a public launch, and no payment is taken.
               </p>
               <p className="text-ink-muted mt-3 max-w-xl leading-relaxed">
                 Product decisions and limits live in the open — no fake engagement, no dark
@@ -123,7 +123,8 @@ export default function HomePage() {
                 <li>✅ Repo, docs, Firestore + Storage rules deployed</li>
                 <li>✅ Auth, onboarding, prompts + preferences E2E</li>
                 <li>✅ Server-side 18+ gate; exact DOB stored privately</li>
-                <li>Next: private photo storage + discovery suggestions</li>
+                <li>🟡 Phase 2: server-side discovery filters and ranking are being built</li>
+                <li>⏸️ Photo uploads: waiting on private Storage controls</li>
               </ul>
             </div>
           </div>

@@ -1,0 +1,5 @@
+# Prompt and discovery preference hardening
+
+[PASS] prompt saves are origin-checked, session-derived and transactional
+[PASS] discovery filters preserve profile intent and use allow-lists
+[PASS] prompt catalog limits answers and rejects contact details

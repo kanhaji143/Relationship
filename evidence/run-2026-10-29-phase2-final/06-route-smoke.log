@@ -1,0 +1,7 @@
+# Route smoke (next start :3210)npm warn install-scripts .npmrc allow-scripts setting is being ignored because --allow-scripts was passed on the command line
+[1m[38;2;173;127;168m▲ Next.js 16.4.3[39m[22m
+- Local:         http://localhost:3210
+- Network:       http://192.168.1.112:3210
+[32m[1m✓[22m[39m Ready in 686ms
+[32m[1m✓[22m[39m Running next.config.ts took 81ms
+{"level":"warn","event":"auth.session.rejected","time":"2026-10-29T04:27:43.870Z","reason":"auth/argument-error"}

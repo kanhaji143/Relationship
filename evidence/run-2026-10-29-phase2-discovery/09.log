@@ -1,0 +1,4 @@
+# Secret hygiene
+
+[PASS] .env.local is gitignored
+[PASS] no real env/service-account files are tracked
