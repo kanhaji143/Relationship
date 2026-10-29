@@ -4,8 +4,6 @@ import { getStaffRole } from "@/lib/admin/server";
 import { getAdminDb } from "@/lib/firebase/admin/app";
 import { COLLECTIONS } from "@/lib/firebase/collections";
 
-type FirestoreDoc = { id: string; get: (field: string) => unknown };
-
 /** Staff-only, read-only audit log feed. */
 export async function GET(request: Request) {
   const session = await getSessionUser();
@@ -23,18 +21,19 @@ export async function GET(request: Request) {
       ? (value as { toDate: () => Date }).toDate().toISOString()
       : null;
 
-  const logs = snapshot.docs.map((doc) => {
-    const data = doc.data() as Record<string, unknown> | undefined;
-    return {
-      id: doc.id,
-      actorUid: String(data?.actorUid ?? ""),
-      action: String(data?.action ?? ""),
-      targetType: (data?.targetType as string | null) ?? null,
-      targetId: (data?.targetId as string | null) ?? null,
-      reasonCode: (data?.reasonCode as string | null) ?? null,
-      createdAt: toIso(data?.createdAt),
-    };
-  })
+  const logs = snapshot.docs
+    .map((doc) => {
+      const data = doc.data() as Record<string, unknown> | undefined;
+      return {
+        id: doc.id,
+        actorUid: String(data?.actorUid ?? ""),
+        action: String(data?.action ?? ""),
+        targetType: (data?.targetType as string | null) ?? null,
+        targetId: (data?.targetId as string | null) ?? null,
+        reasonCode: (data?.reasonCode as string | null) ?? null,
+        createdAt: toIso(data?.createdAt),
+      };
+    })
     .sort((a: { createdAt: string | null }, b: { createdAt: string | null }) =>
       (b.createdAt ?? "").localeCompare(a.createdAt ?? ""),
     );

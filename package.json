@@ -27,7 +27,8 @@
     "rules:deploy": "firebase deploy --only firestore:rules,storage",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run build",
     "test:phase3:emulator": "vitest run --config vitest.emulator.config.mts app/api/conversations/phase3.emulator.e2e.ts",
-    "seed:emulator": "node --env-file-if-exists=.env.local scripts/seed-emulator.mjs"
+    "seed:emulator": "node --env-file-if-exists=.env.local scripts/seed-emulator.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "firebase": "^13.1.0",
@@ -39,6 +40,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^22",
     "@types/react": "^19",
@@ -47,10 +49,10 @@
     "eslint-config-next": "16.4.3",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "^8.3.5",
-    "vitest": "^5.0.5",
-    "sharp": "^0.35.5"
+    "vitest": "^5.0.5"
   }
 }
