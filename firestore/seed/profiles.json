@@ -58,5 +58,20 @@
     "moderationStatus": "rejected",
     "photoCount": 0,
     "interestIds": ["gaming"]
+  },
+  {
+    "uid": "demo-admin-001",
+    "displayName": "Admin Demo",
+    "birthDate": null,
+    "pronouns": null,
+    "bio": "Fictional seed admin profile.",
+    "countryCode": "IN",
+    "regionCode": "central",
+    "broadLocationLabel": "Central India",
+    "languages": ["en-IN"],
+    "visibility": "visible",
+    "moderationStatus": "approved",
+    "photoCount": 0,
+    "interestIds": []
   }
 ]

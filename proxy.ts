@@ -36,5 +36,7 @@ export const config = {
     "/matches/:path*",
     "/messages",
     "/messages/:path*",
+    "/admin",
+    "/admin/:path*",
   ],
 };

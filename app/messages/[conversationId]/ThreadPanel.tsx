@@ -36,6 +36,11 @@ export function ThreadPanel({ conversationId, partnerUid, canSend, messages }: P
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [pendingAction, setPendingAction] = useState<"unmatch" | "block" | null>(null);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportCategory, setReportCategory] = useState("harassment");
+  const [reportDescription, setReportDescription] = useState("");
+  const [reporting, setReporting] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   async function sendMessage(event: React.FormEvent<HTMLFormElement>) {
@@ -45,6 +50,7 @@ export function ThreadPanel({ conversationId, partnerUid, canSend, messages }: P
 
     setSending(true);
     setError(null);
+    setNotice(null);
     try {
       const response = await fetch(`/api/conversations/${conversationId}/messages`, {
         method: "POST",
@@ -74,6 +80,7 @@ export function ThreadPanel({ conversationId, partnerUid, canSend, messages }: P
   async function endMatch(action: "unmatch" | "block") {
     setPendingAction(action);
     setError(null);
+    setNotice(null);
     try {
       const url = action === "unmatch" ? `/api/matches/${conversationId}/unmatch` : "/api/blocks";
       const response = await fetch(url, {
@@ -94,9 +101,44 @@ export function ThreadPanel({ conversationId, partnerUid, canSend, messages }: P
     }
   }
 
+  async function submitReport(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setReporting(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const response = await fetch("/api/reports", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          conversationId,
+          category: reportCategory,
+          description: reportDescription.trim() || undefined,
+        }),
+      });
+      if (!response.ok) {
+        const code = await errorCode(response);
+        setError(
+          code === "already_reported"
+            ? "You have already reported this conversation."
+            : "Your report couldn't be submitted. Please try again.",
+        );
+        return;
+      }
+      setReportOpen(false);
+      setReportDescription("");
+      setNotice("Report submitted. Our moderation team will review it.");
+    } catch {
+      setError("Your report couldn't be submitted. Please try again.");
+    } finally {
+      setReporting(false);
+    }
+  }
+
   return (
     <div className="space-y-4">
       {error ? <Alert tone="error">{error}</Alert> : null}
+      {notice ? <Alert tone="info">{notice}</Alert> : null}
 
       <ol className="space-y-2">
         {messages.length === 0 ? (
@@ -157,7 +199,47 @@ export function ThreadPanel({ conversationId, partnerUid, canSend, messages }: P
         >
           {pendingAction === "block" ? "Blocking…" : "Block"}
         </Button>
+        <Button variant="secondary" onClick={() => setReportOpen((open) => !open)}>
+          {reportOpen ? "Cancel report" : "Report"}
+        </Button>
       </div>
+
+      {reportOpen ? (
+        <form onSubmit={submitReport} className="border-line space-y-3 rounded-xl border p-4">
+          <label htmlFor="report-category" className="text-ink text-sm font-medium">
+            Report reason
+          </label>
+          <select
+            id="report-category"
+            value={reportCategory}
+            onChange={(event) => setReportCategory(event.target.value)}
+            className="border-line text-ink w-full rounded-lg border bg-white/70 p-2 text-sm dark:bg-white/[0.03]"
+          >
+            <option value="spam">Spam</option>
+            <option value="harassment">Harassment</option>
+            <option value="hate">Hate</option>
+            <option value="threats">Threats</option>
+            <option value="impersonation">Impersonation</option>
+            <option value="minor_safety">Minor safety</option>
+            <option value="non_consensual_image">Non-consensual image</option>
+            <option value="other">Other</option>
+          </select>
+          <label htmlFor="report-description" className="text-ink text-sm font-medium">
+            Details (optional)
+          </label>
+          <textarea
+            id="report-description"
+            value={reportDescription}
+            onChange={(event) => setReportDescription(event.target.value)}
+            maxLength={1000}
+            rows={3}
+            className="border-line text-ink w-full rounded-lg border bg-white/70 p-3 text-sm dark:bg-white/[0.03]"
+          />
+          <Button type="submit" disabled={reporting}>
+            {reporting ? "Submitting…" : "Submit report"}
+          </Button>
+        </form>
+      ) : null}
     </div>
   );
 }

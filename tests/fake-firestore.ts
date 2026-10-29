@@ -102,6 +102,24 @@ export function createFakeDb(initial: Record<string, DocData> = {}) {
     id: path.split("/").pop(),
     collection: (name: string) => collection(`${path}/${name}`),
     get: async () => snapshot(path),
+    set: async (value: DocData, options?: { merge?: boolean }) => {
+      if (options?.merge) {
+        documents.set(path, { ...documents.get(path), ...value });
+      } else {
+        documents.set(path, value);
+      }
+      writes.push({ kind: "set", path, value });
+    },
+    update: async (value: DocData) => {
+      const existing = documents.get(path);
+      if (!existing) throw new Error(`missing: ${path}`);
+      documents.set(path, { ...existing, ...value });
+      writes.push({ kind: "update", path, value });
+    },
+    delete: async () => {
+      documents.delete(path);
+      writes.push({ kind: "delete", path });
+    },
   });
 
   const collection = (path: string) => ({

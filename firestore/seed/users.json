@@ -26,5 +26,12 @@
     "accountStatus": "suspended",
     "role": "user",
     "emailVerifiedAt": "2026-10-29T09:00:00.000Z"
+  },
+  {
+    "uid": "demo-admin-001",
+    "emailNormalized": "demo-admin-001@example.com",
+    "accountStatus": "active",
+    "role": "admin",
+    "emailVerifiedAt": "2026-10-29T09:00:00.000Z"
   }
 ]
