@@ -42,7 +42,8 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /app
         run: npm run build
 
-      - name: Validate Firebase service account secret
+      - name: Diagnose npm omit dev
+        run: npm i --omit dev --no-audit 2>&1 | tail -40
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: node -e "const d=JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT); if(d.type!=='service_account'||!d.private_key||!d.project_id){throw new Error('Service account secret is not a valid service_account JSON');} console.log('Service account JSON valid for project:', d.project_id);"
