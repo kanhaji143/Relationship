@@ -1,4 +1,4 @@
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, type Transaction } from "firebase-admin/firestore";
 
 import { isFirebaseConfigured } from "@/lib/config/env";
 import { POLICY_LOCALE, POLICY_VERSION, PRIVACY_VERSION, TERMS_VERSION } from "@/lib/config/legal";
@@ -105,7 +105,7 @@ export async function POST(request: Request) {
   let created = false;
 
   try {
-    await db.runTransaction(async (transaction) => {
+    await db.runTransaction(async (transaction: Transaction) => {
       const [userSnapshot, lookupSnapshot] = await Promise.all([
         transaction.get(userRef),
         transaction.get(lookupRef),

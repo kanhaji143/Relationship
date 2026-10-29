@@ -132,7 +132,9 @@ export async function GET() {
         resolutionNote: typeof data?.resolutionNote === "string" ? data.resolutionNote : null,
       };
     })
-    .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? ""));
+    .sort((a: { createdAt: string | null }, b: { createdAt: string | null }) =>
+      (b.createdAt ?? "").localeCompare(a.createdAt ?? ""),
+    );
 
   return Response.json({ appeals }, { headers: { "cache-control": "no-store" } });
 }

@@ -1,4 +1,4 @@
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, type Transaction } from "firebase-admin/firestore";
 
 import { getAdminDb } from "@/lib/firebase/admin/app";
 import { COLLECTIONS } from "@/lib/firebase/collections";
@@ -32,7 +32,7 @@ export async function DELETE(request: Request, context: Context) {
   const blockRef = db.collection(COLLECTIONS.blocks).doc(blockDocumentId(session.uid, targetUid));
   const auditRef = db.collection(COLLECTIONS.auditLogs).doc();
 
-  const result = await db.runTransaction(async (transaction) => {
+  const result = await db.runTransaction(async (transaction: Transaction) => {
     const block = await transaction.get(blockRef);
     if (!block.exists) return { status: "not_blocked" as const };
 
