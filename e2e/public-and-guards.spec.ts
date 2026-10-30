@@ -15,9 +15,7 @@ test.describe("Bondora public and auth guards", () => {
   test("public marketing pages render", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Bondora/);
-    await expect(
-      page.getByRole("heading", { name: /relationships with clear intent/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /meet with clarity/i })).toBeVisible();
 
     await page.goto("/how-it-works");
     await expect(page).toHaveTitle(/How it works/i);

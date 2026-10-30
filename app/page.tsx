@@ -33,42 +33,78 @@ export default function HomePage() {
       <SiteHeader />
 
       <main id="main" className="flex-1">
-        <section className="mx-auto w-full max-w-5xl px-5 pt-16 pb-14 sm:px-8 sm:pt-24">
-          <p className="text-brand text-sm font-semibold tracking-[0.18em] uppercase">
-            Adults only · 18+
-          </p>
-          <h1 className="text-ink mt-4 max-w-3xl text-4xl leading-tight font-semibold tracking-tight text-balance sm:text-6xl">
-            Relationships with clear intent and real consent.
-          </h1>
-          <p className="text-ink-muted mt-6 max-w-2xl text-lg leading-relaxed">
-            {brand.name} is a privacy-first relationship platform for adults. You choose what you
-            are looking for, who can see you, and what you share — and you can change your mind at
-            any time.
-          </p>
+        <section className="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 pt-12 pb-16 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_.95fr] lg:gap-16">
+          <div>
+            <div className="bg-brand-soft text-brand-strong inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold tracking-wide uppercase">
+              <span className="bg-brand size-2 rounded-full" /> Adults only · 18+
+            </div>
+            <h1 className="text-ink mt-5 max-w-3xl text-5xl leading-[1.02] font-bold tracking-[-0.055em] text-balance sm:text-7xl">
+              Meet with <span className="text-brand">clarity.</span> Connect with care.
+            </h1>
+            <p className="text-ink-muted mt-6 max-w-xl text-lg leading-relaxed sm:text-xl">
+              {brand.name} is a privacy-first relationship platform for adults. Say what you want,
+              discover at your pace and talk only when interest is mutual.
+            </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
-            <Link
-              className="bg-brand-strong hover:bg-brand rounded-lg px-5 py-3 text-sm font-semibold text-white transition-colors"
-              href="/signup"
-            >
-              Create your account
-            </Link>
-            <Link
-              className="bg-brand-strong hover:bg-brand rounded-lg px-5 py-3 text-sm font-semibold text-white transition-colors"
-              href="/how-it-works"
-            >
-              How it works
-            </Link>
-            <Link
-              className="border-line text-ink hover:border-brand rounded-lg border bg-white/60 px-5 py-3 text-sm font-semibold transition-colors dark:bg-white/[0.03]"
-              href="/safety"
-            >
-              Our safety commitments
-            </Link>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                className="bg-brand-strong hover:bg-brand shadow-brand/20 rounded-xl px-5 py-3.5 text-sm font-bold text-white shadow-lg"
+                href="/signup"
+              >
+                Create your account <span aria-hidden="true">→</span>
+              </Link>
+              <Link
+                className="border-line text-ink hover:border-brand rounded-xl border bg-white/70 px-5 py-3.5 text-sm font-bold dark:bg-white/[0.03]"
+                href="/how-it-works"
+              >
+                See how it works
+              </Link>
+            </div>
+            <p className="text-ink-muted mt-4 text-xs font-medium">
+              Free development preview · no payments taken
+            </p>
+            <div className="text-ink-muted mt-8 flex flex-wrap gap-x-5 gap-y-2 text-xs font-semibold">
+              <span>✓ Match-only messaging</span>
+              <span>✓ Broad location only</span>
+              <span>✓ Safety is free</span>
+            </div>
           </div>
-          <p className="text-ink-muted mt-4 text-sm">
-            Development preview · free testing · no payments taken
-          </p>
+
+          <div
+            className="hero-visual relative mx-auto h-[430px] w-full max-w-[500px]"
+            aria-label="Bondora profile preview"
+            role="img"
+          >
+            <div className="hero-visual-glow absolute inset-10 rounded-full" />
+            <div className="hero-profile hero-profile-back absolute top-8 right-0 w-52 rotate-6 rounded-3xl p-4 shadow-xl sm:w-60">
+              <div className="hero-avatar hero-avatar-sage">
+                <span>R</span>
+              </div>
+              <p className="text-ink mt-3 font-bold">Riya, 28</p>
+              <p className="text-ink-muted text-xs">Lucknow · serious intent</p>
+            </div>
+            <div className="hero-profile hero-profile-main absolute top-16 left-3 w-60 -rotate-5 rounded-3xl p-4 shadow-2xl sm:left-10 sm:w-72">
+              <div className="hero-avatar hero-avatar-sunset">
+                <span>A</span>
+                <span className="hero-privacy-pill">private by default</span>
+              </div>
+              <p className="text-ink mt-3 text-lg font-bold">Aarav, 30</p>
+              <p className="text-ink-muted text-xs">Delhi NCR · clear intent</p>
+              <div className="mt-4 flex flex-wrap gap-1.5">
+                <span className="hero-chip">Books</span>
+                <span className="hero-chip">Travel</span>
+                <span className="hero-chip">Hindi</span>
+              </div>
+              <div className="mt-5 flex gap-2">
+                <span className="hero-action">×</span>
+                <span className="hero-action hero-action-like">♥</span>
+              </div>
+            </div>
+            <div className="hero-match absolute right-3 bottom-8 rounded-2xl px-4 py-3 shadow-xl sm:right-8">
+              <span className="text-brand text-xs font-bold uppercase">Mutual match</span>
+              <p className="text-ink mt-1 text-sm font-bold">A thoughtful hello starts here.</p>
+            </div>
+          </div>
 
           {!firebaseReady ? (
             <p className="border-line text-ink-muted mt-8 max-w-2xl rounded-lg border border-dashed bg-white/40 px-4 py-3 text-sm dark:bg-white/[0.02]">
