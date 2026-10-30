@@ -5,7 +5,7 @@ export function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <SiteHeader />
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 overflow-hidden">
         {children}
       </main>
       <SiteFooter />

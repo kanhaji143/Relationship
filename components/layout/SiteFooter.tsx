@@ -7,10 +7,10 @@ import { brand } from "@/lib/config/brand";
 
 export function SiteFooter() {
   return (
-    <footer className="border-line/80 bg-canvas border-t">
-      <div className="text-ink-muted mx-auto flex w-full max-w-5xl flex-col gap-6 px-5 py-10 text-sm sm:px-8">
+    <footer className="border-line/80 bg-canvas/85 border-t">
+      <div className="text-ink-muted mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-12 text-sm sm:px-8">
         <div className="flex flex-col gap-2">
-          <p className="text-ink font-medium">{brand.name}</p>
+          <p className="text-ink text-lg font-bold">{brand.name}</p>
           <p>{brand.description}</p>
         </div>
 

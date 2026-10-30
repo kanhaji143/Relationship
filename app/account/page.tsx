@@ -125,9 +125,8 @@ async function AccountContent() {
               </dl>
             </div>
             <Alert tone="info">
-              Profile prompts and discovery filters are editable now. Photo uploads await a private
-              Storage bucket; discovery suggestions stay locked until matching and safety checks are
-              complete.
+              Profile prompts, discovery filters and privacy controls are ready. Private photos are
+              protected by moderation, metadata stripping and short-lived access links.
             </Alert>
           </>
         ) : null}
