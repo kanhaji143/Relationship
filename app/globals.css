@@ -145,11 +145,19 @@ textarea {
   z-index: 1;
 }
 .hero-avatar-sunset {
-  background: linear-gradient(145deg, #b83268, #ee9b8c 52%, #f7d9a4);
+  background-image:
+    linear-gradient(145deg, rgb(184 50 104 / 0.18), rgb(238 155 140 / 0.08)),
+    url("/landing/bondora-person-a.jpg");
+  background-position: center 28%;
+  background-size: cover;
 }
 .hero-avatar-sage {
   height: 170px;
-  background: linear-gradient(145deg, #286c67, #85c8a9 55%, #d8e8bb);
+  background-image:
+    linear-gradient(145deg, rgb(40 108 103 / 0.18), rgb(133 200 169 / 0.08)),
+    url("/landing/bondora-person-b.jpg");
+  background-position: center 22%;
+  background-size: cover;
 }
 .hero-privacy-pill {
   position: absolute;

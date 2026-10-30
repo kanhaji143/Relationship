@@ -77,15 +77,12 @@ export default function HomePage() {
           >
             <div className="hero-visual-glow absolute inset-10 rounded-full" />
             <div className="hero-profile hero-profile-back absolute top-8 right-0 w-52 rotate-6 rounded-3xl p-4 shadow-xl sm:w-60">
-              <div className="hero-avatar hero-avatar-sage">
-                <span>R</span>
-              </div>
+              <div className="hero-avatar hero-avatar-sage" aria-hidden="true" />
               <p className="text-ink mt-3 font-bold">Riya, 28</p>
               <p className="text-ink-muted text-xs">Lucknow · serious intent</p>
             </div>
             <div className="hero-profile hero-profile-main absolute top-16 left-3 w-60 -rotate-5 rounded-3xl p-4 shadow-2xl sm:left-10 sm:w-72">
-              <div className="hero-avatar hero-avatar-sunset">
-                <span>A</span>
+              <div className="hero-avatar hero-avatar-sunset" aria-hidden="true">
                 <span className="hero-privacy-pill">private by default</span>
               </div>
               <p className="text-ink mt-3 text-lg font-bold">Aarav, 30</p>
