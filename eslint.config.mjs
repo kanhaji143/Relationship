@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     ".firebase/**",
+    // The Hub is a separate vanilla Firebase project nested for local review.
+    "apna-computer/**",
   ]),
 ]);
 

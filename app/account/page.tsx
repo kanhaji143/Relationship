@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { MarketingShell } from "@/components/layout/MarketingShell";
 import { Alert } from "@/components/ui/Alert";
 import { SignOutButton } from "@/features/auth/components/SignOutButton";
+import { PhotoGallery } from "@/features/photos/PhotoGallery";
 import { logger } from "@/lib/logger";
 import { getProfileSummary, type ProfileSummary } from "@/lib/profile/server";
 import { requireSessionUser } from "@/lib/session";
@@ -69,6 +70,7 @@ async function AccountContent() {
 
         {profile ? (
           <>
+            <PhotoGallery />
             <div className="border-line rounded-xl border bg-white/50 p-5 dark:bg-white/[0.03]">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
